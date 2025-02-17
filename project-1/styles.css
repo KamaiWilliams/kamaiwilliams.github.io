@@ -1,0 +1,70 @@
+body{
+    background-color: rgb(255, 212, 159); 
+}
+
+h1{
+    color: rgb(76, 35, 17);
+    font-size: 65px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    width: 900px;
+    margin-left: 100px;
+    margin-top: 70px; 
+}
+
+h2{
+    color: rgb(61, 24, 20);
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-style: italic;
+    width: 500px; 
+    margin-left: 100px; 
+
+}
+
+h3{
+    color: rgb(0, 100, 167);
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic; 
+    font-style: bold;
+    width: 500px; 
+    margin-left: 100px;    
+}
+
+h4{
+    color: rgb(0, 100, 167);
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    width: 500px; 
+    margin-left: 100px;
+    margin-top: auto;
+}
+
+p{
+    color: rgb(30, 11, 9);
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 600px;
+    margin-left: 150px;
+
+}
+
+li{ 
+    color: rgb(61, 24, 20);
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 700px;
+    margin-left: 150px;
+}
+
+a{
+    color: rgb(0, 100, 167);
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-style: italic;
+    width: 600px;  
+}

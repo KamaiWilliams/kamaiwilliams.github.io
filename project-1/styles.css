@@ -1,70 +1,184 @@
-body{
-    background-color: rgb(255, 212, 159); 
+body{ background-color: rgb(247, 149, 22);
+
+}
+
+html{
+    font-size: 1px;
 }
 
 h1{
     color: rgb(76, 35, 17);
-    font-size: 65px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: italic;
-    width: 900px;
-    margin-left: 100px;
-    margin-top: 70px; 
+    font-size: 130rem;
+    font-family: "egizio-urw", serif;
+    font-style: Bold;
+    width: 90vw;
+    margin-left: 40px;
+    margin-top: 30px; 
+    line-height: 110px;
+    margin-bottom: 10px;
 }
 
 h2{
-    color: rgb(61, 24, 20);
-    font-size: 25px;
-    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(76, 35, 17);
+    font-size: 62rem;
+    font-family: "egizio-urw", serif;
     font-weight: bold;
-    font-style: italic;
-    width: 500px; 
-    margin-left: 100px; 
+    width: 900px; 
+    margin-left: 80px; 
+    margin-bottom: 40px;
+    width: 90vw;
+    line-height: 50px;
 
 }
 
 h3{
-    color: rgb(0, 100, 167);
-    font-size: 30px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: italic; 
+    color: rgb(76, 35, 17);
+    font-size: 30rem;
+    line-height: 30px;
+    font-family: "egizio-urw", serif;
     font-style: bold;
     width: 500px; 
-    margin-left: 100px;    
+    margin-left: 80px; 
+    width: 90vw; 
+
 }
 
 h4{
-    color: rgb(0, 100, 167);
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: italic;
-    width: 500px; 
-    margin-left: 100px;
-    margin-top: auto;
+    color: rgb(76, 35, 17);
+    font-size: 20rem;
+    font-family: "egizio-urw", serif;
+    font-weight: normal; 
+    margin-left: 1050px;
+    margin-top: 50px;
+    margin-bottom: 0px;
+    width: 100vw;
+
 }
 
 p{
-    color: rgb(30, 11, 9);
-    font-size: 18px;
-    font-family: Arial, Helvetica, sans-serif;
-    width: 600px;
-    margin-left: 150px;
+    color: rgb(76, 35, 17);
+    font-family: "egizio-urw", serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 27rem;
+    width: 900px;
+    margin-left: 80px;
+    width: 65vw;
 
 }
 
 li{ 
-    color: rgb(61, 24, 20);
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(76, 35, 17);
+    font-size: 20rem;
+    font-family: "egizio-urw", serif;
     width: 700px;
-    margin-left: 150px;
+    margin-left: 80px;
 }
 
 a{
-    color: rgb(0, 100, 167);
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    font-style: italic;
-    width: 600px;  
+    color: rgb(76, 35, 17);
+    text-decoration: solid;
+    font-size: 20rem;
+    font-family: "egizio-urw", serif;
+    font-weight: regular;
+    width: 200px;  
+    display: inline-block;
+}
+.menu{
+    color: #84c8ff;
+    text-decoration: solid;
+    font-size: 20rem;
+    font-family: "egizio-urw", serif;
+    font-weight: normal;
+    width: auto;  
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 9px;
+    border-style:dashed;
+    border-width: 2px;
+    border-color: #84c8ff;
+    display: inline-block;
+}
+
+.menu-box{
+    display: block;
+    margin-left: 70px;
+    width:auto;
+
+}
+
+.home{
+    color: rgb(76, 35, 17);
+    font-size: 20rem;
+    font-family: "egizio-urw", serif;
+    font-weight: normal; 
+    line-height: 20rem;
+    display: block;
+    padding: 15rem;
+    border-radius: 5px;
+    background-color: #84c8ff;
+    width: 100px;
+    position: absolute;
+    top: 30px;
+    right: 40px;
+ 
+}
+
+.howtomake{
+    color: #84c8ff;
+    font-size: 130rem;
+    font-family: "egizio-urw", serif;
+    font-style: Bold;
+    width: 90vw;
+    margin-left: 40px;
+    margin-top: 30px; 
+    line-height: 110px;
+}
+.arecipe{
+    color: rgb(255, 255, 255);
+    font-size: 30rem;
+    line-height: 30px;
+    font-family: "egizio-urw", serif;
+    font-weight: normal;
+    width: 30vw; 
+    text-align: left;
+    display: inline-block;
+    margin-top: 140px;
+    margin-left: 40px;
+     
+
+}
+
+.steps{
+    color: #84c8ff;
+    font-size: 27rem;
+    line-height: 30px;
+    font-family: "egizio-urw", serif;
+    font-weight: normal; 
+    letter-spacing: 1.5px;
+    margin-left: 60px; 
+    margin-top: 100px; 
+    width: auto;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    position:absolute;
+    margin-bottom: 500px;
+    right: 40px; 
+    border-radius: 10px;
+    border-style: dotted;
+    border-width:5px;
+    border-color: #84c8ff;
+    display: inline-block; 
+}
+
+
+.blue{
+    color: #84c8ff;
+    
+}
+
+.top-heading{
+    margin-top: 200px;
 }

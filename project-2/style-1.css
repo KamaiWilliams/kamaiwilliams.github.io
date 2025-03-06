@@ -1,0 +1,31 @@
+/* Version 1: Poster Shape */
+
+.container {
+    background: whitesmoke;
+    position: relative;
+    width: 500px;
+    
+
+  /* METHOD 1: CONTENT-BOX SIZING */
+  /* I want my height to be a total of 700px, but there's a 20px padding all around, so I'm giving it a height of 660px (700 - 20 - 20) */
+    height: 660px; 
+    padding: 20px;
+
+  /* METHOD 2: BORDER-BOX SIZING */
+  /* Alternatively, you can use box-sizing:border-box and set the height to 700px */
+  /* The padding would be added inwards, and you won't need to do the math everytime */
+  /* The height will stay 700px no matter how much padding or border you add */
+  /* box-sizing: border-box; */
+  /* height: 700px; */
+  /* padding: 20px; */
+    
+  /* This makes it horizontally centered */
+  /* It only works on "display:block" elements */
+  /* If it's a position other than static or relative, you must set left and right properties to 0 */ 
+    margin: auto;
+    
+  /* This makes it centered vertically */
+  /* It's 50% of the height, and subtracting half of the total height of the poster (which is 700px)*/  
+    margin-top: calc(50vh - 350px);
+
+  }  

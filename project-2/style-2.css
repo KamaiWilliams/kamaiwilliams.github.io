@@ -1,0 +1,36 @@
+/* Version 2: Full Width and Typographic */
+
+body {
+/* I'm overriding the default margin and setting it to 0 */
+    margin: 0;
+}
+
+.container {
+/* I'm giving this a position:relative so I can position other content within it with position:absolute */
+    position: relative;
+
+/* This makes the container 100% of the viewport width */
+    width: 100vw;
+
+/* This makes the container 100% of the viewport height */
+    height: 100vh;
+    background-color: red;
+}
+
+/* Whenever you are trying to position a child element relative to its parent container, you must: */
+/* 1. Give the parent a position:relative (see line 10) */
+/* 2. Give the child a position:absolute (see line 29) */
+/* 3. The top, bottom, left, right properties will now be relative to the parent */
+
+
+h1 {
+/* I'm giving this a position:absolute so I can position it relative to the container (see line 10) */
+/* You would give every element within the container a position:absolute */
+/* Important: Make sure in your HTML that the content is nested between the container div tags */
+    position: absolute;
+ 
+/* This centers the content vertically and horiziontally within the container */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

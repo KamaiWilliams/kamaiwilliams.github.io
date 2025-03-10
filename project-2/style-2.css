@@ -4,8 +4,91 @@ body {
 /* I'm overriding the default margin and setting it to 0 */
     margin: 0;
 }
+.fourtwenty {
+    font-family: "new-order", sans-serif;
+    font-size: 100px;
+    line-height: 200px;
+    display: block;
+    width: 100%;
+    background: rgb(255, 255, 255);
+    margin: 10px 0%;
+    padding: 0px;
+    position: relative;
 
-.container {
+}
+.info {
+    display: block;
+    width: 100%;
+    background: rgb(175, 157, 157);
+    margin: 10px 0%;
+    padding: 0px;
+}
+
+.title {
+    display: none;
+}
+.eastvillagenyc {  
+    display: none;
+}
+.club509 {
+    font-family: "new-order", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    color:rgb(0, 0, 0);
+    display: inline-block;
+    width: 20%;
+    background-color: rgb(254, 160, 93);
+  }
+  .date {
+    font-family: "new-order", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    color:rgb(0, 0, 0);
+    display: inline-block;
+    width: auto;
+    height: auto;
+    margin-left: 30px;
+    background-color: rgb(227, 70, 70);
+  }
+  .djset {
+    font-family: "new-order", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    color:rgb(0, 0, 0);
+    display: inline-block;
+    width: auto;
+    height: auto;
+    background-color: rgb(247, 111, 111);
+  }
+
+  .mixeddrinks {
+    font-family: "new-order", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    color:rgb(0, 0, 0);
+    display: inline-block;
+    width: auto;
+    height: auto;
+    background-color: rgb(244, 137, 137);
+  }
+
+  .roachmilk {
+    font-family: "new-order", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 40px;
+    color:rgb(0, 0, 0);
+    display: inline-block;
+    width: auto;
+    height: auto;
+    background-color: #f18888;
+  }
+
+/*.container {
 /* I'm giving this a position:relative so I can position other content within it with position:absolute */
     position: relative;
 
@@ -14,7 +97,7 @@ body {
 
 /* This makes the container 100% of the viewport height */
     height: 100vh;
-    background-color: red;
+    background-color: rgb(255, 255, 255);
 }
 
 /* Whenever you are trying to position a child element relative to its parent container, you must: */

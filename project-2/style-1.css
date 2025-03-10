@@ -1,7 +1,148 @@
 /* Version 1: Poster Shape */
+body{ background-color: rgb(122, 211, 255);}
+
+.title {
+  display: block;
+  position: relative;
+  margin: auto;
+  width: 500px;
+  font-family: "mansalva", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 45px;
+  color: rgb(255, 255, 255);
+}
+
+.eastvillagenyc {
+  background: rgb(122, 211, 255);
+  position: relative;
+  width: 475px; 
+  height: 40px;
+  display: block;
+  border-width: 5px;
+  border-color: rgb(246, 62, 25);
+  margin: auto;
+  border-style: solid;
+  padding: 10px;
+  font-family: "ltc-goudy-heavyface-pro", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+  color: rgb(246, 62, 25);
+}
+.fourtwenty {
+  display: none;
+}
+
+.club509 {
+  font-family: "ltc-goudy-heavyface-pro", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 30px;
+  color:rgb(122, 211, 255)
+}
+
+.date {
+  font-family: "ltc-goudy-heavyface-pro", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 25px;
+  color:rgb(0, 0, 0); 
+  position: relative;
+  width: 120px; 
+  height: 100px;
+  display: inline-block;
+  border-width: 5px;
+  border-color: rgb(0, 0, 0);
+  margin: auto;
+  border-style: solid;
+  padding: 5px;
+}
+
+.topboxes {
+  color:rgb(0, 0, 0); 
+  position: relative;
+  width: 120px; 
+  height: 100px;
+  display: inline-block;
+  border-width: 5px;
+  border-color: rgb(0, 0, 0);
+  margin: auto;
+  border-style: solid;
+  padding: 5px;
+}
+
+.djset {
+  font-family: "ltc-goudy-heavyface-pro", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 27px;
+  color:rgb(0, 0, 0); 
+  position: relative;
+  width: 200px; 
+  height: 120px;
+  display: inline-block;
+  border-width: 5px;
+  border-color: rgb(0, 0, 0);
+  margin: auto;
+  border-style: solid;
+  padding: 5px;
+}
+
+.midbox {
+  color:rgb(0, 0, 0); 
+  position: relative;
+  width: 120px; 
+  height: 100px;
+  display: inline-block;
+  border-width: 5px;
+  border-color: rgb(0, 0, 0);
+  margin: auto;
+  border-style: solid;
+  padding: 5px; 
+}
+
+.mixeddrinks {
+  font-family: "ltc-goudy-heavyface-pro", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 27px;
+  color:rgb(0, 0, 0); 
+  position: relative;
+  width: 140px; 
+  height: 150px;
+  display: inline-block;
+  border-width: 5px;
+  border-color: rgb(0, 0, 0);
+  margin: auto;
+  border-style: solid;
+  padding: 5px;
+}
+
+.roachmilk {
+  font-family: "ltc-goudy-heavyface-pro", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 27px;
+  color:rgb(0, 0, 0); 
+  position: relative;
+  width: 120px; 
+  height: 100px;
+  display: inline-block;
+  border-width: 5px;
+  border-color: rgb(0, 0, 0);
+  margin: auto;
+  border-style: solid;
+  padding: 5px;
+}
+
+.whitetext {
+  color: rgb(255, 255, 255);
+  display: inline;
+}
 
 .container {
-    background: whitesmoke;
+    background: rgb(246, 62, 25);
     position: relative;
     width: 500px;
     
@@ -22,10 +163,20 @@
   /* This makes it horizontally centered */
   /* It only works on "display:block" elements */
   /* If it's a position other than static or relative, you must set left and right properties to 0 */ 
-    margin: auto;
+  margin-top: 0%;  
+  margin: auto;
     
   /* This makes it centered vertically */
   /* It's 50% of the height, and subtracting half of the total height of the poster (which is 700px)*/  
     margin-top: calc(50vh - 350px);
 
   }  
+
+  .ground {
+    background: rgb(222, 167, 120);
+    position: relative;
+    width: 100%; 
+    height: 70px;
+    display: block;
+    margin: auto;
+  }

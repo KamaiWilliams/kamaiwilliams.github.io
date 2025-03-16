@@ -5,25 +5,22 @@ body {
     margin: 0;
 }
 .fourtwenty {
-    font-family: "new-order", sans-serif;
-    font-size: 100px;
-    line-height: 200px;
-    display: block;
-    width: 100%;
-    background: rgb(255, 255, 255);
-    margin: 10px 0%;
-    padding: 0px;
+    height: 50%;
+    display: inline-block;
+    margin-left: 70px;
     position: relative;
-
+}
+.at {
+    display: inline-block;
+    text-align: center;
+    position: relative;
 }
 .info {
     display: block;
-    width: 100%;
-    background: rgb(175, 157, 157);
+    width: 90%;
     margin: 10px 0%;
     padding: 0px;
 }
-
 .title {
     display: none;
 }
@@ -31,89 +28,68 @@ body {
     display: none;
 }
 .club509 {
-    font-family: "new-order", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 30px;
-    color:rgb(0, 0, 0);
     display: inline-block;
-    width: 20%;
-    background-color: rgb(254, 160, 93);
+    margin-left: 70px;
   }
   .date {
-    font-family: "new-order", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 30px;
-    color:rgb(0, 0, 0);
-    display: inline-block;
-    width: auto;
-    height: auto;
-    margin-left: 30px;
-    background-color: rgb(227, 70, 70);
-  }
-  .djset {
-    font-family: "new-order", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 30px;
-    color:rgb(0, 0, 0);
-    display: inline-block;
-    width: auto;
-    height: auto;
-    background-color: rgb(247, 111, 111);
-  }
-
-  .mixeddrinks {
-    font-family: "new-order", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 30px;
-    color:rgb(0, 0, 0);
-    display: inline-block;
-    width: auto;
-    height: auto;
-    background-color: rgb(244, 137, 137);
-  }
-
-  .roachmilk {
     font-family: "new-order", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 40px;
     color:rgb(0, 0, 0);
     display: inline-block;
-    width: auto;
-    height: auto;
-    background-color: #f18888;
+    margin-left: 20px;
+    
   }
-
-/*.container {
-/* I'm giving this a position:relative so I can position other content within it with position:absolute */
+  .djset {
+    display: inline-block;
+    margin-left: 25px;
+  }
+.black-line {
+    display: block;
+    width: 90%;
+    height: 12px;
+    background-color: black;
     position: relative;
-
-/* This makes the container 100% of the viewport width */
-    width: 100vw;
-
-/* This makes the container 100% of the viewport height */
-    height: 100vh;
-    background-color: rgb(255, 255, 255);
+    margin: auto;
 }
-
-/* Whenever you are trying to position a child element relative to its parent container, you must: */
-/* 1. Give the parent a position:relative (see line 10) */
-/* 2. Give the child a position:absolute (see line 29) */
-/* 3. The top, bottom, left, right properties will now be relative to the parent */
-
-
+  .info-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:30px;
+    margin: auto;
+    justify-content: flex-start;
+    height: 220px;
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: -120px;
+  }
 h1 {
-/* I'm giving this a position:absolute so I can position it relative to the container (see line 10) */
-/* You would give every element within the container a position:absolute */
-/* Important: Make sure in your HTML that the content is nested between the container div tags */
-    position: absolute;
- 
-/* This centers the content vertically and horiziontally within the container */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    font-family: "new-order", sans-serif;
+    font-size: 400px;
+    font-weight: 600;
+    line-height: 0px;
 }
+h2 {
+    font-family: "new-order", sans-serif;
+    font-size: 180px;
+    line-height: 170px;
+  } 
+  h3 {
+    font-family: "new-order", sans-serif;
+    font-weight:600;
+    font-style: normal;
+    font-size: 50px;
+    color:rgb(0, 0, 0);
+  }
+  h4 {
+    font-family: "new-order", sans-serif;
+    font-weight:600;
+    font-style: normal;
+    font-size: 35px;
+    line-height: 50px;
+    color:rgb(0, 0, 0);
+  }

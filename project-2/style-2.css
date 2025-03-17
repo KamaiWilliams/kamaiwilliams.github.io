@@ -3,17 +3,37 @@
 body {
 /* I'm overriding the default margin and setting it to 0 */
     margin: 0;
+    background-color: rgb(106, 181, 241);
 }
 .fourtwenty {
     height: 50%;
     display: inline-block;
     margin-left: 70px;
     position: relative;
+    font-size: 120px;
+    line-height: 160px;
+    transition: 1s;
+}
+
+.fourtwenty:hover{
+ color: rgb(174, 255, 0);
+ font-size: 130px;
+    line-height: 170px;
+    margin-left: 20px;
+
 }
 .at {
     display: inline-block;
     text-align: center;
     position: relative;
+    transition: 3s;
+    font-size: 200px;
+  
+}
+.at:hover {
+  transform: rotate(1060deg);
+  color: rgb(251, 52, 158);
+
 }
 .info {
     display: block;
@@ -29,29 +49,63 @@ body {
 }
 .club509 {
     display: inline-block;
-    margin-left: 70px;
+    margin-left: 0px;
+    font-size: 45px;
+    line-height: 55px;
+    transition: 5s;
   }
+ .club509:hover {
+font-size: 130px;
+line-height: 150px;
+color: rgb(255, 128, 0);
+}
+
   .date {
     font-family: "new-order", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 40px;
+    line-height: 50px;
     color:rgb(0, 0, 0);
     display: inline-block;
     margin-left: 20px;
+    transition: 5s;
+    
+  }
+  .date:hover  {
+    font-size: 120px;
+    line-height: 140px;
+    font-weight: 700;
+    color: rgb(19, 255, 212);
     
   }
   .djset {
     display: inline-block;
     margin-left: 25px;
+    font-style: normal;
+    font-size: 35px;
+    line-height: 50px;
+    transition: 5s;
+  }
+  .djset:hover {
+    font-size: 80px;
+    line-height: 90px;
+    font-weight: 300;
+    color: rgb(208, 255, 0);
   }
 .black-line {
+  
     display: block;
     width: 90%;
     height: 12px;
     background-color: black;
     position: relative;
     margin: auto;
+    transition: 1s;
+}
+.black-line:hover{
+  height: 62px;
+  background-color: rgb(251, 0, 255);
 }
   .info-box {
     display: flex;
@@ -61,35 +115,38 @@ body {
     margin: auto;
     justify-content: flex-start;
     height: 220px;
+    transition-duration: 4s;
+    width: 90%;
   }
+  .info-box:hover  {
+    height: 700px;
+      
+  }
+
   .container {
     display: flex;
     flex-direction: row;
     margin-bottom: -120px;
+    transition-duration: 2s;
+  }
+  .container:hover {
+    
   }
 h1 {
     font-family: "new-order", sans-serif;
-    font-size: 400px;
-    font-weight: 600;
     line-height: 0px;
+    font-weight: 600;
 }
 h2 {
     font-family: "new-order", sans-serif;
-    font-size: 180px;
-    line-height: 170px;
   } 
   h3 {
     font-family: "new-order", sans-serif;
     font-weight:600;
     font-style: normal;
-    font-size: 50px;
-    color:rgb(0, 0, 0);
+
   }
   h4 {
     font-family: "new-order", sans-serif;
     font-weight:600;
-    font-style: normal;
-    font-size: 35px;
-    line-height: 50px;
-    color:rgb(0, 0, 0);
   }

@@ -1,0 +1,112 @@
+body{ background-color: rgb(255, 239, 202);
+margin-top: 60px;
+}
+p{
+    font-family: "firelli-variable", sans-serif;
+}
+a{
+    text-decoration: solid;
+}
+.yellow-bar{
+    background-color: rgb(255, 187, 14);
+    display: block;
+    height: 50px;
+    position: relative;  
+    margin: 10px 0; 
+}
+.kw{
+   display: inline-block;
+   display: flex;
+   flex-direction: column;
+   margin-left: 50px;
+   position: relative;
+   /* background-color: aqua;*/
+   width: fit-content;
+   height: fit-content;
+}
+.kamai{
+    font-size: 80px;
+    height: fit-content;
+    margin: 0%;
+} 
+.williams{
+    font-size: 57px; 
+    height: fit-content;
+   /* background-color: azure;*/
+    margin: 0%;
+}
+
+.chp{
+    display: inline-block;
+   display: flex;
+   flex-direction: column;
+   margin-left: 50px;
+   position: relative;
+   /*background-color: aqua;*/
+   width: fit-content;
+   height: fit-content;
+}
+.class{
+    font-size: 150px;
+    height: fit-content;
+    margin: 0%;
+}
+.homepage{
+    font-size: 70px; 
+    height: fit-content;
+    /*background-color: azure;*/
+    margin: 0%;
+}
+
+.p1{
+    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    position: relative;
+    width: fit-content;
+    height: fit-content;  
+}
+.web-book{
+    font-size: 40px; 
+    font-weight: 300;
+    height: fit-content;
+    margin: 0%;
+}
+.double-choc{
+    font-family: "firelli-variable", sans-serif;
+    font-size: 20px; 
+    font-weight: 700;
+    color: black;
+    height: fit-content;
+    margin: 0%;
+}
+.double-choc:hover{
+    color: rgb(2, 163, 67);
+}
+.p2{
+    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    position: relative;
+    width: fit-content;
+    height: fit-content;  
+}
+.web-poster{
+    font-size: 40px; 
+    font-weight: 300;
+    height: fit-content;
+    margin: 0%;
+}
+.four-twenty{
+    font-family: "firelli-variable", sans-serif;
+    font-size: 20px; 
+    font-weight: 700;
+    color: black;
+    height: fit-content;
+    margin: 0%;
+}
+.four-twenty:hover{
+    color: rgb(2, 163, 67);
+}

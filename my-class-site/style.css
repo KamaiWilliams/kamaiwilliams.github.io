@@ -24,6 +24,11 @@ a{
    width: fit-content;
    height: fit-content;
 }
+.top-line{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
 .kamai{
     font-size: 80px;
     height: fit-content;

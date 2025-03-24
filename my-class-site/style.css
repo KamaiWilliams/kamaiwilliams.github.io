@@ -28,6 +28,8 @@ a{
     position: relative;
     display: flex;
     flex-direction: row;
+    width: fit-content;
+   height: fit-content;
 }
 .kamai{
     font-size: 80px;

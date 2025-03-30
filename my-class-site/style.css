@@ -187,3 +187,28 @@ body{
     flex-direction: column;
     /*border: 8px solid black;*/
 }
+.fifth-line{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    /*border: 8px solid black;*/
+}
+.web-tool{
+    font-size: 30px; 
+    font-weight: 300;
+    height: fit-content;
+    margin: 0%;
+}
+.pigeon-vs-bagel{
+    font-family: "firelli-variable", sans-serif;
+    font-size: 18px; 
+    font-weight: 700;
+    color: black;
+    height: fit-content;
+    margin: 0%;
+}
+.pigeon-vs-bagel:hover{
+    color: rgb(2, 163, 67);
+}

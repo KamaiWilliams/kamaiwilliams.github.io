@@ -1,0 +1,62 @@
+p {
+    font-family: "mansalva", sans-serif;
+font-weight: 400;
+font-style: normal;
+font-size: 20px;
+}
+/* body{
+    background-image: url("TOOLSITEbg.jpg");
+    height: 500px; 
+    background-position: center;  
+    background-repeat: no-repeat; 
+    background-size: cover; 
+}*/
+
+.title-directions {
+    display: flex;
+    height: 50%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.bottom-homepage {
+    display: flex;
+    height: 50%;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+}
+
+img {
+    position: absolute;
+    width: 80px; /* Adjust size */
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+font-family: "mansalva", sans-serif;
+font-weight: 400;
+font-style: normal;
+font-size: 20px;
+    width: 80px;
+    height: 60px;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid black;
+    text-align: center;
+}
+
+#gameArea {
+    margin-top: 20px;
+    position: relative;
+    height: 500px; /* Adjust as needed */
+    border: 2px solid black;
+    overflow: hidden
+}

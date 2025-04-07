@@ -16,19 +16,28 @@
 
     <!--<h1>PROJECT 3: TOOL</h1>-->
 <div class="title-directions"> 
-    <p>Pigeon vs Bagel</p>
+    <p class="title">Pigeon vs Bagel</p>
     <p>Click a button to generate either a pigeon or a bagel.</p>
     <p>That’s it. That’s the game.</p>
     <p>Click  launch  to begin.</p>
 </div>
 
 <div class="bottom-homepage">
-    <button id="launchPigeon">Launch Pigeon</button>
-    <button id="launchBagel">Launch Bagel</button>
-    <button id="startOver">Start Over</button>
+    <div class="launch-buttons">
+        <button class="launch-button" id="launchPigeon">
+          <img src="images/pigeon1.png" alt="Pigeon" /> <br><br><br><br>
+          <div class="launch-label">Launch</div>
+        </button>
+        <button class="launch-button" id="launchBagel">
+          <img src="images/bagel1.png" alt="Bagel" /> <br><br><br><br>
+          <div class="launch-label">Launch</div>
+        </button>
+      </div>
+   <!-- <button id="launchPigeon">Launch Pigeon</button>
+    <button id="launchBagel">Launch Bagel</button>-->
+    <button id="startOver" style="display: none;">Start Over</button>
     
 </div>
-
 
     
     <div id="gameArea"></div>

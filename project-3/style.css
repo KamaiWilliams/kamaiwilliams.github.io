@@ -1,3 +1,10 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
 p {
     font-family: "mansalva", sans-serif;
 font-weight: 400;
@@ -36,7 +43,7 @@ font-size: 20px;
 
 img {
     position: absolute;
-    width: 80px; /* Adjust size */
+    width: 80px; 
 }
 button {
     padding: 10px 20px;
@@ -49,41 +56,44 @@ font-style: normal;
 font-size: 20px;
     width: 80px;
     height: 60px;
-    background-color: lightblue;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    border: 2px solid black;
     text-align: center;
 }
 
 #gameArea {
-    position: fixed;
-    bottom: 10%;
-    left: 50%;
-    width: 300px;
-    height: 200px;
-    background-image: url("images/TOOLSITEbg.jpg");
-    background-position: center;  
-    background-repeat: no-repeat; 
-    background-size: cover; 
-    /*border: 2px solid black;*/
-    overflow: hidden;
-    transform: translateX(-50%) scale(0.005);
-    transition: transform 1s ease-in-out, width 1s ease-in-out, height 1s ease-in-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 200px;
+  background-image: url("images/TOOLSITEbg.jpg");
+  background-position: center;  
+  background-repeat: no-repeat; 
+  background-size: cover; 
+  overflow: hidden;
+  transform: scale(0.005);
+  transform-origin: center center;
+  transition: all 0.8s ease-in-out;
+  opacity: 0;
+  z-index: 1;
 }
+
 
 /* When expanded */
 #gameArea.expanded {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     top: 0;
     left: 0;
     transform: scale(1);
     z-index: 100;
     background-color: white;
-}
+    opacity: 1;
+  }
+  
 .launch-buttons {
     display: flex;
     gap: 50px;

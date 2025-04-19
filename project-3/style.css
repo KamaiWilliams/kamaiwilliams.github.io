@@ -9,7 +9,8 @@ p {
     font-family: "mansalva", sans-serif;
 font-weight: 400;
 font-style: normal;
-font-size: 20px;
+font-size: 25px;
+line-height: 5px;
 }
 /* body{
     background-image: url("TOOLSITEbg.jpg");
@@ -19,7 +20,7 @@ font-size: 20px;
     background-size: cover; 
 }*/
 .title {
-    font-size: 60px; 
+    font-size: 80px; 
     line-height: 20px; 
     
 }
@@ -31,6 +32,7 @@ font-size: 20px;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    /*border: 3px solid black;*/
 }
 .bottom-homepage {
     display: flex;
@@ -39,6 +41,7 @@ font-size: 20px;
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
+    /*border: 3px solid black;*/
 }
 
 img {
@@ -69,7 +72,6 @@ font-size: 20px;
   left: 0;
   width: 300px;
   height: 200px;
-  background-image: url("images/TOOLSITEbg.jpg");
   background-position: center;  
   background-repeat: no-repeat; 
   background-size: cover; 
@@ -116,17 +118,28 @@ font-size: 20px;
     font-family: "mansalva", sans-serif;
     font-size: 20px;
     color: black;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.4s ease-in-out;
+    width: auto; /* same width as image */
+    height: auto;
   }
   
   .launch-button img {
-    width: 150px; /* adjust size as needed */
+    width: 150px;
     height: auto;
     display: block;
-    margin-bottom: 50px; /* adds space between image and text */
-   /*border: 3px solid black;*/
+    margin-bottom: 10px; /* was 50px */
+    transition: 1s;
   }
   
   .launch-label {
-    margin-top: 4px;
-  }
+    margin-top: 30px;
+    font-size: 40px;
+    opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.launch-button:hover .launch-label {
+  opacity: 1;
+  transform: translateY(0);
+}

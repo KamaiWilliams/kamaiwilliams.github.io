@@ -45,19 +45,19 @@ function updateSkyColor() {
     color = '#A7EBFE';
   } else if (hour >= 12 && hour < 14) {
     // Day
-    color = '##9CDEF9  ';
+    color = '#9CDEF9';
   } else if (hour >= 14 && hour < 17) {
     // Day
-    color = '##93CEFA  '; // light blue
+    color = '#93CEFA'; // light blue
   } else if (hour >= 17 && hour < 19) {
     // Sunset
-    color = '#87C8FF'; // darkr blue
+    color = '#6D9AE8'; // darkr blue
   } else if (hour >= 19 && hour < 21) {
     // Dusk
-    color = '#2B3A67'; // deep blue-violet
+    color = '#3B408F'; // deep blue-violet
   } else {
     // Night
-    color = '#0D1B2A'; // very dark blue
+    color = '#13194D'; // very dark blue
   }
 
   sky.style.backgroundColor = color;

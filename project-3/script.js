@@ -44,7 +44,7 @@ document.getElementById("launchPigeon").addEventListener("click", function () {
     launchItem(pigeons, "pigeon");
   } else {
     // Optional: feedback
-    console.log("Too many pigeons, not enough bagels! 🥯");
+    console.log("Too many pigeons, not enough bagels! ");
   }
 });
   

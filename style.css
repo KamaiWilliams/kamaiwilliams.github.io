@@ -212,3 +212,29 @@ body{
 .pigeon-vs-bagel:hover{
     color: rgb(2, 163, 67);
 }
+
+.sixth-line{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    /*border: 8px solid black;*/
+}
+.clock-site{
+    font-size: 30px; 
+    font-weight: 300;
+    height: fit-content;
+    margin: 0%;
+}
+.time-bug{
+    font-family: "firelli-variable", sans-serif;
+    font-size: 18px; 
+    font-weight: 700;
+    color: black;
+    height: fit-content;
+    margin: 0%;
+}
+.time-bug:hover{
+    color: rgb(2, 163, 67);
+}

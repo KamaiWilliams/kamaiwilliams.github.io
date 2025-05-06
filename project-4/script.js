@@ -21,7 +21,7 @@ function updateDateTime() {
     document.getElementById('date').textContent = currentDate;
   }
   
-  // Upd immediately
+  // time
   updateDateTime();
   
   // Upd every second

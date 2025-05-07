@@ -65,30 +65,64 @@ body, html {
   overflow-y: auto;   /* allows vertical scroll */
 }
   
-  .caterpillar-container {
+.caterpillar-container {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  top: 0;
+  left: 0;
+}
+
+.caterpillar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+}
+  .head {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .eyes {
+    width: 10px;
+    height: 10px;
+    background: black;
+    border-radius: 50%;
     position: absolute;
-    bottom: 130px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    pointer-events: none;
-    z-index: 10; /* <-- ADD THIS */
+    top: 12px;
+    left: 10px;
+    box-shadow: 20px 0 black;
+  }
+  
+  .mouth {
+    width: 20px;
+    height: 5px;
+    background: black;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
   }
 
-  .caterpillar {
-    display: flex;
-    gap: -8px;
+  .segment::before {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 8px;
+    width: 34px;
+    height: 8px;
+    background: black;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px black;
   }
-
   .segment {
     width: 50px;
     height: 50px;
     background-color: #6518ff;
-    border-style: solid;
-    border-color: #00d1b5;
-    border-width: 3px;
+    border: 3px solid #00d1b5;
     border-radius: 50%;
     animation: float 2s ease-in-out infinite;
+    margin-left: -10px;
   }
 
   @keyframes float {
@@ -97,8 +131,8 @@ body, html {
     100% { transform: translateY(0); }
   }
 
-  .segment:nth-child(even) {
-    animation-delay: 1s;
+  .segment:first-child {
+    margin-left: 0; /* no overlap for the head */
   }
 
   section.hero {

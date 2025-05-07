@@ -76,3 +76,45 @@ updateSkyColor();
 // Optional: update every 5 minutes
 setInterval(updateSkyColor, 5 * 60 * 1000);
 
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+// Track mouse position
+document.addEventListener("mousemove", function(e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+const segments = Array.from(document.getElementsByClassName("segment"));
+let positions = new Array(segments.length).fill([mouseX, mouseY]);
+
+function animateCaterpillar() {
+  positions.unshift([mouseX, mouseY]); // insert new position at start
+  positions = positions.slice(0, segments.length); // limit length
+
+  segments.forEach((seg, i) => {
+    const [x, y] = positions[i];
+    seg.style.position = "absolute";
+    seg.style.left = x - 25 + "px"; // center
+    seg.style.top = y - 25 + "px";
+  });
+
+  requestAnimationFrame(animateCaterpillar);
+}
+
+animateCaterpillar();
+
+document.getElementById("colorPicker").addEventListener("input", (e) => {
+  const newColor = e.target.value;
+  segments.forEach(seg => seg.style.backgroundColor = newColor);
+});
+
+for (let i = 0; i < hour; i++) {
+  const segment = document.createElement("div");
+  segment.classList.add("segment");
+  if (i === 0) {
+    segment.classList.add("head");
+    segment.innerHTML = "<div class='eyes'></div><div class='mouth'></div>";
+  }
+  caterpillar.appendChild(segment);
+}

@@ -4,7 +4,7 @@ function updateDateTime() {
     const timeOptions = {
       hour: 'numeric',
       minute: 'numeric',
-      second: 'numeric',
+      /*second: 'numeric',*/
       hour12: true
     };
     
@@ -73,30 +73,63 @@ function updateSkyColor() {
 }
 
 updateSkyColor();
-// Optional: update every 5 minutes
+// update ev 5min
 setInterval(updateSkyColor, 5 * 60 * 1000);
 
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
 
-// Track mouse position
+// follow mouse
 document.addEventListener("mousemove", function(e) {
   mouseX = e.clientX;
   mouseY = e.clientY;
 });
 
+
+let centerX = window.innerWidth / 2;
+let centerY = window.innerHeight / 2
+
+const restX = window.innerWidth / 2;
+const restY = window.innerHeight / 2 + 170; 
+let isMouseDown = false;
+
+let mouseX = centerX;
+let mouseY = centerY;
+
+document.addEventListener("mousedown", () => {
+  isMouseDown = true;
+});
+
+document.addEventListener("mouseup", () => {
+  isMouseDown = false;
+});
+
 const segments = Array.from(document.getElementsByClassName("segment"));
-let positions = new Array(segments.length).fill([mouseX, mouseY]);
+let positions = new Array(segments.length).fill([centerX, centerY]);
+
+document.addEventListener("mousemove", function(e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
 
 function animateCaterpillar() {
-  positions.unshift([mouseX, mouseY]); // insert new position at start
-  positions = positions.slice(0, segments.length); // limit length
+  const isAtBottom = mouseY > window.innerHeight - 100;
+
+  
+  const targetX = isAtBottom ? centerX : mouseX;
+  const targetY = isAtBottom ? centerY : mouseY;
+
+  if (isMouseDown) {
+    positions.unshift([mouseX, mouseY]);
+  } else {
+    positions.unshift([restX, restY]);
+  }
+  
+  positions = positions.slice(0, segments.length);
 
   segments.forEach((seg, i) => {
     const [x, y] = positions[i];
     seg.style.position = "absolute";
-    seg.style.left = x - 25 + "px"; // center
-    seg.style.top = y - 25 + "px";
+    seg.style.left = `${x - i * 40}px`; // spread the circles out
+    seg.style.top = `${y}px`;
   });
 
   requestAnimationFrame(animateCaterpillar);

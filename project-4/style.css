@@ -83,26 +83,6 @@ body, html {
     z-index: 2;
   }
   
-  .eyes {
-    width: 10px;
-    height: 10px;
-    background: black;
-    border-radius: 50%;
-    position: absolute;
-    top: 12px;
-    left: 10px;
-    box-shadow: 20px 0 black;
-  }
-  
-  .mouth {
-    width: 20px;
-    height: 5px;
-    background: black;
-    border-radius: 10px;
-    position: absolute;
-    bottom: 10px;
-    left: 15px;
-  }
 
   .segment::before {
     content: "";

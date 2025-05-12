@@ -83,10 +83,7 @@ let isMouseDown = false;
 let mouseX = centerX;
 let mouseY = centerY;
 
-document.addEventListener("mousedown", (event) => {
-  // Prevent caterpillar from reacting when clicking on form elements
-  if (event.target.closest('label') || event.target.tagName === 'INPUT') return;
-  
+document.addEventListener("mousedown", () => {
   isMouseDown = true;
 });
 

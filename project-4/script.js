@@ -1,42 +1,30 @@
 function updateDateTime() {
-    const now = new Date();
-    
-    const timeOptions = {
-      hour: 'numeric',
-      minute: 'numeric',
-      /*second: 'numeric',*/
-      hour12: true
-    };
-    
-    const dateOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    };
-    
-    const currentTime = now.toLocaleTimeString([], timeOptions);
-    const currentDate = now.toLocaleDateString([], dateOptions);
-  
-    document.getElementById('time').textContent = currentTime;
-    document.getElementById('date').textContent = currentDate;
-  }
-  
-  // time
-  updateDateTime();
-  
-  // Upd every second
-  setInterval(updateDateTime, 1000);
+  const now = new Date();
 
-  const caterpillar = document.getElementById("caterpillar");
-  const hour = new Date().getHours() % 12 || 12;
+  const timeOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  };
 
-  caterpillar.innerHTML = ""; 
-  for (let i = 0; i < hour; i++) {
-    const segment = document.createElement("div");
-    segment.classList.add("segment");
-    caterpillar.appendChild(segment);
-  }
-  
+  const dateOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+
+  const currentTime = now.toLocaleTimeString([], timeOptions);
+  const currentDate = now.toLocaleDateString([], dateOptions);
+
+  document.getElementById('time').textContent = currentTime;
+  document.getElementById('date').textContent = currentDate;
+}
+
+// Time update
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
+// Sky color update
 function updateSkyColor() {
   const sky = document.querySelector('.sky');
   const hour = new Date().getHours();
@@ -44,103 +32,34 @@ function updateSkyColor() {
   let color;
 
   if (hour >= 5 && hour < 8) {
-    // morning
-    color = '#FFD9A0';
+    color = '#FFD9A0'; // morning
   } else if (hour >= 8 && hour < 11) {
-    // Day
-    color = '#BDF6FF';
-  } else if (hour >= 10 && hour < 12) {
-    // Day
-    color = '#A7EBFE';
+    color = '#BDF6FF'; // day
+  } else if (hour >= 11 && hour < 12) {
+    color = '#A7EBFE'; // late morning
   } else if (hour >= 12 && hour < 14) {
-    // afternoon
-    color = '#9CDEF9';
+    color = '#9CDEF9'; // afternoon
   } else if (hour >= 14 && hour < 17) {
-    // evening
-    color = '#93CEFA'; 
+    color = '#93CEFA'; // early evening
   } else if (hour >= 17 && hour < 19) {
-    // Sunset
-    color = '#6D9AE8'; 
+    color = '#6D9AE8'; // sunset
   } else if (hour >= 19 && hour < 21) {
-    // almost night
-    color = '#3B408F'; 
+    color = '#3B408F'; // dusk
   } else {
-    // Night
-    color = '#13194D'; 
+    color = '#13194D'; // night
   }
 
   sky.style.backgroundColor = color;
 }
 
 updateSkyColor();
-// update ev 5min
-setInterval(updateSkyColor, 5 * 60 * 1000);
+setInterval(updateSkyColor, 5 * 60 * 1000); // every 5 min
 
+// Caterpillar setup
+const caterpillar = document.getElementById("caterpillar");
+const hour = new Date().getHours() % 12 || 12;
 
-// follow mouse
-document.addEventListener("mousemove", function(e) {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-
-let centerX = window.innerWidth / 2;
-let centerY = window.innerHeight / 2
-
-const restX = window.innerWidth / 2;
-const restY = window.innerHeight / 2 + 170; 
-let isMouseDown = false;
-
-let mouseX = centerX;
-let mouseY = centerY;
-
-document.addEventListener("mousedown", () => {
-  isMouseDown = true;
-});
-
-document.addEventListener("mouseup", () => {
-  isMouseDown = false;
-});
-
-const segments = Array.from(document.getElementsByClassName("segment"));
-let positions = new Array(segments.length).fill([centerX, centerY]);
-
-document.addEventListener("mousemove", function(e) {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-function animateCaterpillar() {
-  const isAtBottom = mouseY > window.innerHeight - 100;
-
-  
-  const targetX = isAtBottom ? centerX : mouseX;
-  const targetY = isAtBottom ? centerY : mouseY;
-
-  if (isMouseDown) {
-    positions.unshift([mouseX, mouseY]);
-  } else {
-    positions.unshift([restX, restY]);
-  }
-  
-  positions = positions.slice(0, segments.length);
-
-  segments.forEach((seg, i) => {
-    const [x, y] = positions[i];
-    seg.style.position = "absolute";
-    seg.style.left = `${x - i * 40}px`; // spread the circles out
-    seg.style.top = `${y}px`;
-  });
-
-  requestAnimationFrame(animateCaterpillar);
-}
-
-animateCaterpillar();
-
-document.getElementById("colorPicker").addEventListener("input", (e) => {
-  const newColor = e.target.value;
-  segments.forEach(seg => seg.style.backgroundColor = newColor);
-});
+caterpillar.innerHTML = ""; // clear first
 
 for (let i = 0; i < hour; i++) {
   const segment = document.createElement("div");
@@ -151,3 +70,70 @@ for (let i = 0; i < hour; i++) {
   }
   caterpillar.appendChild(segment);
 }
+
+const segments = Array.from(document.getElementsByClassName("segment"));
+
+// Mouse tracking & movement
+let centerX = window.innerWidth / 2;
+let centerY = window.innerHeight / 2;
+const restX = centerX;
+const restY = centerY + 170;
+
+let isMouseDown = false;
+let mouseX = centerX;
+let mouseY = centerY;
+
+document.addEventListener("mousedown", (event) => {
+  // Prevent caterpillar from reacting when clicking on form elements
+  if (event.target.closest('label') || event.target.tagName === 'INPUT') return;
+  
+  isMouseDown = true;
+});
+
+document.addEventListener("mouseup", () => {
+  isMouseDown = false;
+});
+
+document.addEventListener("mousemove", function(e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+let positions = new Array(segments.length).fill([centerX, centerY]);
+
+function animateCaterpillar() {
+  const isAtBottom = mouseY > window.innerHeight - 100;
+  const targetX = isAtBottom ? centerX : mouseX;
+  const targetY = isAtBottom ? centerY : mouseY;
+
+  if (isMouseDown) {
+    positions.unshift([targetX, targetY]);
+  } else {
+    positions.unshift([restX, restY]);
+  }
+
+  positions = positions.slice(0, segments.length);
+
+  segments.forEach((seg, i) => {
+    const [x, y] = positions[i];
+    seg.style.position = "absolute";
+    seg.style.left = `${x - i * 40}px`; // spread spacing
+    seg.style.top = `${y}px`;
+  });
+
+  requestAnimationFrame(animateCaterpillar);
+}
+
+animateCaterpillar();
+
+// Caterpillar & leg color pickers
+const caterpillarInput = document.getElementById('caterpillarColor');
+const legInput = document.getElementById('legColor');
+
+caterpillarInput.addEventListener('input', () => {
+  document.documentElement.style.setProperty('--caterpillar-color', caterpillarInput.value);
+});
+
+legInput.addEventListener('input', () => {
+  document.documentElement.style.setProperty('--leg-color', legInput.value);
+});

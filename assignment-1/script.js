@@ -51,55 +51,79 @@ function drawGrid(n, currentIndex) {
     rows = ceil(n / cols);
   }
 
-  let margin = 21;   // outer border
-  let spacing = 21;  // space between boxes
+   let isPhone = windowWidth < 700;
 
-  let cellW = (width - margin * 2) / cols;
-  let cellH = (height - margin * 2) / rows;
+  if (isPhone) {
+    // ---- PHONE VERSION ----
+    // If phone, swap row/col orientation
+if (isPhone) {
+  let temp = cols;
+  cols = rows;
+  rows = temp;
+}
+    let spacing = 20; // gap between circles
+    // pick diameter so grid fits inside canvas with margins
+    let maxCircleW = (width - (cols + 1) * spacing) / cols;
+    let maxCircleH = (height - (rows + 1) * spacing) / rows;
+    let diameter = min(maxCircleW, maxCircleH);
 
-  let count = 0;
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (count >= n) break;
+    // total grid dimensions
+    let gridW = cols * diameter + (cols - 1) * spacing;
+    let gridH = rows * diameter + (rows - 1) * spacing;
 
-      let x = margin + c * cellW;
-      let y = margin + r * cellH;
+    // top-left corner (to center the grid)
+    let startX = (width - gridW) / 2;
+    let startY = (height - gridH) / 2;
 
-      // Fill for current active time unit
-      if (count === currentIndex) {
-        fill("#04A777"); // active box color
-      } else {
-        fill("#FB6107"); // inactive box color 
-      }
+    let count = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (count >= n) break;
 
-      stroke("#FBB02D");  // outline color
-      strokeWeight(7.5); //border thickness
+        let x = startX + c * (diameter + spacing);
+        let y = startY + r * (diameter + spacing);
 
-        // circles
-    
-        let isPhone = windowWidth < 700 || windowHeight > windowWidth * 1.3; 
-        // treat narrow/tall screens as phones
-        
-        if (isPhone) {
-          // --- Phone version ---
-          let diameter = min(cellW, cellH) - spacing;
-          strokeWeight(diameter * 0.08);  
-          ellipse(
-            x + cellW / 2,
-            y + cellH / 2,
-            diameter,
-            diameter
-          );
+        if (count === currentIndex) {
+          fill("#04A777");
         } else {
+          fill("#FB6107");
+        }
+        stroke("#FBB02D");
+        strokeWeight(diameter * 0.08); // proportional border
 
-        ellipse(
-      x + cellW / 2,         // center X
-      y + cellH / 2,         // center Y
-      cellW - spacing,       // width of circle
-      cellH - spacing        // height of circle (same as width = perfect circle)
-    );
-  }
-      count++;
+        ellipse(x + diameter / 2, y + diameter / 2, diameter, diameter);
+
+        count++;
+      }
+    }
+  } else {
+    // ---- DESKTOP VERSION (your original) ----
+    let margin = 21;
+    let spacing = 21;
+
+    let cellW = (width - margin * 2) / cols;
+    let cellH = (height - margin * 2) / rows;
+
+    let count = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (count >= n) break;
+
+        let x = margin + c * cellW;
+        let y = margin + r * cellH;
+
+        if (count === currentIndex) {
+          fill("#04A777");
+        } else {
+          fill("#FB6107");
+        }
+        stroke("#FBB02D");
+        strokeWeight(7.5);
+
+        ellipse(x + cellW / 2, y + cellH / 2, cellW - spacing, cellH - spacing);
+
+        count++;
+      }
     }
   }
 }

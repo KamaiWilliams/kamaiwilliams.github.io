@@ -76,13 +76,29 @@ function drawGrid(n, currentIndex) {
       strokeWeight(7.5); //border thickness
 
         // circles
-    ellipse(
+    
+        let isPhone = windowWidth < 700 || windowHeight > windowWidth * 1.3; 
+        // treat narrow/tall screens as phones
+        
+        if (isPhone) {
+          // --- Phone version ---
+          let diameter = min(cellW, cellH) - spacing;
+          strokeWeight(diameter * 0.08);  
+          ellipse(
+            x + cellW / 2,
+            y + cellH / 2,
+            diameter,
+            diameter
+          );
+        } else {
+
+        ellipse(
       x + cellW / 2,         // center X
       y + cellH / 2,         // center Y
       cellW - spacing,       // width of circle
       cellH - spacing        // height of circle (same as width = perfect circle)
     );
-
+  }
       count++;
     }
   }

@@ -1,0 +1,94 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #1789FC;
+    color: #eee;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    position: relative;
+  }
+  
+  /* Custom Title */
+  .title {
+    position: absolute;
+    top: 80px;
+    left: -2.0px;
+    text-align: left;
+    font-family: "ouma-devanagari", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 400px; /* adjust size if needed */
+    line-height: 90px;
+    letter-spacing: -74px;
+    -webkit-text-stroke: 4px #F6E27F; /* outline */
+    color: transparent; /* no fill */
+    z-index: 0; /* push behind */
+  }
+  
+  .title .line1,
+  .title .line2 {
+    display: block;
+  }
+  
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(5, 100px); /* 5 categories */
+    gap: 20px;
+    justify-content: center;
+    margin: 160px 0 20px; /* push grid down to clear title */
+    position: relative;
+    z-index: 1; /* bring pads in front */
+  }
+  
+  .pad {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s, background 0.2s;
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+  }
+  
+  .pad:hover {
+    background: #555;
+  }
+  
+  .pad:active {
+    transform: scale(0.9);
+    background: #ff4757;
+  }
+  
+  .pad.flash {
+    background: #ff4757 !important;
+    transform: scale(1.1);
+  }
+  
+  #controls {
+    margin-top: 20px;
+    position: relative;
+    z-index: 1; /* controls also in front */
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background: #ff4757;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  button:hover {
+    background: #ff6b81;
+  }
+  

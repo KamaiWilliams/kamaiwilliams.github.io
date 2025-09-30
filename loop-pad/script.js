@@ -13,10 +13,9 @@ categories.forEach(cat => {
   for (let i = 1; i <= numVariations; i++) {
     const pad = document.createElement("div");
     pad.classList.add("pad");
-    pad.innerText = i; // label inside circle
     pad.dataset.sound = `${cat}${i}`;
     pad.dataset.folder = cat;
-    pad.id = `${cat}${i}`; // unique id for flashing
+    pad.id = `${cat}${i}`;
 
     pad.addEventListener("click", () => {
       playSound(cat, i, pad.id);
@@ -35,7 +34,7 @@ function playSound(folder, index, padId) {
   audio.currentTime = 0;
   audio.play();
 
-  // flash pad when triggered
+  // flash pad
   if (padId) {
     const pad = document.getElementById(padId);
     pad.classList.add("flash");
@@ -53,6 +52,7 @@ document.getElementById("recordBtn").addEventListener("click", () => {
 
     // Start loop playback
     loopInterval = setInterval(playLoop, loopLength);
+    playLoop(); // run immediately
   } else {
     isRecording = false;
     document.getElementById("recordBtn").innerText = "Start Recording";
@@ -65,10 +65,32 @@ document.getElementById("restartBtn").addEventListener("click", () => {
   recordedEvents = [];
   isRecording = false;
   document.getElementById("recordBtn").innerText = "Start Recording";
+
+  // reset circle
+  loopCircle.style.transition = "none";
+  loopCircle.style.strokeDashoffset = circleLength;
 });
 
-// Playback loop
+// ---------------------------
+// Loop Visualizer
+// ---------------------------
+const loopCircle = document.getElementById("loop-circle");
+const circleLength = 2 * Math.PI * 50; // circumference
+
+loopCircle.style.strokeDasharray = circleLength;
+loopCircle.style.strokeDashoffset = circleLength;
+
+function animateLoopVisualizer() {
+  loopCircle.style.transition = "none";
+  loopCircle.style.strokeDashoffset = circleLength;
+  void loopCircle.offsetWidth; // reset trick
+
+  loopCircle.style.transition = `stroke-dashoffset ${loopLength}ms linear`;
+  loopCircle.style.strokeDashoffset = "0";
+}
+
 function playLoop() {
+  animateLoopVisualizer();
   recordedEvents.forEach(event => {
     setTimeout(() => {
       playSound(event.cat, event.i, `${event.cat}${event.i}`);

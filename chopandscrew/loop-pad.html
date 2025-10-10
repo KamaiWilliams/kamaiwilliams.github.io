@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>chop& screw</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://use.typekit.net/afn8srh.css">
+</head>
+<body>
+  <!-- Custom Title -->
+  <div class="title">
+    <span class="line1">chop&</span><br>
+    <span class="line2">screw</span>
+  </div>
+
+  <!-- Controls -->
+  <div id="controls">
+    <button id="recordBtn">Start Recording</button>
+    <button id="restartBtn">Restart</button>
+  </div>
+
+<!-- Loop Visualizer -->
+<svg id="loop-visualizer" width="120" height="120">
+  <circle id="loop-circle" cx="60" cy="60" r="50" stroke="#1789FC" stroke-width="4" fill="none" />
+</svg>
+
+  <!-- Loop Pad -->
+  <div id="loop-pad">
+    <div class="category" id="bass-grid"><h2>Bass</h2></div>
+    <div class="category" id="clap-grid"><h2>Clap</h2></div>
+    <div class="category" id="snare-grid"><h2>Snare</h2></div>
+    <div class="category" id="hihat-grid"><h2>Hi-Hat</h2></div>
+    <div class="category" id="openhat-grid"><h2>Open Hat</h2></div>
+    <div class="category" id="snap-grid"><h2>Snap</h2></div>
+    <div class="category" id="fx-grid"><h2>FX</h2></div>
+    <div class="category" id="vox-grid"><h2>Vox</h2></div>
+  </div>
+
+  <!-- Loop Visualizer (Hidden until playing/recording) -->
+  <div id="loop-visualizer" class="hidden">
+    <div id="loop-progress"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+
+<!--font-family: "baudot-pop-fill", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+font-family: "baudot-pop-open", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+font-family: "baudot", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+font-family: "baudot", sans-serif;
+font-weight: 700;
+font-style: normal;
+
+
+BC LUDVA
+font-family: "bc-ludva", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+font-family: "bc-ludva-slant", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+Ouma Devanagari Regular
+font-family: "ouma-devanagari", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+font-family: "podium-soft-variable", sans-serif;
+font-variation-settings: "wdth" 100;-->
+<!---->

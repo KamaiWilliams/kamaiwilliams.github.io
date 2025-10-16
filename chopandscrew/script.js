@@ -44,6 +44,35 @@ Object.keys(soundCategories).forEach(category => {
   }
 });
 
+// Tab switching
+const tabButtons = document.querySelectorAll(".tab-btn");
+const categories = document.querySelectorAll(".category");
+
+tabButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // remove active state
+    tabButtons.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const category = btn.getAttribute("data-category");
+
+    if (category === "all") {
+      // show all categories
+      categories.forEach((cat) => (cat.style.display = "block"));
+    } else {
+      // show only selected category
+      categories.forEach((cat) => {
+        if (cat.id === `${category}-grid`) {
+          cat.style.display = "block";
+        } else {
+          cat.style.display = "none";
+        }
+      });
+    }
+  });
+});
+
+
 // ---------------------------
 // Play Sound
 // ---------------------------
@@ -117,4 +146,58 @@ function playLoop() {
       playSound(event.category, event.i, `${event.category}${event.i}`);
     }, event.time);
   });
+}
+// ---------------------------
+// Volume
+// ---------------------------
+const volumeControl = document.getElementById("volume");
+let currentVolume = 1;
+
+volumeControl.addEventListener("input", e => {
+  currentVolume = parseFloat(e.target.value);
+});
+
+function playSound(folder, index, padId, preview = false) {
+  const audio = new Audio(`jerkbeat/${folder}/${folder}${index}.wav`);
+  audio.volume = currentVolume;
+  if (!preview) audio.currentTime = 0;
+  audio.play().catch(err => console.warn("Playback failed:", err));
+}
+// ---------------------------
+// User hold shift to try sound before adding
+// ---------------------------
+pad.addEventListener("click", e => {
+  const isPreview = e.shiftKey;
+  playSound(category, i, pad.id, isPreview);
+
+  if (isRecording && !isPreview) {
+    const time = Date.now() - startTime;
+    recordedEvents.push({ category, i, time: time % loopLength });
+  }
+});
+
+// --- New Buttons ---
+const homeBtn = document.getElementById("homeBtn");
+
+homeBtn.addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+const loopLengthInput = document.getElementById("loopLength");
+const pauseBtn = document.getElementById("pauseBtn");
+
+let isPaused = false;
+
+// Go back to Home Page
+
+
+// Pause / Resume Loop
+pauseBtn.addEventListener("click", () => {
+  isPaused = !isPaused;
+  pauseBtn.textContent = isPaused ? "Resume" : "Pause";
+  // You can add pause logic here if your loops are time-based
+});
+
+// Use the chosen loop length in your looping function
+function getLoopLength() {
+  return parseFloat(loopLengthInput.value) * 1000; // milliseconds
 }

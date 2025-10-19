@@ -1,6 +1,4 @@
-
-// --- JERKBEAT LOOP PAD ---
-
+// --- SOUND CATEGORIES ---
 const soundCategories = {
   bass: 13,
   clap: 9,
@@ -12,14 +10,16 @@ const soundCategories = {
   snap: 2
 };
 
-const loopLength = 4000; // 4-second loop
+const loopLength = 4000;
 let isRecording = false;
 let startTime = 0;
 let recordedEvents = [];
 let loopInterval;
+let isPaused = false;
+let currentVolume = 1;
 
 // ---------------------------
-// Build pad grids
+// Build pads
 // ---------------------------
 Object.keys(soundCategories).forEach(category => {
   const grid = document.getElementById(`${category}-grid`);
@@ -30,11 +30,11 @@ Object.keys(soundCategories).forEach(category => {
     pad.classList.add("pad");
     pad.dataset.sound = `${category}${i}`;
     pad.dataset.folder = category;
-    pad.id = `${category}${i}`;
 
-    pad.addEventListener("click", () => {
-      playSound(category, i, pad.id);
-      if (isRecording) {
+    pad.addEventListener("click", (e) => {
+      const isPreview = e.shiftKey;
+      playSound(category, i);
+      if (isRecording && !isPreview) {
         const time = Date.now() - startTime;
         recordedEvents.push({ category, i, time: time % loopLength });
       }
@@ -44,77 +44,56 @@ Object.keys(soundCategories).forEach(category => {
   }
 });
 
+// ---------------------------
+// Play Sound
+// ---------------------------
+function playSound(folder, index) {
+  const audio = new Audio(`jerkbeat/${folder}/${folder}${index}.wav`);
+  audio.volume = currentVolume;
+  audio.currentTime = 0;
+  audio.play().catch(err => console.warn("Playback failed:", err));
+}
+
+// ---------------------------
 // Tab switching
+// ---------------------------
 const tabButtons = document.querySelectorAll(".tab-btn");
 const categories = document.querySelectorAll(".category");
 
-tabButtons.forEach((btn) => {
+tabButtons.forEach(btn => {
   btn.addEventListener("click", () => {
-    // remove active state
-    tabButtons.forEach((b) => b.classList.remove("active"));
+    tabButtons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-
-    const category = btn.getAttribute("data-category");
+    const category = btn.dataset.category;
 
     if (category === "all") {
-      // show all categories
-      categories.forEach((cat) => (cat.style.display = "block"));
+      categories.forEach(cat => (cat.style.display = "grid"));
     } else {
-      // show only selected category
-      categories.forEach((cat) => {
-        if (cat.id === `${category}-grid`) {
-          cat.style.display = "block";
-        } else {
-          cat.style.display = "none";
-        }
+      categories.forEach(cat => {
+        cat.style.display = cat.id === `${category}-grid` ? "grid" : "none";
       });
     }
   });
 });
 
-
 // ---------------------------
-// Play Sound
-// ---------------------------
-function playSound(folder, index, padId) {
-  const audio = new Audio(`jerkbeat/${folder}/${folder}${index}.wav`);
-  audio.currentTime = 0;
-  audio.play().catch(err => console.warn("Playback failed:", err));
-
-  // Flash animation
-  if (padId) {
-    const pad = document.getElementById(padId);
-    pad.classList.add("flash");
-    setTimeout(() => pad.classList.remove("flash"), 150);
-  }
-}
-
-// ---------------------------
-// Recording & Looping Controls
+// Recording & Looping
 // ---------------------------
 const recordBtn = document.getElementById("recordBtn");
+const pauseBtn = document.getElementById("pauseBtn");
 const restartBtn = document.getElementById("restartBtn");
-const loopCircle = document.getElementById("loop-circle");
-const circleLength = 2 * Math.PI * 50; // circle circumference
-
-loopCircle.style.strokeDasharray = circleLength;
-loopCircle.style.strokeDashoffset = circleLength;
 
 recordBtn.addEventListener("click", () => {
   if (!isRecording) {
-    // Start recording
     recordedEvents = [];
     startTime = Date.now();
     isRecording = true;
-    recordBtn.innerText = "Stop Recording";
-
-    // Start loop
+    recordBtn.textContent = "Stop Recording";
     playLoop();
     loopInterval = setInterval(playLoop, loopLength);
   } else {
-    // Stop recording
     isRecording = false;
-    recordBtn.innerText = "Start Recording";
+    recordBtn.textContent = "Start Recording";
   }
 });
 
@@ -122,82 +101,26 @@ restartBtn.addEventListener("click", () => {
   clearInterval(loopInterval);
   recordedEvents = [];
   isRecording = false;
-  recordBtn.innerText = "Start Recording";
-  loopCircle.style.transition = "none";
-  loopCircle.style.strokeDashoffset = circleLength;
+  recordBtn.textContent = "Start Recording";
 });
 
-// ---------------------------
-// Loop Visualizer + Playback
-// ---------------------------
-function animateLoopVisualizer() {
-  loopCircle.style.transition = "none";
-  loopCircle.style.strokeDashoffset = circleLength;
-  void loopCircle.offsetWidth; // reset trick
-
-  loopCircle.style.transition = `stroke-dashoffset ${loopLength}ms linear`;
-  loopCircle.style.strokeDashoffset = "0";
-}
-
-function playLoop() {
-  animateLoopVisualizer();
-  recordedEvents.forEach(event => {
-    setTimeout(() => {
-      playSound(event.category, event.i, `${event.category}${event.i}`);
-    }, event.time);
-  });
-}
-// ---------------------------
-// Volume
-// ---------------------------
-const volumeControl = document.getElementById("volume");
-let currentVolume = 1;
-
-volumeControl.addEventListener("input", e => {
-  currentVolume = parseFloat(e.target.value);
-});
-
-function playSound(folder, index, padId, preview = false) {
-  const audio = new Audio(`jerkbeat/${folder}/${folder}${index}.wav`);
-  audio.volume = currentVolume;
-  if (!preview) audio.currentTime = 0;
-  audio.play().catch(err => console.warn("Playback failed:", err));
-}
-// ---------------------------
-// User hold shift to try sound before adding
-// ---------------------------
-pad.addEventListener("click", e => {
-  const isPreview = e.shiftKey;
-  playSound(category, i, pad.id, isPreview);
-
-  if (isRecording && !isPreview) {
-    const time = Date.now() - startTime;
-    recordedEvents.push({ category, i, time: time % loopLength });
-  }
-});
-
-// --- New Buttons ---
-const homeBtn = document.getElementById("homeBtn");
-
-homeBtn.addEventListener("click", () => {
-  window.location.href = "index.html";
-});
-const loopLengthInput = document.getElementById("loopLength");
-const pauseBtn = document.getElementById("pauseBtn");
-
-let isPaused = false;
-
-// Go back to Home Page
-
-
-// Pause / Resume Loop
 pauseBtn.addEventListener("click", () => {
   isPaused = !isPaused;
   pauseBtn.textContent = isPaused ? "Resume" : "Pause";
-  // You can add pause logic here if your loops are time-based
 });
 
-// Use the chosen loop length in your looping function
-function getLoopLength() {
-  return parseFloat(loopLengthInput.value) * 1000; // milliseconds
+function playLoop() {
+  if (isPaused) return;
+  recordedEvents.forEach(event => {
+    setTimeout(() => {
+      playSound(event.category, event.i);
+    }, event.time);
+  });
 }
+
+// ---------------------------
+// Volume Control
+// ---------------------------
+document.getElementById("volume").addEventListener("input", e => {
+  currentVolume = parseFloat(e.target.value);
+});

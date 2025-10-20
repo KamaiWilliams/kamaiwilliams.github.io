@@ -17,21 +17,35 @@
   width: fit-content;
   
 }
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
 .title-container {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  /* border: 4px solid #fc6f17;
-  background-color: rgb(226, 237, 249);*/
-  border-radius: 0px;
-  margin: 0px;
-  padding: 0px;
-  position: relative;
-  height: fit-content;
-  width: fit-content;
-  
- 
+  flex-direction: column;
+  align-items: flex-start; /* or center */
+  justify-content: center;
 }
+
+/* --- HOME PAGE TITLE --- */
+.home-title {
+  font-family: "ouma-devanagari", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: clamp(100px, 20vw, 800px);
+  line-height: 0.5;
+  letter-spacing: -25px;
+  -webkit-text-stroke: 3px #1789FC;
+  color: transparent;
+  margin: 40px;
+  text-transform: lowercase;
+}
+
 .title {
   text-align: left;
   font-family: "ouma-devanagari", sans-serif;
@@ -84,11 +98,6 @@
   animation: fadeIn 1s ease-in-out;
 }
 
-.home-title {
-  font-size: 4rem;
-  margin-bottom: 2rem;
-  letter-spacing: 4px;
-}
 
 /* --- FIXED START BUTTON --- */
 #startBtn {
@@ -200,7 +209,9 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: "ouma-devanagari", sans-serif;
+  font-family: "chakra-petch", sans-serif;
+  font-weight: 700;
+  font-style: normal; 
   font-size: 1rem;
   flex-shrink: 0;
 }
@@ -232,7 +243,9 @@ button {
   background: #1789FC;
   color: #fff;
   border: none;
-  font-family: "ouma-devanagari", sans-serif;
+  font-family: "chakra-petch", sans-serif;
+font-weight: 700;
+font-style: normal;
   font-size: 1.2rem;
   padding: 8px 16px;
   border-radius: 8px;
@@ -312,7 +325,9 @@ button:hover {
 }
 
 #control-panel h3 {
-  font-family: "ouma-devanagari", sans-serif;
+  font-family: "chakra-petch", sans-serif;
+font-weight: 700;
+font-style: normal;
   font-size: 1.2rem;
   color: #1789FC;
   margin: 0;

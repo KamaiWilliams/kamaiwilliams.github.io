@@ -1,0 +1,81 @@
+body {
+    font-family: "loos-normal", sans-serif;
+    background-color: #fff;
+    margin: 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  #title-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #cbeef3;
+    color: #452103;
+    font-size: 80px;
+    font-weight: 700;
+    font-style: normal;
+    cursor: pointer;
+    animation: float 3s ease-in-out infinite alternate;
+  }
+  
+  
+
+  @keyframes float {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-15px); }
+  }
+  
+  #description {
+    padding: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .tooltip {
+    position: absolute;
+    text-align: left;
+    padding: 6px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    pointer-events: none;
+    font-size: 12px;
+  }
+  #info-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 24px;
+    width: 1000px;
+    height: 300px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 10;
+    text-align: left;
+    opacity: 1;
+  }
+  
+  #info-box h3 {
+    margin-top: 0;
+    color: #1789FC;
+  }
+  
+  #close-info {
+    background: #1789FC;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  
+  #close-info:hover {
+    background: #0d5fbf;
+  }

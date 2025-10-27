@@ -1,26 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uncontained – Data Viz Test</title>
-
-  <!-- Link your CSS -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Uncontained — Guided Data Story</title>
   <link rel="stylesheet" href="style.css" />
-
-  <link rel="stylesheet" href="https://use.typekit.net/vaz0ueu.css">
-  <!-- Load D3.js -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
-
 <body>
-    <h1>🗽 NYC Public Restrooms</h1>
-    <p>edit later</p>
-  
-    <!-- Create a div for your map -->
-    <div id="map"></div>
-  
-    <!-- Link your JS -->
-    <script src="script.js"></script>
-  </body>
+  <!-- Navigation UI -->
+  <div id="nav">
+    <button data-scene="title">Start</button>
+    <button data-scene="map-all">Map — All Restrooms</button>
+    <button data-scene="ratio">Ratio — Restrooms vs People</button>
+    <button data-scene="density">Density / Heatmap</button>
+    <button data-scene="lower">Lower Manhattan — Local View</button>
+    <button data-scene="conditions">Restroom Conditions</button>
+  </div>
+
+  <!-- Scenes -->
+  <main id="app">
+    <section id="scene-title" class="scene active">
+      <h1>UNCONTAINED</h1>
+      <h3>What happens when there's nowhere to pee in NYC — a Lower Manhattan case study</h3>
+      <button id="begin">Begin</button>
+    </section>
+
+    <section id="scene-map-all" class="scene hide">
+      <h2>Citywide: Public Restrooms</h2>
+      <div id="map-all" class="viz"></div>
+      <p class="caption">A superficial abundance — but does it meet need?</p>
+    </section>
+
+    <section id="scene-ratio" class="scene hide">
+      <h2>Restrooms vs People (toggle)</h2>
+      <div id="ratio-controls" class="controls">
+        <button data-mode="perResident" class="active">Restrooms per Resident</button>
+        <button data-mode="perSheltered">Restrooms per Sheltered Person</button>
+      </div>
+      <div id="ratio-viz" class="viz"></div>
+      <p class="caption">Compare borough counts to population and homeless shelter counts.</p>
+    </section>
+
+    <section id="scene-density" class="scene hide">
+      <h2>Restroom Density (block grid)</h2>
+      <div id="density-viz" class="viz"></div>
+      <p class="caption">Density shown using a simple block grid (approximate city-block scale).</p>
+    </section>
+
+    <section id="scene-lower" class="scene hide">
+      <h2>Lower Manhattan — Choose a point to find closest restroom</h2>
+      <div id="lower-viz" class="viz"></div>
+      <div id="lower-info" class="info"></div>
+    </section>
+
+    <section id="scene-conditions" class="scene hide">
+      <h2>Restroom Conditions — Lower Manhattan</h2>
+      <div id="conditions-viz" class="viz"></div>
+      <p class="caption">Points colored by condition/problem severity (data-driven).</p>
+    </section>
+  </main>
+
+  <div id="footer">Built with D3 • Data: NYC Open Data</div>
+
+  <script src="script.js"></script>
+</body>
 </html>

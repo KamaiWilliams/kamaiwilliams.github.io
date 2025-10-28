@@ -28,7 +28,7 @@
 .title-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* or center */
+  align-items: center; /* or center */
   justify-content: center;
 }
 
@@ -38,12 +38,24 @@
   font-weight: 600;
   font-style: normal;
   font-size: clamp(100px, 20vw, 800px);
-  line-height: 0.5;
-  letter-spacing: -25px;
-  -webkit-text-stroke: 3px #1789FC;
-  color: transparent;
-  margin: 40px;
-  text-transform: lowercase;
+  color: transparent; 
+  -webkit-text-stroke: 5px #B8DE27;
+  letter-spacing: -40px;
+  line-height: .35;
+  z-index: 1;
+  margin: 0px;
+  text-decoration: none; /* removes underline */
+  cursor: pointer;       /* shows pointer cursor */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.home-title:hover {
+  
+  transform: scale(1.25);
+  color: #572236; /*83425D*/
+  -webkit-text-stroke: 7px #B8DE27; 
+  letter-spacing: 1px;
+  line-height: .5;
 }
 
 .title {
@@ -51,14 +63,23 @@
   font-family: "ouma-devanagari", sans-serif;
   font-weight: 600;
   font-style: normal;
-  font-size: 70px;
-  line-height: 15px;
+  font-size: 55px;
+  line-height: 10px;
   letter-spacing: -10px;
-  -webkit-text-stroke: 2px #1789FC;
+  -webkit-text-stroke: 1.5px #1789FC;
   color: transparent;
   z-index: 1;
-  margin: 40px;
+  margin: 20px;
+  text-decoration: none; /* removes underline */
+  cursor: pointer;       /* shows pointer cursor */
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
+.title:hover {
+  opacity: 0.7;
+  transform: scale(1.02);
+}
+
 .title .line1, .title .line2 {
   display: block;
 }
@@ -69,7 +90,7 @@
   bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 100%;
   height: 10px;
   background: repeating-linear-gradient(
     to right,
@@ -85,23 +106,34 @@
 /* --- TITLE ROW (title + measure timeline) --- */
 .title-row {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
-  gap: 40px;
   width: 100%;
+  height: 100%;
+  gap: 20px;
 }
+
 
 /* --- MEASURE BAR --- */
 #measure-bar {
-  flex: 1;
-  height: 110px;
+  flex: 0 0 60%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 70px; /* keeps your original height */
   background: transparent;
-  border: 5px solid #fc17a0;
+  border: 2px solid #fc17a0;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: hidden; /* clean edges */
   position: relative;
-  min-width: 1000px;
-  max-width: 1000px;
+  box-sizing: border-box;
+  margin: 10px;
+  
+  width: 100vw; /* keeps a minimum size for structure */
 }
+
 
 /* Moving fill that shows playback progress */
 #measure-fill {
@@ -169,44 +201,12 @@
 }
 
 
-/* --- FIXED START BUTTON --- */
-#startBtn {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1789FC;
-  color: white;
-  border: none;
-  font-family: "ouma-devanagari", sans-serif;
-  font-size: .5rem;
-  padding: 10px 24px;
-  border-radius: 10px;
-  cursor: pointer;
-  z-index: 3;
-  transition: all 0.2s ease;
-}
-
-#startBtn:hover {
-  background: #0f5ec1;
-  transform: translateX(-50%) scale(1.05);
-}
-
 /* --- ANIMATIONS --- */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- START BUTTON CONTAINER --- */
-.start-container {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  text-align: center;
-}
 
 /* --- GLOBAL RESET --- */
 html {
@@ -216,7 +216,7 @@ html {
 }
 
 body {
-  background: #F8F32B;
+  background: #F3D2DF; 
   color: #eee;
   font-family: "Helvetica Neue", Arial, sans-serif;
   margin: 0;
@@ -243,7 +243,7 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0px;
-  padding: 20px;
+  padding: 10px;
   margin: 20px;
   /* border: 2px solid black;
   background: white;
@@ -264,7 +264,7 @@ body {
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   padding-bottom: 10px;
   /* border: 2px solid #1789FC;
@@ -276,14 +276,16 @@ body {
   border: 2px solid #1789FC;
   color: #1789FC;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: "chakra-petch", sans-serif;
-  font-weight: 700;
+  font-family: "ouma-devanagari", sans-serif;
+  font-weight: 600;
   font-style: normal; 
+  text-transform: uppercase;
   font-size: 1rem;
   flex-shrink: 0;
+  
 }
 
 .tab-btn:hover {
@@ -297,37 +299,6 @@ body {
   font-weight: bold;
 }
 
-/* -------------------------
-   CONTROLS
--------------------------- */
-#controls {
-  position: fixed;
-  top: 50px;
-  right: 80px;
-  display: flex;
-  gap: 12px;
-  z-index: 10;
-}
-
-button {
-  background: #1789FC;
-  color: #fff;
-  border: none;
-  font-family: "chakra-petch", sans-serif;
-font-weight: 700;
-font-style: normal;
-  font-size: 1.2rem;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  flex-shrink: 1;
-}
-
-button:hover {
-  background: #0f5ec1;
-  transform: scale(1.05);
-}
 
 /* -------------------------
    LOOP FRAME
@@ -360,30 +331,31 @@ button:hover {
   align-items: stretch;
   width: 100%;
   height: 100%;
-  gap: 20px;
+  gap: 10px;
 }
 
+/* -------------------------
+   CONTROL PANEL
+-------------------------- */
 
 /* Right side (controls) */
 #control-panel {
-  flex: 0 0 40%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: min-content;
-  align-content: start;
-  justify-items: stretch;
-  gap: 20px;
-  /* border: 4px solid #fc6f17;
-  background-color: rgb(226, 237, 249);*/
+  flex: 0 0 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 20px;
+  gap: 30px;
   border-radius: 20px;
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
 #control-panel h3 {
   font-family: "chakra-petch", sans-serif;
-font-weight: 700;
-font-style: normal;
+  font-weight: 700;
+  font-style: normal;
   font-size: 1.2rem;
   color: #1789FC;
   margin: 0;
@@ -393,9 +365,34 @@ font-style: normal;
 /* Control buttons inside panel */
 #control-panel button {
   width: 100%;
-  padding: 12px 0;
-  font-size: 1rem;
-  border-radius: 12px;
+  padding: 10px 0;
+  font-size: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: transparent;
+  font-family: "ouma-devanagari", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 50px;
+  line-height: 35px;
+  letter-spacing: -10px;
+  -webkit-text-stroke: 2px #1789FC;
+  /*text-transform: uppercase;*/
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover + active states */
+#control-panel button:hover {
+  background: transparent;
+  color: transparent;
+  -webkit-text-stroke: 2px #FF37A6;
+  transform: scale(1.05);
+}
+
+#control-panel button:active {
+  transform: scale(0.98);
 }
 
 /* Volume slider section */
@@ -417,6 +414,7 @@ font-style: normal;
   cursor: pointer;
 }
 
+
 /* -------------------------
    LOOP PAD CONTAINER
 -------------------------- */
@@ -425,13 +423,12 @@ font-style: normal;
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-content: center;
-  
   gap: 1px;
   flex: 1;
   width: 100%;
   height: 100%;
-  border: 4px solid #1789FC;
-  border-radius: 20px;
+  border: 10px solid #2D4FC7;
+  border-radius: 40px;
   padding: 30px 40px;
   box-sizing: border-box;
   position: relative;
@@ -467,7 +464,7 @@ font-style: normal;
   gap: 15px;
   border-radius: 50%;
   background: #222;
-  border: 6px solid #444;
+  border: 30px solid #444;
   transition: all 0.2s ease;
   cursor: pointer;
   flex-shrink: 0; /* keeps size consistent */
@@ -476,7 +473,7 @@ font-style: normal;
 .pad:hover {
   background: #333;
   border-color: #1789FC;
-  transform: scale(1.05);
+  transform: scale(.75);
 }
 
 .pad.flash {
@@ -489,10 +486,10 @@ font-style: normal;
    CATEGORY-SPECIFIC PAD STYLES
 -------------------------- */
 #bass-grid .pad {
-  background: #1b4332;
-  border-color: #2d6a4f;
-  width: 105px;
-  height: 105px;
+  background: #F3D2DF;
+  border-color: #2D4FC7;
+  width: 120px;
+  height: 120px;
   
 }
 
@@ -557,12 +554,6 @@ font-style: normal;
   border-width: 5px;
   border-radius: 25px;
 }
-/* -------------------------
-   ALL TAB PAD STYLES
--------------------------- */
-/* -------------------------
-   FIX: ALL TAB VIEW
--------------------------- */
 
 /* -------------------------
    ALL TAB — CENTERED FLEX VERSION
@@ -604,7 +595,7 @@ font-style: normal;
 /* Make sure everything stays within the loop pad border */
 #loop-pad.all-view {
   padding: 15px;
-  border: 4px solid #1789FC;
+  border: 4px solid #2D4FC7
   border-radius: 20px;
   overflow-y: auto;
   overflow-x: hidden;

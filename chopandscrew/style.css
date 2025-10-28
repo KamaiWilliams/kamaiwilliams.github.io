@@ -64,9 +64,9 @@
   font-weight: 600;
   font-style: normal;
   font-size: 55px;
-  line-height: 10px;
+  line-height: 12px;
   letter-spacing: -10px;
-  -webkit-text-stroke: 1.5px #1789FC;
+  -webkit-text-stroke: 1.2px #f6febb;
   color: transparent;
   z-index: 1;
   margin: 20px;
@@ -123,15 +123,20 @@
   justify-content: space-between;
   width: 100%;
   height: 70px; /* keeps your original height */
-  background: transparent;
-  border: 2px solid #fc17a0;
-  border-radius: 10px;
+  background: repeating-linear-gradient(
+    to right,
+    #dbba77,
+    #dbba77 10px,
+    #f6febb 10px,
+    #f6febb 20px
+  );
+  /*border: 2px solid #fc17a0;*/
+  border-radius: 0px;
   overflow: hidden; /* clean edges */
   position: relative;
   box-sizing: border-box;
   margin: 10px;
-  
-  width: 100vw; /* keeps a minimum size for structure */
+  width: 110vw; /* keeps a minimum size for structure */
 }
 
 
@@ -142,7 +147,7 @@
   left: 0;
   height: 100%;
   width: 0%;
-  background: rgba(23, 137, 252, 0.3); /* translucent blue */
+  background: rgba(251, 10, 138, 0.3); /* translucent blue */
   border-radius: 10px;
   transform-origin: left;
   animation: none;
@@ -216,7 +221,7 @@ html {
 }
 
 body {
-  background: #F3D2DF; 
+  background: #3B042D; 
   color: #eee;
   font-family: "Helvetica Neue", Arial, sans-serif;
   margin: 0;
@@ -264,38 +269,40 @@ body {
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding-bottom: 10px;
+  padding-top: -5px;
+  margin-left: 15px;
   /* border: 2px solid #1789FC;
   background-color: white;*/
 }
 
 .tab-btn {
   background: transparent;
-  border: 2px solid #1789FC;
-  color: #1789FC;
+  border: 2px solid #f6febb;
+  color: #f6febb;
   padding: 8px 16px;
-  border-radius: 10px;
+  border-radius: 0px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: "ouma-devanagari", sans-serif;
-  font-weight: 600;
-  font-style: normal; 
-  text-transform: uppercase;
-  font-size: 1rem;
+  font-family: "le-havre-rounded", sans-serif;
+font-weight: 400;
+font-style: normal; 
+  text-transform: lowercase;
+  font-size: 1.5rem;
   flex-shrink: 0;
   
 }
 
 .tab-btn:hover {
-  background: #1789FC;
+  background: #f6febb;
   color: white;
 }
 
 .tab-btn.active {
-  background: #1789FC;
-  color: white;
+  background: #f6febb;
+  color: rgb(255, 6, 155);
   font-weight: bold;
 }
 
@@ -314,8 +321,8 @@ body {
   height: 100%;
   /* border: 4px solid #fc6f17;
   background-color: rgb(226, 237, 249);*/
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 0px;
+  padding: 20px 0px 0px 0px;
   box-sizing: border-box;
   position: relative;
   overflow: scroll;
@@ -344,20 +351,21 @@ body {
   display: flex;
   flex-direction: column;
   align-items: baseline;
-  justify-content: space-between;
+  justify-content: end;
   margin: 20px;
   gap: 30px;
   border-radius: 20px;
   padding: 10px;
   box-sizing: border-box;
+  /*border: 4px solid #fc6f17*/
 }
 
 #control-panel h3 {
-  font-family: "chakra-petch", sans-serif;
-  font-weight: 700;
-  font-style: normal;
+  font-family: "le-havre-rounded", sans-serif;
+font-weight: 400;
+font-style: normal;
   font-size: 1.2rem;
-  color: #1789FC;
+  color: #f6febb;
   margin: 0;
   text-align: left;
 }
@@ -365,20 +373,19 @@ body {
 /* Control buttons inside panel */
 #control-panel button {
   width: 100%;
-  padding: 10px 0;
+  padding: 5px 0;
   font-size: 1.5rem;
   border-radius: 16px;
   border: 1px solid transparent;
   background: transparent;
-  color: transparent;
-  font-family: "ouma-devanagari", sans-serif;
-  font-weight: 600;
-  font-style: normal;
-  font-size: 50px;
-  line-height: 35px;
-  letter-spacing: -10px;
-  -webkit-text-stroke: 2px #1789FC;
-  /*text-transform: uppercase;*/
+  color: #f6febb;
+  font-family: "le-havre-rounded", sans-serif;
+font-weight: 400;
+font-style: normal;
+  line-height: 15px;
+  letter-spacing: 1px;
+  /*-webkit-text-stroke: 2px #1789FC;
+  text-transform: uppercase;*/
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -427,9 +434,11 @@ body {
   flex: 1;
   width: 100%;
   height: 100%;
-  border: 10px solid #2D4FC7;
-  border-radius: 40px;
-  padding: 30px 40px;
+  border: 10px solid #f6febb;
+  background-color: #f6febb;
+  border-radius: 0px;
+  padding: 40px 40px;
+  margin-left: 15px;
   box-sizing: border-box;
   position: relative;
   overflow-y: auto; /* scroll vertically if needed */
@@ -464,7 +473,7 @@ body {
   gap: 15px;
   border-radius: 50%;
   background: #222;
-  border: 30px solid #444;
+  border: 10px solid #444;
   transition: all 0.2s ease;
   cursor: pointer;
   flex-shrink: 0; /* keeps size consistent */
@@ -531,12 +540,31 @@ body {
 #fx-grid .pad {
   background: #8338ec;
   border-color: #3a0ca3;
-  width: 90px;
-  height: 90px;
+  width: 55px;
+  height: 55px;
 }
 
 #vox-grid .pad {
   background: #ff006e;
+  border-color: #fb5607;
+  width: 90px;
+  height: 90px;
+}
+
+#kick-grid .pad {
+  background: #a92d63;
+  border-color: #fb5607;
+  width: 90px;
+  height: 90px;
+}
+#horn-grid .pad {
+  background: #a92d63;
+  border-color: #fb5607;
+  width: 90px;
+  height: 90px;
+}
+#synth-grid .pad {
+  background: #a92d63;
   border-color: #fb5607;
   width: 90px;
   height: 90px;
@@ -595,8 +623,8 @@ body {
 /* Make sure everything stays within the loop pad border */
 #loop-pad.all-view {
   padding: 15px;
-  border: 4px solid #2D4FC7
-  border-radius: 20px;
+  border: 4px solid #f6febb;
+  border-radius: 0px;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
@@ -623,6 +651,34 @@ body {
   to { left: 100%; }
 }
 
+.bpm-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.bpm-control label {
+  font-family: "ouma-devanagari", sans-serif;
+  color: #1789FC;
+  font-size: 1rem;
+}
+
+.bpm-control input[type="number"] {
+  border: 2px solid #1789FC;
+  border-radius: 8px;
+  font-family: "chakra-petch", sans-serif;
+  font-weight: 700;
+  color: #1789FC;
+  font-size: 1rem;
+  text-align: center;
+  padding: 6px 0;
+  background: transparent;
+  outline: none;
+  width: 80px;
+}
+
+
 /* -------------------------
    RESPONSIVE
 -------------------------- */
@@ -635,8 +691,8 @@ body {
   }
 
   .main-container {
-    padding: 10px;
-    margin: 10px;
+    padding: 20px;
+    margin: 20px;
     gap: 20px;
   }
 

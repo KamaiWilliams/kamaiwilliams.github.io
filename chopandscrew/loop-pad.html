@@ -36,15 +36,22 @@
           <div class="category" id="snap-grid"></div>
           <div class="category" id="fx-grid"></div>
           <div class="category" id="vox-grid"></div>
+          <div class="category" id="kick-grid"></div>
+          <div class="category" id="horn-grid"></div>
+          <div class="category" id="synth-grid"></div>
         </div>
     
         <!-- Right: Control Panel -->
         <div id="control-panel">
            <!-- <h3>Controls</h3> -->
-          <button id="recordBtn">start recording</button>
+          <button id="recordBtn">record</button>
           <button id="pauseBtn">pause</button>
           <button id="restartBtn">restart</button>
           <div class="volume-control">
+            <div class="bpm-control">
+              <label for="bpm">BPM</label>
+              <input type="number" id="bpm" min="40" max="240" value="120" step="1">
+            </div>
             <!-- <label for="volume">Volume</label>
             <input type="range" id="volume" min="0" max="1" step="0.01" value="1">  -->
           </div>
@@ -62,6 +69,9 @@
       <button class="tab-btn" data-category="snap">Snap</button>
       <button class="tab-btn" data-category="fx">FX</button>
       <button class="tab-btn" data-category="vox">Vox</button>
+      <button class="tab-btn" data-category="kick">kick</button>
+      <button class="tab-btn" data-category="horn">horn</button>
+      <button class="tab-btn" data-category="synth">synth</button>
       <button class="tab-btn" data-category="all">All</button>
     </div>
 

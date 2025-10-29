@@ -85,23 +85,6 @@
 }
 
 /* --- MEASURE GRID --- */
-#measure-grid {
-  position: fixed;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 10px;
-  background: repeating-linear-gradient(
-    to right,
-    #333,
-    #333 10px,
-    #444 10px,
-    #444 20px
-  );
-  border-radius: 4px;
-  overflow: hidden;
-}
 
 /* --- TITLE ROW (title + measure timeline) --- */
 .title-row {
@@ -122,13 +105,13 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 70px; /* keeps your original height */
+  height: 40px; /* keeps your original height */
   background: repeating-linear-gradient(
     to right,
-    #dbba77,
-    #dbba77 10px,
-    #f6febb 10px,
-    #f6febb 20px
+    #693448,
+    #693448 30px,
+    #572236 30px,
+    #572236 60px
   );
   /*border: 2px solid #fc17a0;*/
   border-radius: 0px;
@@ -136,7 +119,7 @@
   position: relative;
   box-sizing: border-box;
   margin: 10px;
-  width: 110vw; /* keeps a minimum size for structure */
+  width: 125vw; /* keeps a minimum size for structure */
 }
 
 
@@ -174,7 +157,10 @@
 .dot-snare { background: #2196F3; }     /* blue   */
 .dot-vox { background: #E91E63; }       /* magenta*/
 .dot-snap { background: #00BCD4; }      /* teal   */
-
+.dot-kick { background: #c9495c; }   /* pink   */
+.dot-horn { background: #3ad323; }     /* blue   */
+.dot-synth { background: #c0164f; }       /* magenta*/
+.dot-strings { background: #73d3df; }      /* teal   */
 
 
 
@@ -221,7 +207,7 @@ html {
 }
 
 body {
-  background: #3B042D; 
+  background: #200219; 
   color: #eee;
   font-family: "Helvetica Neue", Arial, sans-serif;
   margin: 0;
@@ -249,7 +235,7 @@ body {
   justify-content: flex-start;
   gap: 0px;
   padding: 10px;
-  margin: 20px;
+  margin: 30px;
   /* border: 2px solid black;
   background: white;
   */
@@ -271,9 +257,11 @@ body {
   width: 100%;
   justify-content: flex-start;
   align-items: center;
-  padding-bottom: 10px;
-  padding-top: -5px;
-  margin-left: 15px;
+  padding-bottom: 20px;
+  padding-top: 0px;
+  padding-left: 25px;
+  margin: 0px 10px 0px 0px;
+  background-color: #572236;
   /* border: 2px solid #1789FC;
   background-color: white;*/
 }
@@ -287,8 +275,8 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: "le-havre-rounded", sans-serif;
-font-weight: 400;
-font-style: normal; 
+  font-weight: 400;
+  font-style: normal; 
   text-transform: lowercase;
   font-size: 1.5rem;
   flex-shrink: 0;
@@ -297,12 +285,12 @@ font-style: normal;
 
 .tab-btn:hover {
   background: #f6febb;
-  color: white;
+  color: #572236;
 }
 
 .tab-btn.active {
   background: #f6febb;
-  color: rgb(255, 6, 155);
+  color: #572236;
   font-weight: bold;
 }
 
@@ -339,6 +327,10 @@ font-style: normal;
   width: 100%;
   height: 100%;
   gap: 10px;
+  border: 10px solid #572236;
+  background-color: #572236;
+  margin: 0px;
+  border-radius: 0px;
 }
 
 /* -------------------------
@@ -373,17 +365,17 @@ font-style: normal;
 /* Control buttons inside panel */
 #control-panel button {
   width: 100%;
-  padding: 5px 0;
+  padding: 15px 15px;
   font-size: 1.5rem;
-  border-radius: 16px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #f6febb;
+  border-radius: 30px;
+  border: 14px solid #3B042D;
+  background: #f6febb; 
+  color: #572236;
   font-family: "le-havre-rounded", sans-serif;
-font-weight: 400;
-font-style: normal;
-  line-height: 15px;
-  letter-spacing: 1px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 0px;
+  letter-spacing: 0px;
   /*-webkit-text-stroke: 2px #1789FC;
   text-transform: uppercase;*/
   cursor: pointer;
@@ -393,8 +385,7 @@ font-style: normal;
 /* Hover + active states */
 #control-panel button:hover {
   background: transparent;
-  color: transparent;
-  -webkit-text-stroke: 2px #FF37A6;
+  color: #f6febb;
   transform: scale(1.05);
 }
 
@@ -402,24 +393,6 @@ font-style: normal;
   transform: scale(0.98);
 }
 
-/* Volume slider section */
-.volume-control {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.volume-control label {
-  font-family: "ouma-devanagari", sans-serif;
-  color: #1789FC;
-  font-size: 1rem;
-}
-
-.volume-control input[type="range"] {
-  width: 100%;
-  cursor: pointer;
-}
 
 
 /* -------------------------
@@ -439,6 +412,7 @@ font-style: normal;
   border-radius: 0px;
   padding: 40px 40px;
   margin-left: 15px;
+  margin-top: 10px;
   box-sizing: border-box;
   position: relative;
   overflow-y: auto; /* scroll vertically if needed */
@@ -470,10 +444,10 @@ font-style: normal;
 .pad {
   width: 40px;
   height: 40px;
-  gap: 15px;
+  gap: 10px;
   border-radius: 50%;
   background: #222;
-  border: 10px solid #444;
+  border: 5px solid #444;
   transition: all 0.2s ease;
   cursor: pointer;
   flex-shrink: 0; /* keeps size consistent */
@@ -495,79 +469,86 @@ font-style: normal;
    CATEGORY-SPECIFIC PAD STYLES
 -------------------------- */
 #bass-grid .pad {
-  background: #F3D2DF;
-  border-color: #2D4FC7;
-  width: 120px;
-  height: 120px;
+  background: #3DFAFF;
+  width: 130px;
+  height: 130px;
+  border: 30px solid #572236;
   
 }
 
 #clap-grid .pad {
-  background: #3a0ca3;
-  border-color: #7209b7;
+  background: #ff9028;
+  border: 20px solid #572236;
   width: 110px;
   height: 110px;
 }
 
 #snare-grid .pad {
-  background: #023e8a;
-  border-color: #0077b6;
+  background: #ff6016;
+  border: 20px solid #572236;
   width: 100px;
   height: 100px;
 }
 
 #hihat-grid .pad {
   background: #ffb703;
-  border-color: #fb8500;
+  border: 20px solid #572236;
   width: 90px;
   height: 90px;
 }
 
 #openhat-grid .pad {
   background: #ffafcc;
-  border-color: #cdb4db;
-  width: 90px;
-  height: 90px;
+  border: 30px solid #572236;
+  width: 120px;
+  height: 120px;
 }
 
 #snap-grid .pad {
   background: #00b4d8;
-  border-color: #0077b6;
+  border: 50px solid #572236;
   width: 270px;
   height: 270px;
 }
 
 #fx-grid .pad {
   background: #8338ec;
-  border-color: #3a0ca3;
-  width: 55px;
-  height: 55px;
+  border: 20px solid #572236;
+  width: 75px;
+  height: 75px;
 }
 
 #vox-grid .pad {
   background: #ff006e;
-  border-color: #fb5607;
+  border: 10px solid #572236;
   width: 90px;
   height: 90px;
 }
 
 #kick-grid .pad {
   background: #a92d63;
-  border-color: #fb5607;
-  width: 90px;
-  height: 90px;
+  border: 20px solid #572236;
+  width: 110px;
+  height: 110px;
 }
 #horn-grid .pad {
-  background: #a92d63;
-  border-color: #fb5607;
-  width: 90px;
-  height: 90px;
+  background: #ff6700;
+  border: 40px solid #572236;
+  width: 120px;
+  height: 120px;
 }
 #synth-grid .pad {
-  background: #a92d63;
-  border-color: #fb5607;
-  width: 90px;
-  height: 90px;
+  background: #27FB6B;
+  border: 30px solid #572236;
+  width: 190px;
+  height: 190px;
+}
+
+#strings-grid .pad {
+  background: #5cffce;
+  border: 20px solid #572236;
+  width: 80px;
+  height: 80px;
 }
 
 /* optional: add subtle glow on hover per category */
@@ -650,34 +631,72 @@ font-style: normal;
   from { left: 0%; }
   to { left: 100%; }
 }
-
+/* --- BPM CONTROL --- */
 .bpm-control {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 1px;
   width: 100%;
 }
 
 .bpm-control label {
   font-family: "ouma-devanagari", sans-serif;
-  color: #1789FC;
-  font-size: 1rem;
+  font-weight: 600;
+  -webkit-text-stroke: 1.2px #f6febb;
+  color: transparent;
+  font-size: 2rem;
+  text-align: center;
+  text-transform: lowercase;
 }
 
+/* --- INPUT STYLE --- */
 .bpm-control input[type="number"] {
-  border: 2px solid #1789FC;
+  border: 2px solid transparent;
   border-radius: 8px;
   font-family: "chakra-petch", sans-serif;
   font-weight: 700;
-  color: #1789FC;
-  font-size: 1rem;
+  color: #f6febb;
+  font-size: 1.5rem;
   text-align: center;
-  padding: 6px 0;
+  padding: 3px 1px;
   background: transparent;
   outline: none;
   width: 80px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
+/* Scale on hover */
+.bpm-control input[type="number"]:hover {
+  transform: scale(1.1);
+  border-color: #f6febb;
+}
+
+/* --- CUSTOMIZE ARROWS --- */
+
+/* Chrome, Safari, Edge */
+.bpm-control input[type="number"]::-webkit-inner-spin-button,
+.bpm-control input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;
+  background: #f6febb;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 2px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.bpm-control input[type="number"]::-webkit-inner-spin-button:hover,
+.bpm-control input[type="number"]::-webkit-outer-spin-button:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Firefox */
+.bpm-control input[type="number"] {
+  -moz-appearance: textfield;
+}
 
 /* -------------------------
    RESPONSIVE
@@ -692,8 +711,8 @@ font-style: normal;
 
   .main-container {
     padding: 20px;
-    margin: 20px;
-    gap: 20px;
+    margin: 0px;
+    gap: 0px;
   }
 
   #loop-pad {

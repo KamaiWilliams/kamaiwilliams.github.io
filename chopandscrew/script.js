@@ -6,11 +6,12 @@ const soundCategories = {
   hihat: 15,
   openhat: 14,
   snare: 11,
-  vox: 16,
+  vox: 17,
   snap: 2,
   kick: 15,
   horn: 13,
-  synth: 8
+  synth: 8,
+  strings: 32
 };
 
 // ---------------------------

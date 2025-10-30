@@ -10,11 +10,11 @@
  /* border: 4px solid #fc6f17;
   background-color: rgb(226, 237, 249);*/
   border-radius: 0px;
-  margin: 0px;
+  margin: 5px;
   padding: 4px;
   position: relative;
   height: fit-content;
-  width: fit-content;
+  width: 100%;
   
 }
 .container {
@@ -52,7 +52,7 @@
 .home-title:hover {
   
   transform: scale(1.25);
-  color: #572236; /*83425D*/
+  color: transparent; /*83425D*/
   -webkit-text-stroke: 7px #B8DE27; 
   letter-spacing: 1px;
   line-height: .5;
@@ -66,7 +66,7 @@
   font-size: 55px;
   line-height: 12px;
   letter-spacing: -10px;
-  -webkit-text-stroke: 1.2px #f6febb;
+  -webkit-text-stroke: 1.2px #B8DE27;
   color: transparent;
   z-index: 1;
   margin: 20px;
@@ -108,11 +108,12 @@
   height: 40px; /* keeps your original height */
   background: repeating-linear-gradient(
     to right,
-    #693448,
-    #693448 30px,
-    #572236 30px,
-    #572236 60px
+    #8d8289,
+    #8d8289 10px,
+    #d2c7bc 10px,
+    #d2c7bc 20px
   );
+  opacity: 70%;
   /*border: 2px solid #fc17a0;*/
   border-radius: 0px;
   overflow: hidden; /* clean edges */
@@ -149,18 +150,18 @@
 }
 
 /* Color codes by category */
-.dot-bass { background: #4CAF50; }      /* green  */
-.dot-clap { background: #B24FFF; }      /* purple */
-.dot-fx { background: #FF9800; }        /* orange */
-.dot-hihat { background: #FFD700; }     /* gold   */
-.dot-openhat { background: #FFB6C1; }   /* pink   */
-.dot-snare { background: #2196F3; }     /* blue   */
-.dot-vox { background: #E91E63; }       /* magenta*/
-.dot-snap { background: #00BCD4; }      /* teal   */
-.dot-kick { background: #c9495c; }   /* pink   */
-.dot-horn { background: #3ad323; }     /* blue   */
-.dot-synth { background: #c0164f; }       /* magenta*/
-.dot-strings { background: #73d3df; }      /* teal   */
+.dot-bass { background: #10eff6; }      /* green  */
+.dot-clap { background: #ff9028; }      /* purple */
+.dot-fx { background: #29bf12; }        /* orange */
+.dot-hihat { background: #8f7dff; }     /* gold   */
+.dot-openhat { background: #ff006e; }   /* pink   */
+.dot-snare { background: #8f7dff; }     /* blue   */
+.dot-vox { background: #ff206a; }       /* magenta*/
+.dot-snap { background: #00bbf9; }      /* teal   */
+.dot-kick { background: #db00b6; }   /* pink   */
+.dot-horn { background: #aacc00; }     /* blue   */
+.dot-synth { background: #27FB6B; }       /* magenta*/
+.dot-strings { background: #5cffce; }      /* teal   */
 
 
 
@@ -207,7 +208,7 @@ html {
 }
 
 body {
-  background: #200219; 
+  background: #20232f; 
   color: #eee;
   font-family: "Helvetica Neue", Arial, sans-serif;
   margin: 0;
@@ -261,15 +262,16 @@ body {
   padding-top: 0px;
   padding-left: 25px;
   margin: 0px 10px 0px 0px;
-  background-color: #572236;
+  background-color: #d2c7bc;
   /* border: 2px solid #1789FC;
   background-color: white;*/
 }
 
 .tab-btn {
-  background: transparent;
-  border: 2px solid #f6febb;
-  color: #f6febb;
+  background: #8d8289;
+  opacity: 70%;
+  border: 2px solid #8d8289;
+  color: #d2c7bc;
   padding: 8px 16px;
   border-radius: 0px;
   cursor: pointer;
@@ -280,18 +282,22 @@ body {
   text-transform: lowercase;
   font-size: 1.5rem;
   flex-shrink: 0;
+  transition: all 0.25s ease;
   
 }
 
 .tab-btn:hover {
-  background: #f6febb;
-  color: #572236;
+  background: #8d8289;
+  color: #d2c7bc;
+  opacity: 100%;
 }
 
 .tab-btn.active {
-  background: #f6febb;
-  color: #572236;
-  font-weight: bold;
+  background: #8d8289;
+  opacity: 100%;
+  color: #d2c7bc;
+  font-weight: normal;
+  font-size: 2rem;
 }
 
 
@@ -327,8 +333,8 @@ body {
   width: 100%;
   height: 100%;
   gap: 10px;
-  border: 10px solid #572236;
-  background-color: #572236;
+  border: 10px solid #d2c7bc;
+  background-color: #d2c7bc;
   margin: 0px;
   border-radius: 0px;
 }
@@ -339,15 +345,15 @@ body {
 
 /* Right side (controls) */
 #control-panel {
-  flex: 0 0 5%;
+  flex: 0 0 10%;
   display: flex;
   flex-direction: column;
   align-items: baseline;
   justify-content: end;
   margin: 20px;
-  gap: 30px;
-  border-radius: 20px;
-  padding: 10px;
+  gap: 12px;
+  border-radius: 10px;
+  padding: 5px;
   box-sizing: border-box;
   /*border: 4px solid #fc6f17*/
 }
@@ -356,25 +362,25 @@ body {
   font-family: "le-havre-rounded", sans-serif;
 font-weight: 400;
 font-style: normal;
-  font-size: 1.2rem;
-  color: #f6febb;
+  font-size: .9rem;
+  color: #8d8289;
   margin: 0;
   text-align: left;
 }
 
 /* Control buttons inside panel */
 #control-panel button {
-  width: 100%;
-  padding: 15px 15px;
-  font-size: 1.5rem;
+  width: 90px;
+  padding: 8px 4px;
+  font-size: 1.3rem;
   border-radius: 30px;
-  border: 14px solid #3B042D;
-  background: #f6febb; 
-  color: #572236;
+  border: 5px solid #20232f;
+  background: #d2c7bc; 
+  color: #20232f; 
   font-family: "le-havre-rounded", sans-serif;
   font-weight: 600;
   font-style: normal;
-  line-height: 0px;
+  line-height: 15px;
   letter-spacing: 0px;
   /*-webkit-text-stroke: 2px #1789FC;
   text-transform: uppercase;*/
@@ -384,8 +390,8 @@ font-style: normal;
 
 /* Hover + active states */
 #control-panel button:hover {
-  background: transparent;
-  color: #f6febb;
+  background: #B8DE27;
+  color: #20232f;
   transform: scale(1.05);
 }
 
@@ -407,8 +413,8 @@ font-style: normal;
   flex: 1;
   width: 100%;
   height: 100%;
-  border: 10px solid #f6febb;
-  background-color: #f6febb;
+  border: 10px solid #8d8289;
+  background-color: #8d8289; 
   border-radius: 0px;
   padding: 40px 40px;
   margin-left: 15px;
@@ -469,86 +475,86 @@ font-style: normal;
    CATEGORY-SPECIFIC PAD STYLES
 -------------------------- */
 #bass-grid .pad {
-  background: #3DFAFF;
+  background: #10eff6;
   width: 130px;
   height: 130px;
-  border: 30px solid #572236;
+  border: 20px solid #d2c7bc;
   
 }
 
 #clap-grid .pad {
   background: #ff9028;
-  border: 20px solid #572236;
-  width: 110px;
-  height: 110px;
+  border: 20px solid #d2c7bc;
+  width: 140px;
+  height: 140px;
 }
 
 #snare-grid .pad {
-  background: #ff6016;
-  border: 20px solid #572236;
-  width: 100px;
-  height: 100px;
+  background: #8f7dff;
+  border: 20px solid #d2c7bc;
+  width: 120px;
+  height: 120px;
 }
 
 #hihat-grid .pad {
-  background: #ffb703;
-  border: 20px solid #572236;
-  width: 90px;
-  height: 90px;
+  background: #ffb700;
+  border: 20px solid #d2c7bc;
+  width: 120px;
+  height: 120px;
 }
 
 #openhat-grid .pad {
-  background: #ffafcc;
-  border: 30px solid #572236;
+  background: #ff006e;
+  border: 20px solid #d2c7bc;
   width: 120px;
   height: 120px;
 }
 
 #snap-grid .pad {
-  background: #00b4d8;
-  border: 50px solid #572236;
+  background: #00bbf9;
+  border: 50px solid #d2c7bc;
   width: 270px;
   height: 270px;
 }
 
 #fx-grid .pad {
-  background: #8338ec;
-  border: 20px solid #572236;
-  width: 75px;
-  height: 75px;
+  background: #29bf12;
+  border: 15px solid #d2c7bc;
+  width: 85px;
+  height: 85px;
 }
 
 #vox-grid .pad {
-  background: #ff006e;
-  border: 10px solid #572236;
-  width: 90px;
-  height: 90px;
+  background: #ff206a;
+  border: 20px solid #d2c7bc;
+  width: 120px;
+  height: 120px;
 }
 
 #kick-grid .pad {
-  background: #a92d63;
-  border: 20px solid #572236;
-  width: 110px;
-  height: 110px;
+  background: #db00b6;
+  border: 20px solid #d2c7bc;
+  width: 120px;
+  height: 120px;
 }
 #horn-grid .pad {
-  background: #ff6700;
-  border: 40px solid #572236;
+  background: #d4ff00;
+  border: 30px solid #d2c7bc;
   width: 120px;
   height: 120px;
 }
 #synth-grid .pad {
   background: #27FB6B;
-  border: 30px solid #572236;
+  border: 30px solid #d2c7bc;
   width: 190px;
   height: 190px;
 }
 
 #strings-grid .pad {
   background: #5cffce;
-  border: 20px solid #572236;
-  width: 80px;
-  height: 80px;
+  border: 20px solid #d2c7bc;
+  width: 90px;
+  height: 90px;
 }
 
 /* optional: add subtle glow on hover per category */
@@ -592,8 +598,8 @@ font-style: normal;
 
 /* Uniform pad sizing for all view */
 .all-view .pad {
-  width: 43px !important;
-  height: 43px !important;
+  width: 40px !important;
+  height: 40px !important;
   border-width: 4px !important;
   border-radius: 50%;
   margin: 5px;
@@ -604,7 +610,7 @@ font-style: normal;
 /* Make sure everything stays within the loop pad border */
 #loop-pad.all-view {
   padding: 15px;
-  border: 4px solid #f6febb;
+  border: 4px solid #8d8289;
   border-radius: 0px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -631,72 +637,324 @@ font-style: normal;
   from { left: 0%; }
   to { left: 100%; }
 }
-/* --- BPM CONTROL --- */
+/* -------------------------
+   BPM CONTROL (MATCH SNAP STYLE)
+-------------------------- */
 .bpm-control {
   display: flex;
-  flex-direction: column;
-  gap: 1px;
-  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  background: #20232f;
+  border-radius: 30px;
+  padding: 6px 10px;
+  gap: 10px;
+  width: fit-content;
+  margin-top: 4px;
 }
 
+/* --- BPM LABEL --- */
 .bpm-control label {
+  font-family: "le-havre-rounded", sans-serif;
+  font-weight: 600;
+  color: ##EFE6DD;
+  font-size: 1rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* --- BPM INPUT --- */
+.bpm-control input[type="number"] {
+  background: #20232f;
+  border: 1px solid #EFE6DD; 
+  border-radius: 14px;
+  font-family: "chakra-petch", sans-serif;
+  font-weight: 700;
+  color: #EFE6DD;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 4px 6px;
+  width: 70px;
+  outline: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+/* --- Hover Effect --- */
+.bpm-control input[type="number"]:hover {
+  transform: scale(1.08);
+  border-color: #8d8289;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Remove spin arrows --- */
+.bpm-control input::-webkit-outer-spin-button,
+.bpm-control input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.bpm-control input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.dot-menu {
+  position: fixed;
+  background: #d2c7bc;
+  border: 2px solid #8d8289;
+  border-radius: 10px;
+  padding: 5px 10px;
+  z-index: 9999;
+}
+
+.dot-menu button {
+  background: #8d8289;
+  border: none;
+  color: #d2c7bc;
+  font-family: "le-havre-rounded", sans-serif;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dot-menu button:hover {
+  background: #8d8289;
+}
+
+/* -------------------------
+   SNAP TO BEAT CONTROLS
+-------------------------- */
+#snap-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 14px;
+  color: #8d8289;
+  margin-top: 4px;
+  background: #EFE6DD;
+  border-radius: 30px;
+  padding: 4px 8px;
+}
+
+#snap-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#snap-controls input[type="checkbox"] {
+  accent-color: #d2c7bc; 
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  background-color: #000;
+  
+}
+
+#snap-controls select {
+  background: #EFE6DD;
+  border: 1px solid #8d8289;
+  border-radius: 14px;
+  color: #8d8289;
+  padding: 2px 6px;
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+#snap-controls select:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+#snap-controls select:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* SNAP TO BEAT BUTTON */
+.snap-to-beat-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.snap-btn {
+  background-color: #f5e1b9; /* tan */
+  border: 2px solid #1a1a1a; /* dark outline */
+  color: #1a1a1a;
   font-family: "ouma-devanagari", sans-serif;
   font-weight: 600;
-  -webkit-text-stroke: 1.2px #f6febb;
-  color: transparent;
-  font-size: 2rem;
-  text-align: center;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.snap-btn:hover {
+  background-color: #b89bd9; /* purple hover */
+}
+
+.snap-btn.active {
+  background-color: #8d71c4; /* current active purple */
+  color: white;
+}
+
+.snap-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.snap-options.hidden {
+  display: none;
+}
+
+.snap-options label {
+  font-family: "ouma-devanagari", sans-serif;
+  font-size: 14px;
+}
+
+.snap-options select {
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
+  background-color: #f5e1b9;
+  padding: 4px 8px;
+  font-family: "ouma-devanagari", sans-serif;
+}
+
+
+/* -------------------------
+   SAVED LOOPS PAGE
+-------------------------- */
+
+#saved-loops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 25px;
+  flex: 1;
+  padding: 40px;
+  margin-left: 15px;
+  margin-top: 10px;
+  background: #8d8289;
+  border: 10px solid #8d8289;
+  border-radius: 0px;
+  overflow-y: auto;
+  align-content: start;
+  justify-items: center;
+}
+
+.saved-loop-tile {
+  background: #d2c7bc;
+  border: 6px solid #EFE6DD;
+  border-radius: 10px;
+  width: 160px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0px 0px 0px transparent;
+}
+
+.saved-loop-tile:hover {
+  transform: scale(1.05);
+  border-color: #8d8289;
+  box-shadow: 0 0 12px #8d8289;
+}
+
+.saved-loop-tile.active {
+  background: #EFE6DD;
+  border-color: #f6febb;
+  transform: scale(1.08);
+  box-shadow: 0 0 16px #8d8289;
+}
+
+.loop-label {
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #8d8289;
+  text-transform: lowercase;
+  user-select: none;
+}
+
+/* -------------------------
+   SAVE LOOP POPUP
+-------------------------- */
+
+#save-loop-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(23, 137, 252, 0.15);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+#save-loop-popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: #8d8289;
+  border: 6px solid #EFE6DD;
+  border-radius: 20px;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.popup-content label {
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 1.3rem;
+  color: #EFE6DD;
   text-transform: lowercase;
 }
 
-/* --- INPUT STYLE --- */
-.bpm-control input[type="number"] {
-  border: 2px solid transparent;
-  border-radius: 8px;
-  font-family: "chakra-petch", sans-serif;
-  font-weight: 700;
-  color: #f6febb;
-  font-size: 1.5rem;
+.popup-content input {
+  border: 4px solid #EFE6DD;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-family: "le-havre-rounded", sans-serif;
+  width: 220px;
   text-align: center;
-  padding: 3px 1px;
-  background: transparent;
-  outline: none;
-  width: 80px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-/* Scale on hover */
-.bpm-control input[type="number"]:hover {
-  transform: scale(1.1);
-  border-color: #f6febb;
+.popup-buttons {
+  display: flex;
+  gap: 20px;
 }
 
-/* --- CUSTOMIZE ARROWS --- */
-
-/* Chrome, Safari, Edge */
-.bpm-control input[type="number"]::-webkit-inner-spin-button,
-.bpm-control input[type="number"]::-webkit-outer-spin-button {
-  appearance: none;
-  background: #f6febb;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin: 0 2px;
+.popup-buttons button {
+  background: #d2c7bc;
+  border: 4px solid #EFE6DD;
+  color: #8d8289;
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 1.1rem;
+  padding: 10px 20px;
+  border-radius: 10px;
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.bpm-control input[type="number"]::-webkit-inner-spin-button:hover,
-.bpm-control input[type="number"]::-webkit-outer-spin-button:hover {
-  opacity: 1;
-  transform: scale(1.2);
+.popup-buttons button:hover {
+  background: #EFE6DD;
+  border-color: #8d8289;
+  transform: scale(1.05);
 }
 
-/* Firefox */
-.bpm-control input[type="number"] {
-  -moz-appearance: textfield;
-}
 
 /* -------------------------
    RESPONSIVE

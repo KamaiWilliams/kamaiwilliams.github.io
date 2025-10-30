@@ -48,17 +48,30 @@
           <button id="recordBtn">record</button>
           <button id="pauseBtn">pause</button>
           <button id="restartBtn">restart</button>
-          <div class="volume-control">
             <div class="bpm-control">
               <label for="bpm">BPM</label>
               <input type="number" id="bpm" min="40" max="240" value="120" step="1">
             </div>
+            <div class="snap-to-beat-section">
+              <button id="snapToggle" class="snap-btn">snap to beat</button>
+              <div id="snapOptions" class="snap-options hidden">
+                <label for="snapResolution">Snap Resolution:</label>
+                <select id="snapResolution">
+                  <option value="1/4">1/4</option>
+                  <option value="1/8">1/8</option>
+                  <option value="1/16" selected>1/16</option>
+                  <option value="1/32">1/32</option>
+                </select>
+              </div>
+            </div>
+            <button id="saveLoopBtn">save loop</button>
+            <button id="viewLoopsBtn">view saved</button>
             <!-- <label for="volume">Volume</label>
             <input type="range" id="volume" min="0" max="1" step="0.01" value="1">  -->
           </div>
         </div>
       </div>
-    </div>
+    
 
     <!-- Tabs stay below -->
     <div id="tab-bar">
@@ -76,7 +89,19 @@
       <button class="tab-btn" data-category="strings">strings</button>
       <button class="tab-btn" data-category="all">All</button>
     </div>
-
+  </div>
   <script src="script.js"></script>
+
+  <!-- Save Loop Popup -->
+<div id="save-loop-popup" class="hidden">
+  <div class="popup-content">
+    <label for="loopName">name loop:</label>
+    <input type="text" id="loopName" placeholder="enter loop name" maxlength="20">
+    <div class="popup-buttons">
+      <button id="saveLoopConfirmBtn">save</button>
+      <button id="cancelSaveBtn">cancel</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

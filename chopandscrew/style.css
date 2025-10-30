@@ -813,15 +813,19 @@ font-style: normal;
 }
 
 .snap-options label {
-  font-family: "ouma-devanagari", sans-serif;
-  font-size: 14px;
+  font-family: "le-havre-rounded", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.2rem;
+  color: #20232f;
+  line-height: 15px;
 }
 
 .snap-options select {
-  border: 2px solid #1a1a1a;
-  border-radius: 8px;
-  background-color: #f5e1b9;
-  padding: 4px 8px;
+  border: 2px solid #20232f;
+  border-radius: 23px;
+  background-color: #d2c7bc;
+  padding: 4px 12px;
   font-family: "ouma-devanagari", sans-serif;
 }
 

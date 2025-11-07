@@ -1,28 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lublin Fellowship Survey on Mexican Restaurant Design</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lublin Fellowship Survey</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://use.typekit.net/oky4maa.css">
 </head>
 <body>
-  <div id="survey-container">
-    <div id="intro-page" class="page active">
-      <h1>Lublin Fellowship Survey</h1>
-      <h2>on Mexican Restaurant Design</h2>
-      <button id="start-btn">Start Survey</button>
+  <div class="container">
+    <!-- Intro Slide -->
+    <div id="intro" class="slide active">
+      <h1>LUBALIN FELLOWSHIP SURVEY ON RESTAURANT DESIGN</h1>
+      <p>Welcome! This short survey will take about <strong>5 minutes</strong> to complete.</p>
+      <p>Your responses will help us better understand how people experience and interpret Mexican restaurant design symbols.</p>
+      <button id="startSurveyBtn">Start Survey</button>
     </div>
 
-    <div id="question-page" class="page">
-      <h2 id="question-text"></h2>
-      <div id="question-content"></div>
-      <button id="next-btn">Next</button>
+    <!-- Respondent Info -->
+    <div id="info" class="slide">
+      <h2>Tell us a bit about yourself</h2>
+      <label>Age: <input type="number" id="age" placeholder="Your age" /></label>
+      <label>City: <input type="text" id="city" placeholder="Where do you live?" /></label>
+      <label>How familiar are you with Mexican restaurants?
+        <select id="familiarity">
+          <option value="">Select</option>
+          <option value="Not familiar">Not familiar</option>
+          <option value="Somewhat familiar">Somewhat familiar</option>
+          <option value="Very familiar">Very familiar</option>
+        </select>
+      </label>
+      <button class="nextBtn">Next</button>
     </div>
 
-    <div id="end-page" class="page">
+    <!-- Symbol Feeling Questions -->
+    <div id="question1" class="slide">
+      <h2>Using one word, describe what the following symbol makes you feel.</h2>
+      <img src="images/cowboy-hat.png" alt="Symbol 1" class="symbol" />
+      <select id="q1">
+        <option value="">Select feeling</option>
+        <option value="Warm">Warm</option>
+        <option value="Calm">Calm</option>
+        <option value="Energetic">Energetic</option>
+        <option value="Uncomfortable">Uncomfortable</option>
+        <option value="Excited">Excited</option>
+      </select>
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <div id="question2" class="slide">
+      <h2>Using one word, describe what the following symbol makes you feel.</h2>
+      <img src="images/cactus.png" alt="Symbol 2" class="symbol" />
+      <select id="q2">
+        <option value="">Select feeling</option>
+        <option value="Warm">Warm</option>
+        <option value="Calm">Calm</option>
+        <option value="Energetic">Energetic</option>
+        <option value="Uncomfortable">Uncomfortable</option>
+        <option value="Excited">Excited</option>
+      </select>
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <div id="question3" class="slide">
+      <h2>Using one word, describe what the following symbol makes you feel.</h2>
+      <img src="images/eagle.png" alt="Symbol 3" class="symbol" />
+      <select id="q3">
+        <option value="">Select feeling</option>
+        <option value="Warm">Warm</option>
+        <option value="Calm">Calm</option>
+        <option value="Energetic">Energetic</option>
+        <option value="Uncomfortable">Uncomfortable</option>
+        <option value="Excited">Excited</option>
+      </select>
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <!-- Word Association -->
+    <div id="question4" class="slide">
+      <h2>Write down what similar imagery comes to mind.</h2>
+      <p>This reminds me of...</p>
+      <textarea id="q4" placeholder="Type your answer here..."></textarea>
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <div id="question5" class="slide">
+      <h2>If you saw this symbol on the street, it would belong to...</h2>
+      <select id="q5">
+        <option value="">Select one</option>
+        <option value="Restaurant">Restaurant</option>
+        <option value="Clothing brand">Clothing brand</option>
+        <option value="Cultural center">Cultural center</option>
+        <option value="Travel company">Travel company</option>
+        <option value="Other">Other</option>
+      </select>
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <!-- Food Type Association -->
+    <div id="question6" class="slide">
+      <h2>What kind of restaurant food does this symbol most remind you of?</h2>
+      <img src="images/sombrero.png" alt="Symbol 4" class="symbol" />
+      <select id="q6">
+        <option value="">Select one</option>
+        <option value="Italian">Italian</option>
+        <option value="French">French</option>
+        <option value="Mexican">Mexican</option>
+        <option value="American">American</option>
+        <option value="Japanese">Japanese</option>
+      </select>
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <!-- Symbol Association -->
+    <div id="question7" class="slide">
+      <h2>When I see a cowboy hat, I think of...</h2>
+      <input type="text" id="q7" placeholder="Type your answer here..." />
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <!-- Authenticity -->
+    <div id="question8" class="slide">
+      <h2>In three words, how would you define "authentic"?</h2>
+      <input type="text" id="q8" placeholder="Your 3-word definition..." />
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <div id="question9" class="slide">
+      <h2>Does this restaurant look authentic to you?</h2>
+      <img src="images/restaurant.png" alt="Restaurant Example" class="symbol" />
+      <select id="q9">
+        <option value="">Select one</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+        <option value="Not sure">Not sure</option>
+      </select>
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <!-- Color Association -->
+    <div id="question10" class="slide">
+      <h2>What color do you associate with this dish?</h2>
+      <img src="images/tacos.png" alt="Dish Example" class="symbol" />
+      <input type="color" id="q10" />
+      <button class="nextBtn">Next</button>
+    </div>
+
+    <!-- Final Slide -->
+    <div id="final" class="slide">
       <h2>Thank you for completing the survey!</h2>
-      <p>Your responses have been recorded.</p>
+      <p>Is there anything else you’d like to share?</p>
+      <textarea id="comments" placeholder="Optional additional comments..."></textarea>
+      <button id="submitBtn">Finish</button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div id="progressContainer">
+      <div id="progressBar"></div>
     </div>
   </div>
 

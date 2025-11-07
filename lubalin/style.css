@@ -1,64 +1,105 @@
 body {
-    font-family: "Helvetica Neue", sans-serif;
-    background-color: #f8f8f8;
-    color: #222;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+  font-family: "dm-sans", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  background-color: #fefed4;
+  color: #150800;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   
-  #survey-container {
-    width: 80%;
-    max-width: 700px;
-    background: white;
-    padding: 2em;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-  
-  h1 {
-    font-size: 2em;
-    color: #d62828;
-  }
-  
-  h2 {
-    margin-bottom: 1em;
-  }
-  
-  button {
-    background-color: #d62828;
-    color: white;
-    border: none;
-    padding: 0.8em 2em;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1em;
-  }
-  
-  button:hover {
-    background-color: #b91c1c;
-  }
-  
-  .page {
-    display: none;
-  }
-  
-  .page.active {
-    display: block;
-  }
-  
-  #question-content {
-    margin: 1.5em 0;
-  }
-  
-  img.question-image {
-    width: 200px;
-    height: auto;
-    border-radius: 10px;
-    margin-bottom: 1em;
-  }
-  
+}
+
+.container {
+  width: 90%;
+  max-width: 600px;
+  background: #fefed4;
+  border-radius: 20px;
+  /*box-shadow: 0 4px 20px rgba(0,0,0,0.1);*/
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+h1, h2 {
+  color: #150800;
+}
+
+p {
+  margin-bottom: 1rem;
+  line-height: 1.4em;
+}
+
+button {
+  background-color: transparent;
+  color: #150800;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+button:hover {
+  background-color: transparent;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+label {
+  display: block;
+  margin: 1rem 0;
+}
+
+input, select, textarea {
+  width: 90%;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+.symbol {
+  width: 200px;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 12px;
+}
+
+.slide {
+  display: none;
+}
+
+.slide.active {
+  display: block;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress Bar */
+#progressContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 5%;
+  width: 90%;
+  height: 10px;
+  background: #ffffff;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#progressBar {
+  height: 10px;
+  background-color: #150800;
+  width: 0%;
+  transition: width 0.3s ease;
+}

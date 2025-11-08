@@ -28,9 +28,26 @@
     But when you zoom in, you’ll notice how few and far between these points are. 
     For many New Yorkers, there’s simply nowhere to go.
     <br><br>
-    If you explore further, you'll notice that a lot of the public restrooms aren't even in opperation!
+    If you explore further, you'll notice that a lot of the public restrooms aren't even in operation!
   </p>
+  <button id="explore-button">Explore →</button>
 </div>
+
+<!-- This stays hidden until user clicks "Explore" -->
+<div id="filter-controls" class="hidden">
+  <label>Filter by:</label>
+  <select id="filter-type">
+    <option value="all">All Restrooms</option>
+    <option value="Operator">Operator</option>
+    <option value="Status">Status</option>
+    <option value="Accessibility">Accessibility</option>
+  </select>
+
+  <select id="filter-value">
+    <!-- This dropdown will be dynamically populated -->
+  </select>
+</div>
+
 
   <script src="script.js"></script>
 </body>

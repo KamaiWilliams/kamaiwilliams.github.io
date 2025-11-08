@@ -55,7 +55,9 @@ body {
   pointer-events: none;
   opacity: 0;
   border-radius: 4px;
+  z-index: 9999;
 }
+
 
 /* Next Button */
 #next-button {
@@ -176,20 +178,19 @@ body {
   padding: 15px;
   border-radius: 15px;
   box-shadow: 4px 4px 0px #000;
-  display: none;
-  transition: opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
   z-index: 10;
 }
 
 #filter-panel.show {
-  display: block;
   opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
-#filter-panel.hidden {
-  display: none;
-  opacity: 0;
-}
 
 #filter-panel .close-btn {
   position: absolute;
@@ -212,6 +213,7 @@ body {
 
 #explore-button:hover {
   background: #1789FC;
+  font-size: 18px;
 }
 
 

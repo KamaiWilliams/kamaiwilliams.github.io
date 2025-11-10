@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background: #B5DDD2;
+  background: #FC7D01;
   overflow: hidden;
 }
 
@@ -17,7 +17,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #FBE0D5;
+  background: #FC7D01;
   z-index: 10;
   color: #9ECCDE;
 }
@@ -26,8 +26,8 @@ body {
   font-size: 14.25em;
   line-height: .85em;
   margin: 0;
-  color: #F33720;
-  -webkit-text-stroke: #1F0E02;
+  color: #06d6a0;
+  -webkit-text-stroke: #06d6a0;
   -webkit-text-stroke-width: 2pt;
 }
 
@@ -37,7 +37,7 @@ body {
   font-family: "futura-100", sans-serif;
   font-weight: 600;
   font-style: normal;
-  color: #F33720;
+  color: #CAE4E3;
 }
 
 #title-screen button {
@@ -49,14 +49,14 @@ body {
   font-size: 18pt; 
   border: none;
   background: transparent;
-  color: #F33720;
+  color: #2E2518;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 #title-screen button:hover {
   background: transparent;
-  color: #7BAB45;
+  color: #FF2269;
 }
 
 /* ---------------------------
@@ -64,17 +64,17 @@ body {
 ---------------------------- */
 .tooltip {
   position: absolute;
-  background: #FFFFFF;
-  border: 2px solid #F33720;
+  background: #2E2518;
+  border: 2px solid transparent;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 0px;
   font-family: "futura-100", sans-serif;
   font-size: 13px;
-  color: #1F0E02;
+  color: #CAE4E3;
   line-height: 1.4;
   pointer-events: none;
   opacity: 0;
-  box-shadow: 4px 6px 0 #1F0E02;
+  box-shadow: 4px 6px 0 #FC7D01;
   transition: opacity 0.25s ease, transform 0.25s ease;
   transform: translateY(-5px);
   z-index: 9999;
@@ -83,7 +83,7 @@ body {
 .tooltip strong {
   font-family: "elizeth", serif;
   font-size: 14px;
-  color: #F33720;
+  color: #CAE4E3;
   display: block;
   margin-bottom: 2px;
 }
@@ -105,16 +105,16 @@ body {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #000000;
-  font-size: 16px;
-  font-weight: 500;
+  color: #2E2518;
+  font-size: 35px;
+  text-transform: uppercase;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 #next-button:hover {
   background: transparent;
-  color: rgb(0, 0, 0);
+  color: #06d6a0;
 }
 
 /* Back Button */
@@ -129,16 +129,16 @@ body {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #000000;
-  font-size: 16px;
-  font-weight: 500;
+  color: #2E2518;
+  font-size: 35px;
+  text-transform: uppercase;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 #back-button:hover {
   background: transparent;
-  color: rgb(0, 0, 0);
+  color: #06d6a0;
 }
 
 .map-outline {
@@ -165,8 +165,8 @@ body {
   position: absolute;
   top: 40px;
   left: 60px;
-  width: 400px;
-  background: transparent;
+  width: 450px;
+  /*background: #FC7D0180;*/
   padding: 16px 20px;
   border-radius: 8px;
   font-family: sans-serif;
@@ -182,20 +182,21 @@ body {
 
 #map-description h2 {
   font-family: "elizeth", serif;
-  font-weight: 800;
+  font-weight: 600;
   font-style: normal;
   margin-top: 0;
   font-size: 42px;
-  color: #1F0E02;
+  line-height: 45px;
+  color: #2E2518;
 }
 
 #map-description p {
   font-family: "futura-100", sans-serif;
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #1F0E02;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #2E2518;
 }
 
 
@@ -206,20 +207,23 @@ body {
 }
 
 /* ---------------------------
-   FILTER PANEL (Scene 1)
+   FILTER PANEL (Scene 1) — forced styles
+   (use this to override inline styles / child styles)
 ---------------------------- */
 #filter-panel {
   position: fixed;
-  top: 40px;
+  top: 0px;          /* 👈 Move closer to the top edge */
   right: 60px;
   width: 180px;
+  max-height: 90vh;  /* keep some margin from the bottom */
+  overflow-y: auto;  /* allow scrolling if it's still too tall */
   padding: 14px 16px;
-  background: #FBE0D5;
-  border: 2px solid #F33720;
-  border-radius: 16px;
-  font-family: "futura-100", sans-serif;
-  color: #1F0E02;
-  box-shadow: 4px 6px 0 #1F0E02; /* same shadow as tooltip */
+  background: #221d1b !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: "elizeth", serif;
+  color: #CAE4E3 !important;
   opacity: 0;
   pointer-events: none;
   transform: translateY(20px);
@@ -227,53 +231,47 @@ body {
   z-index: 10000;
 }
 
-
+/* ensure the 'show' state still works */
 #filter-panel.show {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 }
 
-#filter-panel h3 {
+/* also force children to inherit and remove any child rounding */
+#filter-panel,
+#filter-panel * {
+  background: #CAE4E3 !important; /* let parent background show through */
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* if you want text inside to be a specific color */
+#filter-panel {
   font-family: "elizeth", serif;
-  font-size: 18px;
-  color: #F33720;
-  margin-bottom: 10px;
-  text-align: left;
+  color: #2E2518 !important;
 }
-
-#filter-panel label {
-  display: block;
+#filter-panel {
+  color: #2E2518 !important;
   font-family: "futura-100", sans-serif;
-  font-size: 14px;
-  margin-bottom: 6px;
-  cursor: pointer;
-  color: #1F0E02;
 }
+#filter-panel h3,
+#filter-panel p { font-family: "elizeth", serif;
+  color: #2E2518 !important;}
 
+/* keep checkbox accent, but override appearance if needed */
 #filter-panel input[type="checkbox"] {
-  accent-color: #F33720;
-  margin-right: 6px;
-}
-
-#filter-panel .close-btn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  color: #F33720;
+  accent-color: #FF2269 !important;
 }
 
 
 #explore-button {
   font-family: "elizeth", serif;
-  font-weight: 400;
   font-style: normal;
   background: transparent;
-  color: #000000;
-  font-size: 24px;
+  color: #CAE4E3;
+  font-size: 20px;
   font-weight: 500;
   cursor: pointer;
   border-radius: 0px;
@@ -284,16 +282,26 @@ body {
 
 #explore-button:hover {
   background: transparent;
-  color: rgb(0, 0, 0);
+  color: #FF2269;
 }
+
+#foot-traffic-info {
+  font-family: "futura-100", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #2E2518;
+}
+
 
 #foot-traffic-toggle {
   font-family: "elizeth", serif;
   font-weight: 400;
   font-style: normal;
   background: transparent;
-  color:#000000;
-  font-size: 24px;
+  color:#CAE4E3;
+  font-size: 20px;
   font-weight: 500;
   cursor: pointer;
   border-radius: 0px;
@@ -306,22 +314,31 @@ body {
 /* --- Pedestrian Chart Popup Styling --- */
 #chart-popup-1 {
   position: fixed;
-  top: 10px;
+  top: 50px;
   right: 60px;
   width: 740px;
   height: auto;
-  background: #fff;
-  border: 2px solid #000000;
-  border-radius: 10px;
-  padding: 15px 20px;
+  border-radius: 0px;
+  padding: 10px 10px;
   /*box-shadow: 0 4px 12px rgba(0,0,0,0.25);*/
   z-index: 9999;
-  font-family: "futura-100", sans-serif;
-  color: #333;
+  font-family: "elizeth", serif;
+  
+  color: #2E2518;
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInChart 0.3s ease-out forwards;
   pointer-events: auto; /* ensures popup can be interacted with */
+}
+
+#chart-content-1 {
+  background: #CAE4E3;
+  padding: 0px;
+  border-radius: 0px;
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+  position: relative;
 }
 
 #chart-popup {
@@ -330,9 +347,9 @@ body {
   right: 60px;
   width: 540px;
   height: auto;
-  background: #fff;
+  background: #CAE4E3;
   border: 2px solid #333;
-  border-radius: 10px;
+  border-radius: 0px;
   padding: 15px 20px;
   /*box-shadow: 0 4px 12px rgba(0,0,0,0.25);*/
   z-index: 9999;
@@ -416,13 +433,13 @@ body {
 }
 
 .restroom {
-  stroke: white;
+  stroke: transparent;
   stroke-width: 0.8;
   opacity: 0.9;
 }
 
 .marker {
-  fill: rgba(255,0,0,0.7);
+  fill: #CAE4E3;
   cursor: grab;
 }
 
@@ -445,41 +462,29 @@ body {
 }
 
 #chart-button {
-  position: absolute;
-  bottom: 80px;
-  left: 70px;
   font-family: "elizeth", serif;
-  font-weight: 400;
   font-style: normal;
   background: transparent;
-  color: #000000;
-  font-size: 24px;
+  color: #CAE4E3;
+  font-size: 20px;
   font-weight: 500;
   cursor: pointer;
   border-radius: 0px;
   border-color: transparent;
-  padding: 10px 10px;
+  padding: 0px 0px;
   transition: all 0.2s ease;
 }
 
-#chart-button :hover{
+#chart-button:hover {
   background: transparent;
-  color: rgb(0, 0, 0);
+  color: #FF2269;
 }
 
-#chart-content-1 {
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 1000px;
-  text-align: center;
-  position: relative;
-}
+
 #chart-content {
-  background: #fff;
+  background: #CAE4E3;
   padding: 25px;
-  border-radius: 12px;
+  border-radius: 0px;
   width: 80%;
   max-width: 1000px;
   text-align: center;
@@ -504,6 +509,121 @@ body {
   font-size: 22px;
   cursor: pointer;
 }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto !important;  /* ✅ force vertical scrolling */
+  overflow-x: hidden;
+  background: #1f1a14;
+  color: #FC7D01;
+  font-family: "futura-100", sans-serif;
+}
+
+/* main info container */
+.info-page {
+  
+    width: 100%;
+    max-width: 100%;
+    padding: 30px 80px 10px 80px; /* top, right, bottom, left */
+    box-sizing: border-box;
+    text-align: left;               /* ✅ aligns all text to the left */
+  }
+
+
+/* titles + text styling */
+.info-title {
+  font-size: 42px;
+  line-height: 45px;
+  font-family: "elizeth", serif;
+  font-weight: 700;
+  margin-bottom: 0px;
+  color: #FC7D01;
+}
+
+.info-text {
+  font-family: "futura-100", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #CAE4E3;
+}
+
+.info-section {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.info-section h2 {
+  font-family: "elizeth", serif;
+  font-size: 20px;
+  margin-bottom: 0px;
+  color: #CAE4E3;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.info-section ul {
+  list-style-type: square;
+  margin-left: 5px;
+  line-height: 1.6;
+  font-size: 16px;
+  font-family: "futura-100", sans-serif;
+  color: #CAE4E3;
+  font-weight: 300;
+}
+
+.info-section a {
+  color: #CAE4E3;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+.info-section a:hover {
+  color: #FF2269;
+}
+
+.info-reflection {
+  font-family: "futura-100", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #FC7D01;
+}
+
+/* buttons at bottom */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.nav-buttons button {
+  font-family: "elizeth", serif;
+  font-weight: 500;
+  font-style: normal;
+  bottom: 40px;
+  left: 60px;
+  padding: 06px 0px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #FC7D01;
+  font-size: 35px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nav-buttons button:hover {
+  background: transparent;
+  color: #FF2269;
+}
+
 
 /* TEMP FIX: Prevent any background overlay */
 

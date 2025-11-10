@@ -13,9 +13,9 @@ async function showRestroomMap() {
     // Reset description
     d3.select("#map-description")
       .html(`
-        <h2>Public Restrooms Across NYC</h2>
+        <h2>PUBLIC RESTROOMS ACROSS NYC</h2>
         <p>
-          Where are all the public restrooms in the city?
+          Where are all the public restrooms in the city?<br>
         In a place with over eight million people, finding a public restroom shouldn’t feel impossible. 
         A lot of them are hiding in plain sight! On this map, each dot represents a public bathroom recorded by NYC Open Data.
         This includes ones in parks, libraries, transit hubs, and community spaces maintained by the city.
@@ -24,7 +24,8 @@ async function showRestroomMap() {
         But when you <b>zoom in</b>, you’ll start to see how few and far between these points really are. 
         Explore a bit more, and you’ll notice that many of the restrooms shown here aren’t even in operation.
         </p>
-        <button id="explore-button">Explore →</button>
+        <button id="explore-button">EXPLORE →</button> <br>
+        <button id="chart-button">VIEW DATA INSIGHTS →</button>
       `)
       .style("display", "block")
       .style("opacity", 1)
@@ -36,18 +37,23 @@ async function showRestroomMap() {
       .attr("id", "map-svg")
       .attr("width", width)
       .attr("height", height)
-      .style("background", "#FBE0D5");
+      .style("background", "#FC7D01");
   
     const g = svg.append("g");
     const projection = d3.geoMercator()
       .center([-74.006, 40.7128])
-      .scale(120000)
+      .scale(130000)
       .translate([width / 2, height / 2]);
     const path = d3.geoPath().projection(projection);
     const tooltip = d3.select("body")
       .append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
+      const xOffset = 90; // pixels — tweak this number for how far right you want it
+        
+          
+
+    
   
     try {
       // Load borough map
@@ -57,8 +63,8 @@ async function showRestroomMap() {
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("fill", "#7BAB45")
-        .attr("stroke", "#1F0E02")
+        .attr("fill", "#806763")
+        .attr("stroke", "#806763")
         .attr("stroke-width", 1);
   
       // Load restrooms CSV
@@ -99,11 +105,11 @@ async function showRestroomMap() {
       const validData = restrooms.filter(d => !isNaN(d.Latitude) && !isNaN(d.Longitude));
   
       const typeColors = {
-        "Parks Department": "#31A3BD",
-        "Library": "#F33720",
+        "Parks Department": "#06d6a0",
+        "Library": "#ffd60a",
         "Transit Hub": "#2ca02c",
         "Community Center": "#d62728",
-        "Other": "#FEB940"
+        "Other": "#FF2269"
       };
   
       // Draw restroom dots
@@ -114,10 +120,10 @@ async function showRestroomMap() {
         .attr("class", "restroom")
         .attr("cx", d => projection([d.Longitude, d.Latitude])[0])
         .attr("cy", d => projection([d.Longitude, d.Latitude])[1])
-        .attr("r", 3.5)
+        .attr("r", 2.5)
         .attr("fill", d => typeColors[d.Operator] || "#1F0E02")
-        .attr("stroke-width", 0.5)
-        .style("stroke", "#1F0E02")
+        .attr("stroke-width", 0)
+        .style("stroke", "transparent")
         .style("opacity", 1)
         .on("mouseover", (event, d) => {
           tooltip.transition().duration(120).style("opacity", 0.95);
@@ -138,12 +144,9 @@ async function showRestroomMap() {
       });
   
       // --- CHART POPUP SETUP ---
-      const chartBtn = d3.select("body")
-        .append("button")
-        .attr("id", "chart-button")
-        .text("View Data Insights →");
-  
-      chartBtn.on("click", () => showCharts(validData));
+      // --- CHART POPUP SETUP ---
+d3.select("#chart-button").on("click", () => showCharts(validData));
+
   
       // Create popup container
       d3.select("body")
@@ -153,7 +156,7 @@ async function showRestroomMap() {
         .html(`
           <div id="chart-content-1">
             <button id="close-chart">✕</button>
-            <h2>NYC Public Restroom Insights</h2>
+            <h2>NYC PUBLIC RESTROOM INSIGHTS</h2>
             <div id="chart-type" class="chart"></div>
             <div id="chart-accessibility" class="chart"></div>
             <div id="chart-status" class="chart"></div>
@@ -183,12 +186,12 @@ function showCharts(data) {
   
     // 🎨 Editable chart colors
     const chartColors = {
-      typeBars: "#F33720", // orange
-      statusBars: "#4F77B0", // blue
+      typeBars: "#FC7D01", // orange
+      statusBars: "#FF2269", // blue
       accessibility: {
-        "Fully Accessible": "#4CAF50",
+        "Fully Accessible": "#806763",
         "Partially Accessible": "#FFC107",
-        "Not Accessible": "#E53935"
+        "Not Accessible": "#C0A45D"
       }
     };
   
@@ -265,7 +268,7 @@ function showCharts(data) {
         const y = Math.sin(angle - Math.PI / 2) * (radius + offset);
         return `translate(${x},${y})`;
       })
-      .style("font-size", "11px")
+      .style("font-size", "12px")
       .style("text-anchor", "middle")
       .style("opacity", 0)
       .transition()

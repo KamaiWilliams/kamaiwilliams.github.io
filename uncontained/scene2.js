@@ -19,15 +19,15 @@ async function showLESScene() {
     container.append("div")
         .attr("id", "map-description")
         .html(`
-            <h2>Lower Manhattan's Shopping Areas</h2>
+            <h2>LOWER MANHATTAN'S SHOPPING AREAS</h2>
             <p>
-              Welcome to one of the busiest parts of the city! Lower Manhattan’s shopping corridors.
-              Every day, thousands of locals, workers, and tourists move through these blocks, creating constant foot traffic.
+              Welcome to one of the busiest parts of the city! <br>Lower Manhattan’s shopping corridors.
+              <br>Every day, thousands of locals, workers, and tourists move through these blocks, creating constant foot traffic.
               Despite all that activity, public restrooms here are surprisingly scarce. 
               For restaurant workers, delivery couriers, and members of the unhoused community, the lack of access
               can turn an everyday need into a real struggle.
             </p>
-            <button id="foot-traffic-toggle">Show Foot Traffic →</button>
+            <button id="foot-traffic-toggle">SHOW FOOT TRAFFIC →</button>
         `);
 
     // --- SVG Map ---
@@ -35,7 +35,7 @@ async function showLESScene() {
         .attr("id", "map-svg-les")
         .attr("width", width)
         .attr("height", height)
-        .style("background", "#FFFFFF")
+        .style("background", "#FC7D01")
         .style("position", "absolute")
         .style("top", "0")
         .style("left", "0")
@@ -63,8 +63,8 @@ async function showLESScene() {
             .append("path")
             .attr("class", "block-outline")
             .attr("d", path)
-            .attr("fill", "#FFFFFF")
-            .attr("stroke", "#000000")
+            .attr("fill", "#806763")
+            .attr("stroke", "#FC7D01")
             .attr("stroke-width", 1);
 
         // --- Restrooms data ---
@@ -110,11 +110,11 @@ async function showLESScene() {
 
         // --- Draw Restrooms ---
         const typeColors = {
-            "Parks Department": "#1f77b4",
-            "Library": "#ff7f0e",
-            "Transit Hub": "#2ca02c",
-            "Community Center": "#d62728",
-            "Other": "#7f7f7f"
+            "Parks Department": "#06d6a0",
+        "Library": "#ffd60a",
+        "Transit Hub": "#2ca02c",
+        "Community Center": "#d62728",
+        "Other": "#FF2269"
         };
 
         g.selectAll("circle.les")
@@ -127,7 +127,7 @@ async function showLESScene() {
             .attr("r", 2.5)
             .attr("fill", d => typeColors[d.Operator] || "#1789FC")
             .attr("opacity", 0.95)
-            .attr("stroke", "#fff")
+            .attr("stroke", "transparent")
             .attr("stroke-width", 1);
 
         // --- Foot traffic toggle ---
@@ -140,7 +140,7 @@ async function showLESScene() {
             if (footTrafficVisible) {
                 g.selectAll(".ped-demand").remove();
                 d3.select("#chart-popup").remove();
-                btn.text("Show Foot Traffic →");
+                btn.text("SHOW FOOT TRAFFIC →");
                 zoomLocked = false;
                 svg.call(zoom);
                 footTrafficVisible = false;
@@ -168,8 +168,9 @@ async function showLESScene() {
             const dy = bottomRight[1] - topLeft[1];
             const cx = (topLeft[0] + bottomRight[0]) / 2;
             const cy = (topLeft[1] + bottomRight[1]) / 2;
-            const scale = Math.min(width / dx, height / dy) * 0.62;
-            const translate = [width / 2 - scale * cx, height / 2 - scale * cy];
+            const scale = Math.min(width / dx, height / dy) * 0.4;
+            const xOffset = 290; // pixels — tweak this number for how far right you want it
+            const translate = [width / 2 - scale * cx + xOffset, height / 2 - scale * cy];
             g.transition().duration(800).attr("transform", `translate(${translate}) scale(${scale})`);
 
             g.selectAll(".ped-demand")
@@ -179,9 +180,9 @@ async function showLESScene() {
                 .attr("class", "ped-demand")
                 .attr("cx", d => projection([d.Longitude, d.Latitude])[0])
                 .attr("cy", d => projection([d.Longitude, d.Latitude])[1])
-                .attr("r", 3)
-                .attr("fill", "green")
-                .attr("opacity", 0.7)
+                .attr("r", 5)
+                .attr("fill", "#CAE4E3")
+                .attr("opacity", 1)
                 .style("cursor", "pointer")
                 .on("click", function (event, d) {
                     showPedestrianChart(event, d);
@@ -190,15 +191,16 @@ async function showLESScene() {
             container.append("p")
                 .attr("id", "foot-traffic-info")
                 .style("margin-top", "8px")
-                .style("font-size", "14px")
-                .style("color", "#333")
+                .style("font-size", "18px")
+                .style("line-height", "1.25")
+                .style("color", "#CAE4E3")
                 .html(
-                    `The <b>green dots</b> on the map show locations where pedestrian foot traffic 
-                    has been recorded. Click a dot to see how foot traffic in that area has changed 
-                    over time — and start thinking about where all those people might actually go when they need to.`
+                    `The <b>white dots</b> on the map show locations where pedestrian foot traffic 
+                    has been recorded. <b>Click a dot</b> to see how foot traffic in that area persists 
+                    over time. Think about where all those people might actually go when they need to use the restroom.`
                 );
 
-            btn.text("Hide Foot Traffic ←");
+            btn.text("HIDE FOOT TRAFFIC ←");
             footTrafficVisible = true;
         });
 
@@ -215,12 +217,12 @@ async function showLESScene() {
 
         navButtons.append("button")
             .attr("id", "back-button")
-            .text("← Back")
+            .text("←")
             .on("click", () => window.location.href = "scene1.html");
 
         navButtons.append("button")
             .attr("id", "next-button")
-            .text("Next →")
+            .text("→")
             .on("click", () => window.location.href = "scene3.html");
 
     } catch (err) {
@@ -238,23 +240,23 @@ function showPedestrianChart(event, d) {
         .append("div")
         .attr("id", "chart-popup")
         .style("position", "fixed")
-        .style("top", "10px")
+        .style("top", "50px")
         .style("right", "60px")
         .style("width", "350px")
         .style("height", "auto")
-        .style("background", "#fff")
+        .style("background", "#CAE4E3")
         .style("padding", "15px")
-        .style("border", "2px solid #1789FC")
-        .style("border-radius", "10px")
-        .style("box-shadow", "0px 2px 10px rgba(0,0,0,0.2)")
+        .style("border", "2px solid transparent")
+        .style("border-radius", "0px")
+        .style("box-shadow", "0px 2px 10px transparent")
         .style("z-index", 9999)
-        .style("font-family", "futura-100, sans-serif")
-        .style("color", "#333");
+        .style("font-family", "elizeth, serif")
+        .style("color", "#2E2518");
 
     const locationName = `${d.Borough || ""} | ${d.Street_Nam || ""} | ${d.From_Street || ""} → ${d.To_Street || ""}`;
     chartContainer.append("h3")
         .style("margin", "5px 0")
-        .style("font-size", "14px")
+        .style("font-size", "18px")
         .style("text-align", "center")
         .text(locationName);
 
@@ -287,14 +289,16 @@ function showPedestrianChart(event, d) {
     drawChart(chartContainer, simplifiedData);
 
     const toggleButton = chartContainer.append("button")
-        .text("Expand Chart")
+        .text("EXPAND →")
         .style("margin", "10px auto 0")
         .style("display", "block")
         .style("padding", "6px 12px")
-        .style("border-radius", "5px")
-        .style("border", "1px solid #1789FC")
-        .style("background", "#FFFFFF")
-        .style("color", "#1789FC")
+        .style("border-radius", "0px")
+        .style("border", "1px solid transparent")
+        .style("font-family", "elizeth, serif")
+        .style("font-weight", "600")
+        .style("background", "#CAE4E3")
+        .style("color", "#FF2269")
         .style("cursor", "pointer");
 
     let expanded = false;
@@ -302,21 +306,23 @@ function showPedestrianChart(event, d) {
         if (!expanded) {
             drawChart(chartContainer, fullData, 700, 300);
             chartContainer.style("width", "750px");
-            toggleButton.text("Minimize Chart");
+            toggleButton.text("MINIMIZE →");
             expanded = true;
         } else {
             drawChart(chartContainer, simplifiedData, 300, 150);
             chartContainer.style("width", "350px");
-            toggleButton.text("Expand Chart");
+            toggleButton.text("EXPAND →");
             expanded = false;
         }
     });
 
     chartContainer.append("p")
         .style("margin-top", "8px")
-        .style("font-size", "12px")
+        .style("font-size", "14px")
         .style("text-align", "center")
-        .text(`On average, ${avgCount} pedestrians consistently travel through this area.`);
+        .style("color", "#2E2518")
+        .style("font-weight", "500")
+        .text(`On average, ${avgCount} pedestrians consistently travel through this area everyday day.`);
 
     event.stopPropagation();
     d3.select("body").on("click.chart", function(event2) {

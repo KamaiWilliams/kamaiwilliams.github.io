@@ -18,8 +18,8 @@ async function showScene3() {
     container.append("div")
         .attr("id", "map-description")
         .html(`
-            <h2>Find the Nearest Restroom</h2>
-            <p>Drag the red dot to a spot on the map to see the distance to the nearest public restroom.</p>
+            <h2>FIND THE <br>NEAREST RESTROOM</h2>
+            <p><b>Drag the white dot</b> to a spot on the map <br>to see the distance to the nearest public restroom.</p>
         `);
 
     // --- SVG ---
@@ -27,7 +27,7 @@ async function showScene3() {
         .attr("id", "map-svg-scene3")
         .attr("width", width)
         .attr("height", height)
-        .style("background", "#FFFFFF")
+        .style("background", "#FC7D01")
         .style("position", "absolute")
         .style("top", "0")
         .style("left", "0")
@@ -62,8 +62,8 @@ async function showScene3() {
             .append("path")
             .attr("class", "block-outline")
             .attr("d", path)
-            .attr("fill", "#FFFFFF")
-            .attr("stroke", "#000000")
+            .attr("fill", "#806763")
+            .attr("stroke", "#FC7D01")
             .attr("stroke-width", 1);
 
         // Prepare restroom data
@@ -79,13 +79,15 @@ async function showScene3() {
         });
 
         // Normalize operator colors
+        // --- Draw Restrooms ---
         const typeColors = {
-            "Parks Department": "#1f77b4",
-            "Library": "#ff7f0e",
-            "Transit Hub": "#2ca02c",
-            "Community Center": "#d62728",
-            "Other": "#7f7f7f"
+            "Parks Department": "#06d6a0",
+        "Library": "#ffd60a",
+        "Transit Hub": "#2ca02c",
+        "Community Center": "#d62728",
+        "Other": "#FF2269"
         };
+
 
         restroomData.forEach(d => {
             const op = (d.Operator || "").toLowerCase();
@@ -123,10 +125,10 @@ const lesRestrooms = restroomData
             .attr("cy", d => projection([d.Longitude, d.Latitude])[1])
             .attr("r", 2.5)
             .attr("fill", d => typeColors[d.Operator] || "#1789FC")
-            .attr("stroke", "#fff")
-            .attr("stroke-width", 1)
+            .attr("stroke", "transparent")
+            .attr("stroke-width", 0)
             .on("mouseover", (event, d) => {
-                tooltip.transition().duration(120).style("opacity", 0.95);
+                tooltip.transition().duration(120).style("opacity", 1);
                 tooltip.html(`<strong>${d.Name}</strong><br>${d.Operator}`)
                        .style("left", (event.pageX + 8) + "px")
                        .style("top", (event.pageY - 28) + "px");
@@ -140,8 +142,11 @@ const lesRestrooms = restroomData
         const dy = bottomRight[1] - topLeft[1];
         const cx = (topLeft[0] + bottomRight[0]) / 2;
         const cy = (topLeft[1] + bottomRight[1]) / 2;
-        const scale = Math.min(width / dx, height / dy) * 0.62;
-        const translate = [width / 2 - scale * cx, height / 2 - scale * cy];
+        const scale = Math.min(width / dx, height / dy) * 0.65;
+            const xOffset = 150; // pixels — tweak this number for how far right you want it
+            const translate = [width / 2 - scale * cx + xOffset, height / 2 - scale * cy];
+            g.transition().duration(800).attr("transform", `translate(${translate}) scale(${scale})`);
+
 
         g.transition().duration(800)
             .attr("transform", `translate(${translate}) scale(${scale})`)
@@ -165,13 +170,13 @@ const lesRestrooms = restroomData
         dragMarker = g.append("circle")
             .attr("class", "marker")
             .attr("r", 3.5)
-            .attr("fill", "red")
+            .attr("fill", "#CAE4E3")
             .attr("cx", startCoords[0])
             .attr("cy", startCoords[1])
             .call(dragBehavior);
 
         dragLine = g.append("line")
-            .attr("stroke", "#ff4f4f")
+            .attr("stroke", "#CAE4E3")
             .attr("stroke-width", 1)
             .attr("stroke-dasharray", "6,4");
 
@@ -217,11 +222,11 @@ const lesRestrooms = restroomData
             const miles = minDist * 0.621371; // km → miles
         
             // --- Walking time in minutes, NYC realistic pace ~2.5 mph ---
-            const walkTime = Math.round(miles / (1.5 / 60)); // 2.5 mph = 2.5 miles/60 min
+            const walkTime = Math.round(miles / (1.45 / 60)); // 2.5 mph = 2.5 miles/60 min
         
             const milesFormatted = miles.toFixed(2);
         
-            tooltip.transition().duration(150).style("opacity", 0.95);
+            tooltip.transition().duration(150).style("opacity", 1);
             tooltip.html(
                 `Nearest restroom: <strong>${nearest.Name}</strong><br>` +
                 `${milesFormatted} miles (~${walkTime} min walk)`
@@ -245,13 +250,13 @@ const lesRestrooms = restroomData
 
         navButtons.append("button")
             .attr("id", "back-button")
-            .text("← Back")
+            .text("←")
             .on("click", () => window.location.href = "scene2.html");
 
         navButtons.append("button")
             .attr("id", "next-button")
-            .text("Next →")
-            .on("click", () => window.location.href = "scene4.html");
+            .text("→")
+            .on("click", () => window.location.href = "info.html");
 
     } catch (err) {
         console.error("🚨 Error in showLESScene():", err);

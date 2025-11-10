@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scene 1 — NYC Public Restrooms</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://use.typekit.net/vaz0ueu.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <button id="back-button">← Back</button>
+  <button id="next-button">Next →</button>
+
+  <!-- Description box -->
+  <div id="map-description"></div>
+
+  <!-- Load core helper script -->
+  <script src="script.js"></script>
+
+  <!-- Load Scene 1 code -->
+  <script src="scene1.js"></script>
+
+  <script>
+     document.getElementById("back-button").onclick = () => window.location.href = "index.html";
+    document.getElementById("next-button").onclick = () => window.location.href = "scene2.html";
+
+    document.addEventListener("DOMContentLoaded", () => {
+    showRestroomMap();
+  });
+  </script>
+</body>
+</html>

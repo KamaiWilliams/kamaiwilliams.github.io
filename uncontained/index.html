@@ -4,50 +4,19 @@
   <meta charset="UTF-8">
   <title>Uncontained — NYC Public Restrooms</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://d3js.org/d3.v7.min.js"></script>
   <link rel="stylesheet" href="https://use.typekit.net/vaz0ueu.css">
 </head>
 <body>
-  <!-- Intro Page -->
-  <div id="title-screen" class="page">
+  <div id="title-screen">
     <h1>Uncontained</h1>
     <p>What happens when there’s nowhere to pee in NYC?</p>
-    <button id="start">Begin</button>
+    <button id="start">Begin →</button>
   </div>
- 
- <!-- Back button (hidden by default) -->
- <button id="back-button" style="display: none;">← Back</button>
- 
-<!-- Map Description Box -->
-<div id="map-description"  class="hidden"> 
-  <h2>Public Restrooms Across NYC</h2>
-  <p>
-    In a city of over eight million people, finding a public restroom shouldn’t feel impossible.
-    Each dot represents a public bathroom recorded by NYC Open Data parks, transit hubs, and community spaces.
-    <br><br>
-    But when you zoom in, you’ll notice how few and far between these points are. 
-    For many New Yorkers, there’s simply nowhere to go.
-    <br><br>
-    If you explore further, you'll notice that a lot of the public restrooms aren't even in operation!
-  </p>
-  <button id="explore-button">Explore →</button>
-</div>
 
-<!-- This stays hidden until user clicks "Explore" -->
-<div id="filter-controls" class="hidden">
-  <label>Filter by:</label>
-  <select id="filter-type">
-    <option value="all">All Restrooms</option>
-    <option value="Operator">Operator</option>
-    <option value="Status">Status</option>
-    <option value="Accessibility">Accessibility</option>
-  </select>
-
-  <select id="filter-value">
-    <!-- This dropdown will be dynamically populated -->
-  </select>
-</div>
-
-  <script src="script.js"></script>
+  <script>
+    document.getElementById("start").addEventListener("click", () => {
+      window.location.href = "scene1.html";
+    });
+  </script>
 </body>
 </html>

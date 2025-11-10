@@ -1,14 +1,14 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background: #FDFC54;
+  background: #B5DDD2;
   overflow: hidden;
 }
 
 /* Intro Screen */
 #title-screen {
-  font-family: "clarendon-text-pro", serif;
-  font-weight: 400;
+  font-family: "elizeth", serif;
+  font-weight: 700;
   font-style: normal;
   position: absolute;
   top: 0; left: 0;
@@ -17,32 +17,45 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #FDFC54;
+  background: #B5DDD2;
   z-index: 10;
+  color: #9ECCDE;
 }
 
 #title-screen h1 {
   font-size: 14.25em;
   line-height: .75em;
   margin: 0;
+  color: #000000;
+  -webkit-text-stroke: #FAAF43;
+  -webkit-text-stroke-width: 2pt;
+}
+
+#title-screen p {
+  font-size: 18pt; 
+  font-family: "futura-100", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  color: #000000;
 }
 
 #title-screen button {
-  font-family: "clarendon-text-pro", serif;
-  font-weight: 400;
+  font-family: "elizeth", serif;
+  font-weight: 500;
   font-style: normal;
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 1.2em;
   border: none;
-  background: black;
-  color: white;
+  background: transparent;
+  color: #000000;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 #title-screen button:hover {
-  background: #333;
+  background: transparent;
+  color: #DD572F;
 }
 
 /* Tooltip */
@@ -58,11 +71,10 @@ body {
   z-index: 9999;
 }
 
-
 /* Next Button */
 #next-button {
-  font-family: "clarendon-text-pro", serif;
-  font-weight: 400;
+  font-family: "elizeth", serif;
+  font-weight: 500;
   font-style: normal;
   position: absolute;
   bottom: 40px;
@@ -70,8 +82,8 @@ body {
   padding: 12px 18px;
   border: none;
   border-radius: 6px;
-  background: #000000;
-  color: white;
+  background: transparent;
+  color: #000000;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -79,14 +91,14 @@ body {
 }
 
 #next-button:hover {
-  background: #ffffff;
+  background: transparent;
   color: rgb(0, 0, 0);
 }
 
 /* Back Button */
 #back-button {
-  font-family: "clarendon-text-pro", serif;
-  font-weight: 400;
+  font-family: "elizeth", serif;
+  font-weight: 500;
   font-style: normal;
   position: absolute;
   bottom: 40px;
@@ -94,8 +106,8 @@ body {
   padding: 12px 18px;
   border: none;
   border-radius: 6px;
-  background: #000000;
-  color: white;
+  background: transparent;
+  color: #000000;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -103,11 +115,9 @@ body {
 }
 
 #back-button:hover {
-  background: #ffffff;
+  background: transparent;
   color: rgb(0, 0, 0);
 }
-
-
 
 .map-outline {
   fill: #01923D;
@@ -115,20 +125,32 @@ body {
   stroke-width: 1;
 }
 
+#scene2-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#map-svg-les {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;  /* behind description */
+}
+
 /* Map Description Box */
 #map-description {
   position: absolute;
   top: 40px;
   left: 60px;
-  width: 300px;
+  width: 350px;
   background: transparent;
   padding: 16px 20px;
   border-radius: 8px;
-  /*box-shadow: 0 4px 10px rgba(0,0,0,0.1);*/
   font-family: sans-serif;
-  color: #222;
+  color: #000000;
   transition: opacity 0.4s ease;
-  z-index: 5;
+  z-index: 10;
 }
 
 #map-description.hidden {
@@ -136,26 +158,26 @@ body {
   pointer-events: none;
 }
 
-
 #map-description h2 {
-  font-family: "clarendon-text-pro", serif;
+  font-family: "elizeth", serif;
   font-weight: 500;
   font-style: normal;
   margin-top: 0;
-  font-size: 26px;
+  font-size: 32px;
   color: #000000;
 }
 
 #map-description p {
   font-family: "futura-100", sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-style: normal;
   font-size: 16px;
   line-height: 1.5;
+  color: #000000;
 }
 
 #filter-panel h3 {
-  font-family: "clarendon-text-pro", serif;
+  font-family: "elizeth", serif;
   margin-top: 0;
   margin-bottom: 8px;
   font-size: 16px;
@@ -177,7 +199,7 @@ body {
   border: 2px solid #000;
   padding: 15px;
   border-radius: 15px;
-  box-shadow: 4px 4px 0px #000;
+  /*box-shadow: 0 4px 12px rgba(0,0,0,0.25);*/
   opacity: 0;
   pointer-events: none;
   transform: translateY(20px);
@@ -191,7 +213,6 @@ body {
   transform: translateY(0);
 }
 
-
 #filter-panel .close-btn {
   position: absolute;
   top: 8px;
@@ -201,21 +222,252 @@ body {
 }
 
 #explore-button {
-  background: #000;
-  color: #fff;
-  border: none;
-  border-radius: 25px;
-  padding: 10px 20px;
+  font-family: "elizeth", serif;
+  font-weight: 400;
+  font-style: normal;
+  background: transparent;
+  color: #000000;
+  font-size: 24px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 14px;
+  border-radius: 0px;
+  border-color: transparent;
+  padding: 0px 0px;
   transition: all 0.2s ease;
 }
 
 #explore-button:hover {
-  background: #1789FC;
-  font-size: 18px;
+  background: transparent;
+  color: rgb(0, 0, 0);
 }
 
+#foot-traffic-toggle {
+  font-family: "elizeth", serif;
+  font-weight: 400;
+  font-style: normal;
+  background: transparent;
+  color:#000000;
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0px;
+  border-color: transparent;
+  padding: 0px 0px;
+  transition: all 0.2s ease;
+}
+
+/* --- Pedestrian Chart Popup Styling --- */
+/* --- Pedestrian Chart Popup Styling --- */
+#chart-popup-1 {
+  position: fixed;
+  top: 10px;
+  right: 60px;
+  width: 740px;
+  height: auto;
+  background: #fff;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  padding: 15px 20px;
+  /*box-shadow: 0 4px 12px rgba(0,0,0,0.25);*/
+  z-index: 9999;
+  font-family: "futura-100", sans-serif;
+  color: #333;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInChart 0.3s ease-out forwards;
+  pointer-events: auto; /* ensures popup can be interacted with */
+}
+
+#chart-popup {
+  position: fixed;
+  top: 10px;
+  right: 60px;
+  width: 540px;
+  height: auto;
+  background: #fff;
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 15px 20px;
+  /*box-shadow: 0 4px 12px rgba(0,0,0,0.25);*/
+  z-index: 9999;
+  font-family: "futura-100", sans-serif;
+  color: #333;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInChart 0.3s ease-out forwards;
+  pointer-events: auto; /* ensures popup can be interacted with */
+}
+
+/* Ensure no full-screen overlay from body */
+body::before,
+body::after {
+  content: none !important;
+  background: none !important;
+}
+
+body {
+  background: #f5f5f5; /* or your site’s normal background */
+}
+
+/* Optional: style the inner SVG and text */
+#chart-popup svg {
+  display: block;
+  margin: 0 auto;
+}
+
+#chart-popup p {
+  margin-top: 8px;
+  font-size: 13px;
+  text-align: center;
+  color: #4F77B0;
+}
+
+/* Animations */
+@keyframes fadeInChart {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+#chart-popup path {
+  stroke: transparent;
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 1.2s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+#chart-popup .dot {
+  fill: #333;
+  opacity: 0;
+  animation: fadeDots 0.5s ease-out 1s forwards;
+}
+
+@keyframes fadeDots {
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+/* --- Scene 3 map / restrooms --- */
+#scene3-container, #map-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.restroom {
+  stroke: white;
+  stroke-width: 0.8;
+  opacity: 0.9;
+}
+
+.marker {
+  fill: rgba(255,0,0,0.7);
+  cursor: grab;
+}
+
+#resetViewBtn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #1789FC;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#resetViewBtn:hover {
+  background: #0f5bb5;
+}
+
+#chart-button {
+  position: absolute;
+  bottom: 80px;
+  left: 70px;
+  font-family: "elizeth", serif;
+  font-weight: 400;
+  font-style: normal;
+  background: transparent;
+  color: white;
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0px;
+  border-color: transparent;
+  padding: 10px 10px;
+  transition: all 0.2s ease;
+}
+
+#chart-button :hover{
+  background: transparent;
+  color: rgb(0, 0, 0);
+}
+
+#chart-content-1 {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+  position: relative;
+}
+#chart-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 1000px;
+  text-align: center;
+  position: relative;
+}
+
+#chart-content h2 {
+  margin-bottom: 10px;
+}
+
+.chart {
+  display: inline-block;
+  margin: 10px;
+}
+
+#close-chart {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* TEMP FIX: Prevent any background overlay */
+#chart-popup,
+#chart-popup * {
+  background: none !important;
+}
+
+#chart-popup {
+  background: white !important;
+}
 
 
 /*font-family: "futura-100", sans-serif;

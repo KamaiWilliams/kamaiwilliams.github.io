@@ -36,7 +36,7 @@ async function showRestroomMap() {
       .attr("id", "map-svg")
       .attr("width", width)
       .attr("height", height)
-      .style("background", "#FFFFFF");
+      .style("background", "#FBE0D5");
   
     const g = svg.append("g");
     const projection = d3.geoMercator()
@@ -57,8 +57,8 @@ async function showRestroomMap() {
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("fill", "#FFFFFF")
-        .attr("stroke", "#000000")
+        .attr("fill", "#7BAB45")
+        .attr("stroke", "#1F0E02")
         .attr("stroke-width", 1);
   
       // Load restrooms CSV
@@ -99,11 +99,11 @@ async function showRestroomMap() {
       const validData = restrooms.filter(d => !isNaN(d.Latitude) && !isNaN(d.Longitude));
   
       const typeColors = {
-        "Parks Department": "#DD572F",
-        "Library": "#EEAFB7",
+        "Parks Department": "#31A3BD",
+        "Library": "#F33720",
         "Transit Hub": "#2ca02c",
         "Community Center": "#d62728",
-        "Other": "#EC78B3"
+        "Other": "#FEB940"
       };
   
       // Draw restroom dots
@@ -114,11 +114,11 @@ async function showRestroomMap() {
         .attr("class", "restroom")
         .attr("cx", d => projection([d.Longitude, d.Latitude])[0])
         .attr("cy", d => projection([d.Longitude, d.Latitude])[1])
-        .attr("r", 1.5)
-        .attr("fill", d => typeColors[d.Operator] || "#7f7f7f")
-        .attr("opacity", 0.95)
-        .attr("stroke", "#FAAF43")
+        .attr("r", 3.5)
+        .attr("fill", d => typeColors[d.Operator] || "#1F0E02")
         .attr("stroke-width", 0.5)
+        .style("stroke", "#1F0E02")
+        .style("opacity", 1)
         .on("mouseover", (event, d) => {
           tooltip.transition().duration(120).style("opacity", 0.95);
           tooltip.html(`<strong>${d.Name}</strong><br>Type: ${d.Operator}<br>Status: ${d.Status}<br>Accessibility: ${d.Accessibility}`)
@@ -183,7 +183,7 @@ function showCharts(data) {
   
     // 🎨 Editable chart colors
     const chartColors = {
-      typeBars: "#FAAF43", // orange
+      typeBars: "#F33720", // orange
       statusBars: "#4F77B0", // blue
       accessibility: {
         "Fully Accessible": "#4CAF50",

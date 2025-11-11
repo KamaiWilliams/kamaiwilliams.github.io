@@ -322,7 +322,7 @@ function showPedestrianChart(event, d) {
         .style("text-align", "center")
         .style("color", "#2E2518")
         .style("font-weight", "500")
-        .text(`On average, ${avgCount} pedestrians consistently travel through this area everyday day.`);
+        .text(`On average, ${avgCount} pedestrians consistently travel through this area everyday.`);
 
     event.stopPropagation();
     d3.select("body").on("click.chart", function(event2) {

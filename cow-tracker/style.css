@@ -1,0 +1,55 @@
+/* Basic layout */
+:root{
+    --bg:#0b0f12;
+    --panel:#0f1720;
+    --muted:#9aa6b2;
+    --accent:#d4a34a;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+  body{background:var(--bg);color:#fff;display:flex;flex-direction:column}
+  
+  /* top bar */
+  .topbar{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:10px 14px;
+    background:linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-bottom:1px solid rgba(255,255,255,0.03);
+  }
+  .topbar h1{font-size:16px;margin:0;font-weight:600}
+  .controls{display:flex;align-items:center;gap:10px;margin-left:auto}
+  #playBtn{
+    height:34px;padding:6px 10px;border-radius:8px;border:0;background:var(--panel);color:var(--accent);cursor:pointer;font-weight:700;
+  }
+  #speedSelect { height:34px; background:var(--panel); color: #fff; border: 0; padding: 0 8px; border-radius:8px; }
+  #timeSlider{width:340px}
+  
+  /* map and sidebar layout */
+  #map{flex:1; height: calc(100vh - 72px); width: 100%}
+  #legend{
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    width: 240px;
+    background: rgba(3,7,10,0.8);
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    font-size:13px;
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+  #legend h3{margin:0 0 8px 0;font-size:14px}
+  #animalList{list-style:none;padding:0;margin:0;max-height:260px;overflow:auto}
+  #animalList li{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.02)}
+  .cowBadge{width:28px;height:18px;display:inline-grid;place-items:center;border-radius:6px;background:linear-gradient(180deg,#fff,#ddd);color:#111;font-weight:700;font-size:12px}
+  
+  /* timestamp area */
+  #timestamp{font-size:13px;color:var(--muted);min-width:240px}
+  
+  /* small responsive */
+  @media (max-width:700px){
+    #timeSlider{width:180px}
+    #legend{width:180px}
+  }

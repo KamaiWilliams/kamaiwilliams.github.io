@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grazing — Logone Floodplain (cattle)</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Grazing — Logone Floodplain (Cameroon)</h1>
+    <div class="controls">
+      <button id="playBtn" title="Play / Pause">▶</button>
+
+      <!-- speed selector -->
+      <label for="speedSelect" style="font-size:13px;color:var(--muted);margin-left:6px">speed</label>
+      <select id="speedSelect" title="Playback speed" style="height:34px;border-radius:6px;">
+        <option value="1">1x</option>
+        <option value="2">2x</option>
+        <option value="5">5x</option>
+      </select>
+
+      <input id="timeSlider" type="range" min="0" max="0" value="0" />
+      <div id="timestamp">loading…</div>
+    </div>
+  </header>
+
+  <div id="map"></div>
+
+  <aside id="legend">
+    <h3>Animals</h3>
+    <ul id="animalList"></ul>
+    <div class="note">Use the slider or play button to scrub through time.</div>
+  </aside>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

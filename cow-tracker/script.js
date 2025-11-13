@@ -6,6 +6,7 @@
    - playback speed control wired to the play loop
 */
 
+
 /* CONFIG */
 const CSV_PATH = "data/cow-herd-movement.csv"; // put your downloaded Movebank CSV here
 const TIME_FORMAT_OPTIONS = { year:"numeric", month:"short", day:"numeric", hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:true };
@@ -17,6 +18,39 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 20,
   attribution: "© OpenStreetMap contributors"
 }).addTo(map);
+
+// --- Remove any default layer or legend controls (like "Animals") ---
+document.querySelectorAll(".leaflet-control-layers, .leaflet-control-attribution").forEach(el => {
+  if (el.textContent.toLowerCase().includes("animals")) el.remove();
+});
+
+
+
+// --- Adjust cow icon size dynamically based on zoom ---
+// --- Scale cow <img> elements slightly on zoom (using transform scale) ---
+const baseZoomForScale = 11;        // the zoom level where scale === 1
+const scaleFactorPerZoom = 0.15;    // tweak this to increase/reduce scaling
+
+map.on('zoom', () => {
+  const zoom = map.getZoom();
+  // compute a scale value: 1 at baseZoomForScale, grows as you zoom in
+  const scale = Math.max(0.6, 1 + (zoom - baseZoomForScale) * scaleFactorPerZoom);
+
+  // update all cow images that exist in the DOM
+  const imgs = document.querySelectorAll('.cow-img');
+  imgs.forEach(img => {
+    // use transform for smooth GPU-accelerated scaling
+    img.style.transform = `translateY(0px) scale(${scale})`;
+  });
+
+  // optionally adjust z-index so larger icons stay visible
+  imgs.forEach(img => {
+    img.style.zIndex = Math.round(scale * 1000);
+  });
+});
+
+
+
 
 /* UI refs */
 const slider = document.getElementById("timeSlider");
@@ -30,7 +64,8 @@ let animals = [];             // array of tagIds
 let sortedTimestamps = [];    // array of Date objects (unique, sorted)
 let markers = {};             // leaflet markers per tag
 let labels = {};              // optional label popups
-let anim = { playing:false, interval:null, speed:1, baseDelayMs:150 };
+let anim = { playing:false, interval:null, speed:1, baseDelayMs:80 };
+
 
 /* -------------------------
    CSV loader + parser
@@ -140,27 +175,50 @@ function createCowIconDataURI(){
   return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 }
 
+
 /* -------------------------
-   Draw initial markers (one per animal) but don't place them until time selected
+   Draw initial markers (one per animal) with random cow PNG icons
    ------------------------- */
-function initMarkers(tagIds){
-  const iconUrl = createCowIconDataURI();
-  for(let i=0;i<tagIds.length;i++){
-    const tag = tagIds[i];
-    const labelNum = i+1;
-    // use a DivIcon to combine image + number
-    const div = L.divIcon({
-      className: "cow-divicon",
-      html: `<div style="display:flex;align-items:center;gap:6px">
-               <img src="${iconUrl}" style="width:26px;height:18px;transform:translateY(0px)" />
-               <div style="min-width:18px;background:#fff;color:#111;border-radius:6px;padding:2px 6px;font-weight:700;font-size:11px">${labelNum}</div>
-             </div>`,
-      iconSize: [46,20],
-      iconAnchor: [23,10]
-    });
-    markers[tag] = L.marker([0,0], { icon: div, opacity:0 }).addTo(map); // hidden until valid pos
+   /* Replace initMarkers() with this version */
+   function initMarkers(tagIds){
+    for(let i=0;i<tagIds.length;i++){
+      const tag = tagIds[i];
+      const cowNum = (i % 9) + 1; // pick cow image from 1–9
+      const iconUrl = `images/cow${cowNum}.png`;
+  
+      const div = L.divIcon({
+        className: "cow-divicon",
+        html: `<img class="cow-img" src="${iconUrl}" style="width:26px;height:auto;transform-origin:center center;transform:translateY(0px) scale(1)" />`,
+        iconSize: [26,18],
+        iconAnchor: [13,9]
+      });
+      markers[tag] = L.marker([0,0], { icon: div, opacity:0 }).addTo(map);
+    }
   }
+  
+
+/* Modal logic — add at the very bottom of your JS file */
+/* Modal logic — add at the very bottom of your JS file */
+/* --- About the Cows Pop-out --- */
+const aboutBtn = document.getElementById("aboutBtn");
+const aboutBox = document.getElementById("aboutBox");
+const closeAbout = document.getElementById("closeAbout");
+const gallery = aboutBox.querySelector(".cow-gallery");
+
+for (let i = 1; i <= 9; i++) {
+  const div = document.createElement("div");
+  div.innerHTML = `<img src="images/cow${i}.png" alt="Cow ${i}"><div class="label">Cow ${i}</div>`;
+  gallery.appendChild(div);
 }
+
+aboutBtn.onclick = () => {
+  aboutBox.classList.toggle("hidden");
+};
+
+closeAbout.onclick = () => {
+  aboutBox.classList.add("hidden");
+};
+
 
 /* -------------------------
    Render animal list in the legend with color/badge
@@ -179,23 +237,61 @@ function populateLegend(tagIds){
   }
 }
 
+
 /* -------------------------
    Update view for a given timestamp (Date)
-   For each animal find last record <= time and move its marker
+   For each animal, interpolate smoothly between nearest points
    ------------------------- */
-function updateForTime(time){
-  for(const tag of animals){
-    const rec = lastBefore(dataByAnimal[tag], time);
-    const marker = markers[tag];
-    if(rec){
-      marker.setLatLng([rec.lat, rec.lon]);
+   function updateForTime(time){
+    for(const tag of animals){
+      const records = dataByAnimal[tag];
+      if(!records || records.length === 0) continue;
+  
+      // find the two records around the current time
+      let prev = null, next = null;
+      for(let i=0; i<records.length; i++){
+        if(records[i].ts <= time) prev = records[i];
+        if(records[i].ts > time){ next = records[i]; break; }
+      }
+  
+      const marker = markers[tag];
+  
+      if(!prev && !next){
+        marker.setOpacity(0);
+        continue;
+      }
+  
+      // if exact match or no next point, just show prev
+      if(!next){
+        marker.setLatLng([prev.lat, prev.lon]);
+        marker.setOpacity(1);
+        continue;
+      }
+  
+      if(!prev){
+        marker.setLatLng([next.lat, next.lon]);
+        marker.setOpacity(1);
+        continue;
+      }
+  
+      // interpolate between prev and next
+      const total = next.ts - prev.ts;
+      const elapsed = time - prev.ts;
+      const t = total > 0 ? elapsed / total : 0;
+  
+      const lat = prev.lat + (next.lat - prev.lat) * t;
+      const lon = prev.lon + (next.lon - prev.lon) * t;
+  
+      marker.setLatLng([lat, lon]);
       marker.setOpacity(1);
-    } else {
-      marker.setOpacity(0); // hide if no known pos yet
+
+      
     }
+  
+    // show formatted time
+    tsDisplay.textContent = new Date(time).toLocaleString(undefined, TIME_FORMAT_OPTIONS);
   }
-  tsDisplay.textContent = new Date(time).toLocaleString(undefined, TIME_FORMAT_OPTIONS);
-}
+  
 
 /* -------------------------
    Playback helpers

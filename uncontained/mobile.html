@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uncontained Mobile</title>
+  <link rel="stylesheet" href="mobile.css" />
+</head>
+<body>
+
+<header>
+  <h1>Uncontained</h1>
+</header>
+
+<!-- THIS MUST HAVE A HEIGHT FOR D3 MAP TO APPEAR -->
+<section id="map-section">
+  <div id="map"></div>
+</section>
+
+<!-- Overlay Buttons -->
+<div id="overlay-controls">
+  <button id="find-me">Show Nearest Restroom</button>
+  <button id="stop-sharing">Stop Sharing</button>
+
+  <div id="filters">
+    <select id="filter-ada">
+      <option value="all">ADA — All</option>
+      <option value="true">ADA Only</option>
+    </select>
+
+    <select id="filter-status">
+      <option value="all">Status — All</option>
+      <option value="Open">Open Only</option>
+      <option value="Closed">Closed</option>
+    </select>
+  </div>
+</div>
+
+<section id="details-section">
+  <h2>Restroom Details</h2>
+  <div id="details-box">Tap a restroom for more info.</div>
+</section>
+<div id="info-panel" class="info-hidden">
+  <div id="info-content"></div>
+  <button id="info-close">CLOSE ✕</button>
+</div>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="mobile.js"></script>
+
+</body>
+</html>

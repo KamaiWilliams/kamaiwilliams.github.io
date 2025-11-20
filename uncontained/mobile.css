@@ -1,0 +1,291 @@
+/* ------------------------------
+   GLOBAL MOBILE RESET + BODY
+------------------------------ */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #FC7D01;
+  font-family: "futura-100", sans-serif;
+  color: #2E2518;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ------------------------------
+   LOADING SCREEN
+------------------------------ */
+#loading-screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #FC7D01;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+  font-family: "elizeth", serif;
+  color: #CAE4E3;
+}
+
+#loading-screen h1 {
+  font-size: 2.6rem;
+  margin-bottom: 8px;
+  text-align: center;
+  color: #06d6a0;
+}
+
+#loading-screen p {
+  font-size: 1rem;
+  color: #CAE4E3;
+}
+
+/* ------------------------------
+   MAP CONTAINER
+------------------------------ */
+#map-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#map-section {
+  width: 100%;
+  height: 70vh;   /* THIS WAS MISSING EARLIER */
+  position: relative;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* ------------------------------
+   RESTROOM MARKERS
+------------------------------ */
+.restroom {
+  fill: #CAE4E3;
+  stroke: transparent;
+  opacity: 0.9;
+}
+
+.restroom:hover {
+  opacity: 1;
+}
+
+/* ------------------------------
+   UI BUTTONS (TOP RIGHT)
+------------------------------ */
+
+.button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 10px 14px;
+  background: #2E2518;
+  color: #CAE4E3;
+  border: none;
+  border-radius: 0;
+  font-family: "elizeth", serif;
+  font-size: 1rem;
+  z-index: 20;
+  cursor: pointer;
+}
+
+.button:hover {
+  color: #FF2269;
+}
+
+/* ------------------------------
+   FILTER PANEL (SLIDE DOWN)
+------------------------------ */
+
+#filter-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 85vw;
+  max-height: 70vh;
+  background: #CAE4E3;
+  padding: 16px;
+  transform: translateY(-100%);
+  transition: transform 0.35s ease;
+  z-index: 30;
+  overflow-y: auto;
+  font-family: "futura-100", sans-serif;
+  color: #2E2518;
+}
+
+#filter-panel.show {
+  transform: translateY(0);
+}
+
+#filter-panel h3 {
+  font-family: "elizeth", serif;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+#filter-panel label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+#filter-panel input[type="checkbox"] {
+  accent-color: #FF2269;
+  margin-right: 10px;
+}
+
+/* ------------------------------
+   STOP SHARING BUTTON
+------------------------------ */
+
+#stop-sharing {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: #2E2518;
+  color: #CAE4E3;
+  border: none;
+  font-family: "elizeth", serif;
+  font-size: 1rem;
+  padding: 10px 14px;
+  z-index: 40;
+}
+
+/* ------------------------------
+   INFO POPUP FOR RESTROOM
+------------------------------ */
+
+#info-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #2E2518;
+  color: #CAE4E3;
+  padding: 16px 18px;
+  border-top: 4px solid #FC7D01;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+  z-index: 50;
+  font-family: "futura-100", sans-serif;
+}
+
+#info-popup.show {
+  transform: translateY(0);
+}
+
+#info-popup h2 {
+  font-family: "elizeth", serif;
+  font-size: 1.4rem;
+  margin: 0 0 6px 0;
+  color: #CAE4E3;
+}
+
+#info-popup p {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+/* Close popup */
+#info-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  color: #FF2269;
+  cursor: pointer;
+}
+
+/* ------------------------------
+   QR HEADER (OPTIONAL AT TOP)
+------------------------------ */
+#header {
+  width: 100%;
+  padding: 10px 16px;
+  text-align: center;
+  background: #FC7D01;
+  font-family: "elizeth", serif;
+  font-size: 1.2rem;
+  color: #2E2518;
+  border-bottom: 3px solid #2E2518;
+}
+
+/* ------------------------------
+   ENSURE SCROLLING WORKS
+------------------------------ */
+body {
+  overflow-y: auto;
+}
+
+.mobile-tooltip {
+  position: absolute;
+  padding: 6px 10px;
+  background: #1F0E02;
+  color: white;
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 999;
+}
+/* Bottom slide-up info panel */
+#info-panel {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: #1F0E02;
+  color: white;
+  padding: 18px 20px 30px;
+  transform: translateY(100%);
+  transition: transform 0.35s ease-in-out;
+  z-index: 9999;
+  font-family: sans-serif;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+
+#info-panel.show {
+  transform: translateY(0%);
+}
+
+#info-panel h3 {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+}
+
+#info-panel p {
+  margin: 2px 0;
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.35;
+}
+
+#info-close {
+  margin-top: 18px;
+  padding: 12px 16px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  background: #FC7D01;
+  color: white;
+  cursor: pointer;
+  position: static;  /* <-- IMPORTANT: puts it at the bottom */
+  display: block;
+}
+

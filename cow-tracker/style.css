@@ -30,9 +30,11 @@ font-style: normal;
 #map {
   flex: 2;
   height: 100%;
+  width: 100%;      /* NEW — ensures it fills its flex space */
   border-radius: 8px;
   overflow: hidden;
 }
+
 
 /* Right-side controls */
 .side-panel {
@@ -89,7 +91,7 @@ font-style: normal;
 .topbar {
   text-align: center;
   margin-top: 40px;
-  margin-bottom: 30px; /* optional spacing below header */
+  margin-bottom: 0px; /* optional spacing below header */
 }
 
 .topbar h1 {
@@ -276,4 +278,10 @@ font-style: normal;
   height: 8px;
   border-radius: 5px;
   background: #6b442c;
+}
+
+/* Ensure the map actually renders full-height inside its container */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
 }

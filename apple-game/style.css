@@ -1,0 +1,59 @@
+:root {
+    --bg: #f8f6f0;
+    --accent: #4a90e2;
+    --dark: #222;
+    --muted: #9b9b9b;
+    --apple-red: #e23b3b;
+    --apple-green: #6fbf49;
+    --apple-yellow: #f1c40f;
+  }
+  
+  html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing:antialiased;
+  }
+  
+  svg{ width:100vw; height:100vh; display:block; }
+  
+  #handCursor { pointer-events:none; filter: drop-shadow(0 6px 6px rgba(0,0,0,0.12)); }
+  #fistIndicator { pointer-events:none; transition: fill-opacity 0.12s ease; }
+  
+  /* minimal flat shapes for tree, basket, apples, baskets, sink, etc. */
+  .tree-trunk { fill: #8b5a2b; }
+  .tree-crown { fill: #6bb04a; }
+  .apple { stroke: #7a1b1b; stroke-width:1.5; }
+  
+  .basket { fill: #b27b4f; stroke: #7a4d2b; stroke-width:2; }
+  .basket-empty { fill: rgba(178,123,79,0.25); stroke: #caa588; stroke-width:2; }
+  
+  .buttonless-hint { font-size:16px; fill:var(--dark); }
+  
+  /* small instruction text */
+  .instruction {
+    font-size:18px;
+    fill:var(--dark);
+  }
+  
+  /* final screen */
+  .finalText { font-size:36px; font-weight:700; fill:var(--dark); text-anchor:middle; }
+  
+  #nextBtn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    padding: 14px 26px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+#nextBtn:active {
+    transform: scale(0.97);
+}

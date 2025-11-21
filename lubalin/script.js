@@ -12,9 +12,9 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0u_qFcaq52G
 
 // Section 1: cuisines and placeholder PNG filenames (you asked for .png)
 const cuisines = [
-  { id: 'american', label: 'American', img: 'images/food-american.png' },
-  { id: 'chinese', label: 'Chinese', img: 'images/food-chinese.png' },
-  { id: 'mexican', label: 'Mexican', img: 'images/food-mexican.png' },
+  { id: 'american', label: 'American', img: 'images/burger.jpeg' },
+  { id: 'chinese', label: 'Chinese', img: 'images/japanese-food.jpg' },
+  { id: 'mexican', label: 'Mexican', img: 'images/mexican-food.png' },
   { id: 'indian', label: 'Indian', img: 'images/food-indian.png' },
 ];
 

@@ -15,7 +15,7 @@ const cuisines = [
   { id: 'american', label: 'American', img: 'images/burger.jpeg' },
   { id: 'chinese', label: 'Chinese', img: 'images/japanese-food.jpg' },
   { id: 'mexican', label: 'Mexican', img: 'images/mexican-food.png' },
-  { id: 'indian', label: 'Indian', img: 'images/food-indian.png' },
+  { id: 'indian', label: 'Indian', img: 'images/indian-food.jpg' },
 ];
 
 // Section 2: icons (actual icons per your choice)
@@ -70,7 +70,7 @@ function buildCuisineSlides() {
   cuisineSlides = cuisines.map(c => {
     const container = el('div', { class: 'slide', id: `cuisine-${c.id}` });
 
-    container.appendChild(el('h2', { html: `Look at this dish — ${c.label}` }));
+    container.appendChild(el('h2', { html: `Look at this dish` }));
     const img = el('img', { class: 'symbol', src: c.img, alt: c.label });
     container.appendChild(img);
 
@@ -135,7 +135,7 @@ function buildCuisineSlides() {
 function buildIconSlides() {
   iconSlides = icons.map(ic => {
     const container = el('div', { class: 'slide', id: `icon-${ic.id}` });
-    container.appendChild(el('h2', { html: `Look at this symbol — ${ic.label}` }));
+    container.appendChild(el('h2', { html: `Look at this symbol` }));
     container.appendChild(el('img', { class: 'symbol', src: ic.img, alt: ic.label }));
 
     // Q1: cuisine association
@@ -213,7 +213,7 @@ function buildLayeredSignSlides() {
   layeredSlides = layeredGroups.map(group => {
     // main interactive layering slide
     const container = el('div', { class: 'slide', id: `layer-${group.id}` });
-    container.appendChild(el('h2', { html: `Is this a Mexican restaurant? — ${group.label}` }));
+    container.appendChild(el('h2', { html: `Is this a Mexican restaurant?` }));
 
     const img = el('img', { class: 'symbol', id: `layerImg-${group.id}`, src: `${group.prefix}1.png`, alt: `${group.label} layer` });
     container.appendChild(img);
@@ -263,21 +263,6 @@ function buildLayeredSignSlides() {
   layeredFollowUps = layeredGroups.map(group => {
     const cont = el('div', { class: 'slide', id: `layer-follow-${group.id}` });
     cont.appendChild(el('h2', { html: `About the ${group.label} sign` }));
-
-    // Q: recognition (at what point does it look Mexican?) slider 1-10
-    cont.appendChild(el('label', { html: 'At what point does this start to look like a Mexican restaurant? (1-10)' }));
-    const recognition = el('input', { type: 'range', id: `recog-${group.id}`, min: 1, max: 10, value: 5 });
-    cont.appendChild(recognition);
-
-    // Q: authenticity slider
-    cont.appendChild(el('label', { html: 'How authentic does this sign feel? (1-10)' }));
-    const auth = el('input', { type: 'range', id: `auth-${group.id}`, min: 1, max: 10, value: 5 });
-    cont.appendChild(auth);
-
-    // Q: free association
-    cont.appendChild(el('label', { html: 'What does this sign make you think of?' }));
-    const free = el('input', { type: 'text', id: `free-${group.id}`, placeholder: 'Short answer...' });
-    cont.appendChild(free);
 
     cont.appendChild(el('div', {}, [
       (() => {

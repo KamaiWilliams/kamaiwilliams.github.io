@@ -10,440 +10,347 @@
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0u_qFcaq52Gx1JlbUu7IOrVra5u03sfnU1qEVYzo_hgUAEUfgnVhKo3avVlNJ8m5auw/exec";
 
 
-// Section 1: cuisines and placeholder PNG filenames (you asked for .png)
-const cuisines = [
-  { id: 'american', label: 'American', img: 'images/burger.jpeg' },
-  { id: 'chinese', label: 'Chinese', img: 'images/japanese-food.jpg' },
-  { id: 'mexican', label: 'Mexican', img: 'images/mexican-food.png' },
-  { id: 'indian', label: 'Indian', img: 'images/indian-food.jpg' },
-];
+// Survey rebuilt to the updated content you provided
+// Put the images in /images/ with exact filenames as specified in the conversation
 
-// Section 2: icons (actual icons per your choice)
-const icons = [
-  { id: 'cowboy', label: 'Cowboy', img: 'images/icon-cowboy.png' },
-  { id: 'flag', label: 'Flag', img: 'images/icon-flag.png' },
-  { id: 'rotulos', label: 'Rotulos', img: 'images/icon-rotulos.png' },
-  { id: 'folklore', label: 'Folklore', img: 'images/icon-folklore.png' },
-];
+/* --------------------------
+   Config / filenames
+   -------------------------- */
+   const fontFiles = ['font8.png','font9.png','font10.png','font11.png','font12.png','font13.png','font14.png']; // slides 8-14
+   const symbolFiles = [];
+   for(let i=15;i<=26;i++) symbolFiles.push(`symbol${i}.png`); // slides 15-26
+   
+   const layeredGroups = [
+     { id:'cowboy', label:'Cowboy', prefix:'images/cowboy' },    // cowboy1..10.png
+     { id:'folklore', label:'Folklore', prefix:'images/folklore' },
+     { id:'rotulos', label:'Rotulos', prefix:'images/rotulos' },
+     { id:'flag', label:'Flag', prefix:'images/flag' }
+   ];
+   const LAYERS = 10;
+   
+   /* --------------------------
+      DOM helpers & state
+      -------------------------- */
+   const slides = Array.from(document.querySelectorAll('.slide'));
+   const startBtn = document.getElementById('startBtn');
+   const progressBar = document.getElementById('progressBar');
+   const fontsContainer = document.getElementById('fonts-container');
+   const symbolsContainer = document.getElementById('symbols-container');
+   const layeredContainer = document.getElementById('layered-container');
+   const responses = []; // push objects per slide
+   
+   let currentIndex = 0;
+   
+   /* --------------------------
+      Navigation helpers
+      -------------------------- */
+   function showSlideByIndex(i){
+     slides.forEach(s => s.classList.remove('active'));
+     if(i<0) i=0;
+     if(i>=slides.length) i=slides.length-1;
+     slides[i].classList.add('active');
+     currentIndex = i;
+     updateProgress();
+   }
+   function goNext(){ showSlideByIndex(currentIndex+1); }
+   function goBack(){ showSlideByIndex(currentIndex-1); }
+   function updateProgress(){
+     const pct = (currentIndex / (slides.length - 1)) * 100;
+     progressBar.style.width = `${pct}%`;
+   }
+   
+   /* --------------------------
+      Wire basic nav buttons
+      -------------------------- */
+   document.addEventListener('click', (e) => {
+     const t = e.target;
+     if(t.id === 'startBtn'){ goNext(); return; }
+     if(t.classList.contains('navBtn')){
+       const action = t.getAttribute('data-action');
+       if(action === 'next') goNext();
+       if(action === 'back') goBack();
+     }
+   });
+   
+   /* --------------------------
+      Build color swatches (a generic palette)
+      -------------------------- */
+   const palette = [
+     '#b91c1c','#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#16a34a','#0ea5a4',
+     '#06b6d4','#3b82f6','#6366f1','#8b5cf6','#ec4899','#db2777','#7c3aed','#6b7280'
+   ];
+   
+   function initSwatches(){
+     document.querySelectorAll('.swatches').forEach(container => {
+       const name = container.dataset.name;
+       palette.forEach(color => {
+         const sw = document.createElement('div');
+         sw.className = 'swatch';
+         sw.style.background = color;
+         sw.dataset.color = color;
+         // selection toggle up to 3
+         sw.addEventListener('click', () => {
+           const selected = container.querySelectorAll('.swatch.selected').length;
+           if(sw.classList.contains('selected')) {
+             sw.classList.remove('selected');
+           } else {
+             if(selected >= 3) {
+               // flash to indicate limit
+               sw.style.transform = 'scale(0.98)';
+               setTimeout(()=> sw.style.transform = '');
+               return;
+             }
+             sw.classList.add('selected');
+           }
+         });
+         container.appendChild(sw);
+       });
+     });
+   }
+   
+   /* --------------------------
+      Build font slides (8-14)
+      -------------------------- */
+   function buildFontSlides(){
+     fontFiles.forEach((fn, idx) => {
+       const slide = document.createElement('div');
+       slide.className = 'slide';
+       slide.id = `font-${idx+8}`; // font8..font14
+       const label = document.createElement('h2');
+       label.textContent = `Formal Association Section: Font`;
+       slide.appendChild(label);
+   
+       const preview = document.createElement('div');
+       preview.className = 'font-preview';
+       preview.innerHTML = `<img src="images/${fn}" alt="font preview" style="max-width:100%;height:auto;display:block;margin:0 auto;">`;
+       slide.appendChild(preview);
+   
+       const q = document.createElement('p');
+       q.textContent = 'Which cuisine is best representative of this font? (pick up to 3)';
+       slide.appendChild(q);
+   
+       const list = document.createElement('div');
+       list.className = 'checkbox-list';
+       const cuisines = ["Italian","Chinese","Indian","Mexican","Korean","Pakistani","French","Thai","Greek","Puerto Rican","Dominican","Brazilian"];
+       cuisines.forEach(c => {
+         const item = document.createElement('label');
+         item.className = 'checkbox-item';
+         item.innerHTML = `<input type="checkbox" name="font-${idx}" value="${c}"> <span>${c}</span>`;
+         list.appendChild(item);
+       });
+       slide.appendChild(list);
+   
+       const controls = document.createElement('div');
+       controls.className = 'controls';
+       const btnNext = document.createElement('button'); btnNext.textContent = 'Next';
+       const btnBack = document.createElement('button'); btnBack.textContent = 'Back';
+       btnBack.className = 'navBtn'; btnBack.setAttribute('data-action','back');
+       btnNext.addEventListener('click', () => {
+         // collect up to 3 selections
+         const checked = Array.from(list.querySelectorAll('input:checked')).map(i=>i.value).slice(0,3);
+         responses.push({ section:'font', file:fn, selections:checked });
+         goNext();
+       });
+       controls.appendChild(btnBack); controls.appendChild(btnNext);
+       slide.appendChild(controls);
+   
+       fontsContainer.appendChild(slide);
+     });
+   }
+   
+   /* --------------------------
+      Build symbol slides (15-26)
+      -------------------------- */
+   function buildSymbolSlides(){
+     symbolFiles.forEach((fn, idx) => {
+       const slide = document.createElement('div');
+       slide.className = 'slide';
+       slide.id = `symbol-${15+idx}`;
+       slide.innerHTML = `<h2>Formal Association Section: Symbol</h2>`;
+       const img = document.createElement('img');
+       img.src = `images/${fn}`;
+       img.alt = fn;
+       img.className = 'symbol-img';
+       slide.appendChild(img);
+   
+       const q = document.createElement('p');
+       q.textContent = 'Which cuisine is best representative of this symbol? (pick up to 3)';
+       slide.appendChild(q);
+   
+       const list = document.createElement('div');
+       list.className = 'checkbox-list';
+       const cuisines = ["Italian","Chinese","Indian","Mexican","Korean","Pakistani","French","Thai","Greek","Puerto Rican","Dominican","Brazilian"];
+       cuisines.forEach(c => {
+         const item = document.createElement('label');
+         item.className = 'checkbox-item';
+         item.innerHTML = `<input type="checkbox" name="symbol-${idx}" value="${c}"> <span>${c}</span>`;
+         list.appendChild(item);
+       });
+       slide.appendChild(list);
+   
+       const controls = document.createElement('div');
+       controls.className = 'controls';
+       const btnNext = document.createElement('button'); btnNext.textContent = 'Next';
+       const btnBack = document.createElement('button'); btnBack.textContent = 'Back';
+       btnBack.className = 'navBtn'; btnBack.setAttribute('data-action','back');
+       btnNext.addEventListener('click', () => {
+         const checked = Array.from(list.querySelectorAll('input:checked')).map(i=>i.value).slice(0,3);
+         responses.push({ section:'symbol', file:fn, selections:checked });
+         goNext();
+       });
+       controls.appendChild(btnBack); controls.appendChild(btnNext);
+       slide.appendChild(controls);
+   
+       symbolsContainer.appendChild(slide);
+     });
+   }
+   
+   /* --------------------------
+      Build layered sign slides (for each group)
+      - each group has a slide that shows layer images; Next advances image; Stop records current image index and moves on
+      - after the 10 layers for that group we show a follow-up slide asking recognition/authenticity/free text (we'll reuse the follow-up used earlier)
+      -------------------------- */
+   function buildLayeredSlides(){
+     layeredGroups.forEach(group => {
+       // main layering slide
+       const main = document.createElement('div');
+       main.className = 'slide';
+       main.id = `layering-${group.id}`;
+       main.innerHTML = `<h2>Does this sign look like it belongs to a Mexican restaurant? — ${group.label}</h2>`;
+       const img = document.createElement('img');
+       img.className = 'symbol-img';
+       img.id = `img-${group.id}`;
+       img.src = `${group.prefix}1.png`;
+       main.appendChild(img);
+   
+       const btnWrap = document.createElement('div');
+       btnWrap.className = 'logo-buttons';
+       const btnNext = document.createElement('button'); btnNext.textContent = 'Next (show next layer)';
+       const btnStop = document.createElement('button'); btnStop.textContent = 'Stop (submit this layer)';
+       btnWrap.appendChild(btnStop); btnWrap.appendChild(btnNext);
+       main.appendChild(btnWrap);
+   
+       const counter = document.createElement('div');
+       counter.className = 'logo-count';
+       counter.id = `counter-${group.id}`;
+       counter.textContent = `Layer 1 of ${LAYERS}`;
+       main.appendChild(counter);
+   
+       // internal state
+       main._layer = 1;
+       main._group = group.id;
+   
+       // behavior
+       btnNext.addEventListener('click', () => {
+         if(main._layer < LAYERS){
+           main._layer++;
+           img.src = `${group.prefix}${main._layer}.png`;
+           counter.textContent = `Layer ${main._layer} of ${LAYERS}`;
+         } else {
+           // if last layer, advance to follow-up slide automatically
+           responses.push({ section:'layering-summary', group:group.id, stoppedAt:LAYERS, note:'completed all layers' });
+           goNext();
+         }
+       });
+   
+       btnStop.addEventListener('click', () => {
+         // record the layer index where user stopped
+         responses.push({ section:'layering-summary', group:group.id, stoppedAt: main._layer });
+         // go to follow-up slide immediately (we create it next in same flow)
+         goNext();
+       });
+   
+       layeredContainer.appendChild(main);
+   
+     });
+   }
+   
+   /* small helper for labels */
+   function createLabelEl(text){
+     const l = document.createElement('label');
+     l.textContent = text;
+     return l;
+   }
+   
+   /* --------------------------
+      Finalize: render dynamic slides into main slides list
+      -------------------------- */
+   function finalizeSlides(){
+     // rebuild slides array (slides are nodes with class .slide)
+     const all = Array.from(document.querySelectorAll('.slide'));
+     // ensure we put the dynamic fonts, symbols and layering in the right place:
+     // fontsContainer and symbolsContainer have appended slides; layeredContainer has appended slides already.
+     // just re-calc slides order as DOM order:
+     const ordered = Array.from(document.querySelectorAll('.container .slide'));
+     // update global slides array
+     while(slides.length) slides.pop();
+     ordered.forEach(s => slides.push(s));
+     // show first
+     showSlideByIndex(0);
+   }
+   
+   /* --------------------------
+      Collect respondent data from slide 2 before moving on
+      -------------------------- */
+   document.addEventListener('click', (e)=>{
+     const t = e.target;
+     if(t.classList.contains('navBtn') && t.getAttribute('data-action') === 'next') {
+       // if current is respondent slide, collect
+       const active = slides[currentIndex];
 
-// Section 3: layered sign groups (assume 10 layers each: 1..10)
-const layeredGroups = [
-  { id: 'cowboy', label: 'Cowboy', prefix: 'images/cowboy' },   // cowboy1.png ... cowboy10.png
-  { id: 'rotulos', label: 'Rotulos', prefix: 'images/rotulos' },
-  { id: 'flag', label: 'Flag', prefix: 'images/flag' },
-  { id: 'folklore', label: 'Folklore', prefix: 'images/folklore' },
-];
-const LAYERS_PER_GROUP = 10;
-
-/* -------------------------
-   State
-   ------------------------- */
-const dynamicSlidesEl = document.getElementById('dynamicSlides');
-const startBtn = document.getElementById('startSurveyBtn');
-const nextButtons = []; // used for dynamic slides (not needed statically)
-const progressBar = document.getElementById('progressBar');
-const finishBtn = document.getElementById('finishBtn');
-
-let slides = []; // list of slide DOM nodes in order (intro + respondent + dynamic + final)
-let currentIndex = 0;
-let responses = []; // will store objects { slideId, answers... }
-
-/* -------------------------
-   Helper: create element with attrs
-   ------------------------- */
-function el(tag, attrs = {}, children = []) {
-  const dom = document.createElement(tag);
-  for (const k in attrs) {
-    if (k === 'class') dom.className = attrs[k];
-    else if (k === 'html') dom.innerHTML = attrs[k];
-    else dom.setAttribute(k, attrs[k]);
-  }
-  children.forEach(c => dom.appendChild(c));
-  return dom;
-}
-
-/* -------------------------
-   Build dynamic slides:
-   Section 1: Cuisine slides (one slide per cuisine with 3 Qs)
-   ------------------------- */
-function buildCuisineSlides() {
-  cuisineSlides = cuisines.map(c => {
-    const container = el('div', { class: 'slide', id: `cuisine-${c.id}` });
-
-    container.appendChild(el('h2', { html: `Look at this dish` }));
-    const img = el('img', { class: 'symbol', src: c.img, alt: c.label });
-    container.appendChild(img);
-
-    // Q1: Color association (color input)
-    container.appendChild(el('label', { html: 'What color do you associate with this dish?' }));
-    const colorInput = el('input', { type: 'color', id: `color-${c.id}` });
-    container.appendChild(colorInput);
-
-    // Q2: Which design style?
-    container.appendChild(el('label', { html: 'Which design style do you most associate with this dish?' }));
-    const styleSelect = el('select', { id: `style-${c.id}` });
-    styleSelect.innerHTML = `
-      <option value="">Select</option>
-      <option value="cowboy">Cowboy</option>
-      <option value="flag">Flag</option>
-      <option value="rotulos">Rótulos</option>
-      <option value="folklore">Folklore</option>
-    `;
-    container.appendChild(styleSelect);
-
-    // Q3: Which icon/symbol?
-    container.appendChild(el('label', { html: 'Which icon / symbol do you most associate with this dish?' }));
-    const iconSelect = el('select', { id: `icon-${c.id}` });
-    iconSelect.innerHTML = `
-      <option value="">Select</option>
-      <option value="cowboy-hat">Cowboy hat</option>
-      <option value="eagle">Eagle</option>
-      <option value="rotulo">Rótulo (hand-painted)</option>
-      <option value="floral">Floral / folklore</option>
-    `;
-    container.appendChild(iconSelect);
-
-    container.appendChild(el('div', {}, [
-      (() => {
-        const btn = el('button', { class: 'smallBtn' });
-        btn.textContent = 'Next';
-        btn.addEventListener('click', () => {
-          // collect answers
-          const data = {
-            section: 'cuisine',
-            cuisine: c.id,
-            color: colorInput.value || null,
-            style: styleSelect.value || null,
-            icon: iconSelect.value || null
-          };
-          responses.push(data);
-          goNext();
+       if(active && active.id === 'slide-personal'){
+        responses.push({
+          section: 'personal',
+          age: document.getElementById('r_age').value || null,
+          location: document.getElementById('r_location').value || null,
+          hometown: document.getElementById('r_hometown').value || null,
+          ethnicity: document.getElementById('r_ethnicity').value || null
         });
-        return btn;
-      })()
-    ]));
-
-    return container;
-  });
-
-  cuisineSlides.forEach(s => dynamicSlidesEl.appendChild(s));
-}
-
-/* -------------------------
-   Build Section 2: Icon slides (one slide per icon with 3 Qs)
-   ------------------------- */
-function buildIconSlides() {
-  iconSlides = icons.map(ic => {
-    const container = el('div', { class: 'slide', id: `icon-${ic.id}` });
-    container.appendChild(el('h2', { html: `Look at this symbol` }));
-    container.appendChild(el('img', { class: 'symbol', src: ic.img, alt: ic.label }));
-
-    // Q1: cuisine association
-    container.appendChild(el('label', { html: 'What type of cuisine do you most associate with this symbol?' }));
-    const cuisineSel = el('select', { id: `iconCuisine-${ic.id}` });
-    cuisineSel.innerHTML = `
-      <option value="">Select</option>
-      <option value="Mexican">Mexican</option>
-      <option value="American">American</option>
-      <option value="Italian">Italian</option>
-      <option value="Chinese">Chinese</option>
-      <option value="Indian">Indian</option>
-      <option value="Other">Other</option>
-    `;
-    container.appendChild(cuisineSel);
-
-    // Q2: geographic association
-    container.appendChild(el('label', { html: 'What geographic location do you most associate with this symbol?' }));
-    const geoSel = el('select', { id: `iconGeo-${ic.id}` });
-    geoSel.innerHTML = `
-      <option value="">Select</option>
-      <option value="Mexico">Mexico</option>
-      <option value="Southwest US">Southwest US</option>
-      <option value="Central America">Central America</option>
-      <option value="Europe">Europe</option>
-      <option value="Asia">Asia</option>
-      <option value="Not sure">Not sure</option>
-    `;
-    container.appendChild(geoSel);
-
-    // Q3: mood/feeling (your choice A)
-    container.appendChild(el('label', { html: 'What mood or feeling do you associate with this symbol?' }));
-    const moodSel = el('select', { id: `iconMood-${ic.id}` });
-    moodSel.innerHTML = `
-      <option value="">Select</option>
-      <option value="festive">Festive</option>
-      <option value="rustic">Rustic</option>
-      <option value="traditional">Traditional</option>
-      <option value="formal">Formal</option>
-      <option value="casual">Casual</option>
-      <option value="energetic">Energetic</option>
-    `;
-    container.appendChild(moodSel);
-
-    container.appendChild(el('div', {}, [
-      (() => {
-        const btn = el('button', { class: 'smallBtn' });
-        btn.textContent = 'Next';
-        btn.addEventListener('click', () => {
-          responses.push({
-            section: 'icon',
-            icon: ic.id,
-            cuisine: cuisineSel.value || null,
-            geographic: geoSel.value || null,
-            mood: moodSel.value || null
-          });
-          goNext();
-        });
-        return btn;
-      })()
-    ]));
-
-    return container;
-  });
-
-  iconSlides.forEach(s => dynamicSlidesEl.appendChild(s));
-}
-
-/* -------------------------
-   Build Section 3: Layered sign groups
-   For each group we create a single "interactive" slide that progresses through layers
-   and then pushes a follow-up slide for recognition + authenticity + free text.
-   ------------------------- */
-function buildLayeredSignSlides() {
-  layeredSlides = layeredGroups.map(group => {
-    // main interactive layering slide
-    const container = el('div', { class: 'slide', id: `layer-${group.id}` });
-    container.appendChild(el('h2', { html: `Is this a Mexican restaurant?` }));
-
-    const img = el('img', { class: 'symbol', id: `layerImg-${group.id}`, src: `${group.prefix}1.png`, alt: `${group.label} layer` });
-    container.appendChild(img);
-
-    // Yes/No buttons
-    const btnWrap = el('div', { class: 'logo-buttons' });
-    const yesBtn = el('button', { class: 'smallBtn', id: `yes-${group.id}` });
-    yesBtn.textContent = 'Yes';
-    const noBtn = el('button', { class: 'smallBtn', id: `no-${group.id}` });
-    noBtn.textContent = 'No';
-    btnWrap.appendChild(yesBtn);
-    btnWrap.appendChild(noBtn);
-    container.appendChild(btnWrap);
-
-    const counter = el('div', { class: 'logo-count', id: `counter-${group.id}` , html: `Layer 1 of ${LAYERS_PER_GROUP}`});
-    container.appendChild(counter);
-
-    // store internal state on element
-    container._layerIndex = 1;
-    container._group = group;
-
-    // behavior on click: advance layer (record yes/no)
-    yesBtn.addEventListener('click', () => {
-      // record the response for this layer
-      responses.push({
-        section: 'layering',
-        group: group.id,
-        layer: container._layerIndex,
-        answer: 'Yes'
-      });
-      advanceLayer(container);
-    });
-    noBtn.addEventListener('click', () => {
-      responses.push({
-        section: 'layering',
-        group: group.id,
-        layer: container._layerIndex,
-        answer: 'No'
-      });
-      advanceLayer(container);
-    });
-
-    return container;
-  });
-
-  // follow-up slides (one per group) after layers done
-  layeredFollowUps = layeredGroups.map(group => {
-    const cont = el('div', { class: 'slide', id: `layer-follow-${group.id}` });
-    cont.appendChild(el('h2', { html: `About the ${group.label} sign` }));
-
-    cont.appendChild(el('div', {}, [
-      (() => {
-        const btn = el('button', { class: 'smallBtn' });
-        btn.textContent = 'Next';
-        btn.addEventListener('click', () => {
-          responses.push({
-            section: 'layer-follow',
-            group: group.id,
-            recognition: recognition.value,
-            authenticity: auth.value,
-            freeAssociation: free.value || null
-          });
-          goNext();
-        });
-        return btn;
-      })()
-    ]));
-
-    return cont;
-  });
-
-  // append to DOM in sequence: for each group: layering slide -> follow-up slide
-  layeredSlides.forEach((slide, idx) => {
-    dynamicSlidesEl.appendChild(slide);
-    dynamicSlidesEl.appendChild(layeredFollowUps[idx]);
-  });
-}
-
-/* -------------------------
-   Advance layer helper
-   ------------------------- */
-function advanceLayer(layerSlideEl) {
-  layerSlideEl._layerIndex++;
-  if (layerSlideEl._layerIndex <= LAYERS_PER_GROUP) {
-    // update image src and counter
-    const imgEl = document.getElementById(`layerImg-${layerSlideEl._group.id}`);
-    imgEl.src = `${layerSlideEl._group.prefix}${layerSlideEl._layerIndex}.png`;
-    const counter = document.getElementById(`counter-${layerSlideEl._group.id}`);
-    counter.textContent = `Layer ${layerSlideEl._layerIndex} of ${LAYERS_PER_GROUP}`;
-  } else {
-    // finished this group's layers -> move to next slide (which should be its follow-up)
-    goNext();
-  }
-}
-
-/* -------------------------
-   Render all dynamic content
-   ------------------------- */
-function renderAllDynamic() {
-  buildCuisineSlides();
-  buildIconSlides();
-  buildLayeredSignSlides();
-
-  // after building, collect all slide nodes in order:
-  const intro = document.getElementById('intro');
-  const info = document.getElementById('respondentInfo');
-  const final = document.getElementById('final');
-
-  // slides order: intro, info, dynamicSlides children (as constructed), final
-  slides = [intro, info, ...Array.from(dynamicSlidesEl.children), final];
-
-  // set up initial display and progress
-  slides.forEach(s => s.classList.remove('active'));
-  currentIndex = 0;
-  slides[currentIndex].classList.add('active');
-  updateProgress();
-}
-
-/* -------------------------
-   Navigation helpers
-   ------------------------- */
-function goNext() {
-  // hide current
-  slides[currentIndex].classList.remove('active');
-
-  // increment
-  currentIndex++;
-  if (currentIndex >= slides.length) currentIndex = slides.length - 1;
-
-  // show next
-  slides[currentIndex].classList.add('active');
-  updateProgress();
-}
-
-function updateProgress() {
-  const pct = (currentIndex / (slides.length - 1)) * 100;
-  progressBar.style.width = `${pct}%`;
-}
-
-/* -------------------------
-   Wire up start & respondent "Next" button
-   ------------------------- */
-document.addEventListener('click', (e) => {
-  // "Start" button
-  if (e.target && e.target.id === 'startSurveyBtn') {
-    // go to respondent info (index 1)
-    goNext();
-  }
-
-  // respondent info "Next" button (class nextBtn)
-  if (e.target && e.target.classList.contains('nextBtn')) {
-    // collect respondent info
-    const respondent = {
-      age: document.getElementById('age').value || null,
-      currentLocation: document.getElementById('currentLocation').value || null,
-      grewUp: document.getElementById('grewUp').value || null,
-      ethnicBackground: document.getElementById('ethnicBackground').value || null,
-      eatOutFreq: document.getElementById('eatOutFreq').value || null,
-      mostEatCuisine: document.getElementById('mostEatCuisine').value || null
-    };
-    // push respondent info once (only when at respondentInfo slide)
-    if (slides[currentIndex] && slides[currentIndex].id === 'respondentInfo') {
-      responses.push({ section: 'respondent', ...respondent });
-    }
-    goNext();
-  }
-});
-
-/* -------------------------
-   Send data to Google Sheets
-   ------------------------- */
-   async function submitToGoogleSheets(payload) {
-    try {
-      const res = await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-  
-      console.log("Data sent to Google Sheets!", payload);
-      return true;
-    } catch (err) {
-      console.error("Error sending to Google Sheets:", err);
-      return false;
-    }
-  }
-  
-
-/* -------------------------
-   Finish button - now submits to Google Sheets AND downloads JSON backup
-   ------------------------- */
-   document.addEventListener('click', async (e) => {
-    if (e.target && e.target.id === 'finishBtn') {
-  
-      // include final comments
-      const finalComments = document.getElementById('finalComments').value || null;
-      responses.push({ section: 'finalComments', text: finalComments });
-  
-      // Send to Google Sheets
-      const payload = {
-        timestamp: new Date().toISOString(),
-        responses: responses
-      };
-  
-      await submitToGoogleSheets(payload);
-  
-      // Also download the JSON as backup for your records
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(responses, null, 2));
-      const a = document.createElement('a');
-      a.setAttribute('href', dataStr);
-      a.setAttribute('download', 'survey_responses.json');
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-  
-      alert('Thank you! Your responses were submitted.');
-  
-      // Reset survey
-      slides.forEach(s => s.classList.remove('active'));
-      currentIndex = 0;
-      slides[currentIndex].classList.add('active');
-      updateProgress();
-      responses = [];
-    }
-  });
-  
-
-/* -------------------------
-   Initialize render
-   ------------------------- */
-renderAllDynamic();
-
+      }
+      
+       if(active && active.id === 'slide-respondent'){
+         const eat = document.getElementById('r_eatout').value || null;
+         const most = document.getElementById('r_mostcuisine').value || null;
+         responses.push({ section:'respondent', eatOutFreq: eat, mostEatCuisine: most });
+       }
+     }
+   });
+   
+   /* --------------------------
+      Build everything and initialize
+      -------------------------- */
+   function init(){
+     initSwatches();
+     buildFontSlides();
+     buildSymbolSlides();
+     buildLayeredSlides();
+     // small pause then finalize so DOM is updated
+     setTimeout(finalizeSlides, 60);
+   }
+   init();
+   
+   /* --------------------------
+      Finish button: save JSON locally (and console.log)
+      (If you want Google Sheets POSTing, we can add the fetch to your webapp here)
+      -------------------------- */
+   document.getElementById('finishBtn').addEventListener('click', ()=>{
+     // append final comments
+     const finalText = document.getElementById('finalComments').value || '';
+     responses.push({ section:'finalComments', text: finalText });
+   
+     // download JSON
+     const blob = new Blob([JSON.stringify(responses, null, 2)], {type:'application/json'});
+     const url = URL.createObjectURL(blob);
+     const a = document.createElement('a');
+     a.href = url; a.download = 'survey_responses.json';
+     a.click();
+     URL.revokeObjectURL(url);
+   
+     console.log('Responses:', responses);
+     alert('Thanks! Your responses were saved locally. (You can also wire this to Google Sheets if you want.)');
+   
+     // reset (go to intro)
+     showSlideByIndex(0);
+     // clear responses
+     responses.length = 0;
+   });   

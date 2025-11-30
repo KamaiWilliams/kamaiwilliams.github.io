@@ -1,3 +1,37 @@
+// ------------------------------
+// RETURN TO INTRO ON LOGO CLICK
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    const homeLink = document.getElementById("home-link");
+    const titleScreen = document.getElementById("title-screen");
+  
+    if (homeLink && titleScreen) {
+      homeLink.addEventListener("click", (e) => {
+        e.preventDefault();
+  
+        // Bring intro back
+        titleScreen.style.display = "flex";
+        titleScreen.style.opacity = "1";
+        titleScreen.style.pointerEvents = "auto";
+      });
+    }
+  });
+  
+// ------------------------------
+// MOBILE INTRO START BUTTON
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    const startBtn = document.getElementById("start");
+    if (startBtn) {
+      startBtn.addEventListener("click", () => {
+        const title = document.getElementById("title-screen");
+        title.style.opacity = "0";
+        title.style.pointerEvents = "none";
+        setTimeout(() => title.remove(), 600);
+      });
+    }
+  });
+  
 // ------------------------------------
 // Mobile Map — Styled Like Scene 1
 // ------------------------------------

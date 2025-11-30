@@ -1,4 +1,91 @@
 /* ------------------------------
+   MOBILE INTRO SCREEN (MATCHES DESKTOP)
+------------------------------ */
+/* ------------------------------
+   FLOATING LOGO (TOP LEFT)
+------------------------------ */
+
+#floating-header {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 9000;
+  background: transparent;
+  pointer-events: auto;
+}
+
+#home-link {
+  font-family: "elizeth", serif;
+  font-size: 22px;
+  font-weight: 800;
+  text-decoration: none;
+  color: #06d6a0;
+  -webkit-text-stroke: #06d6a0;
+  -webkit-text-stroke-width: 0.5pt;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#home-link:hover {
+  color: #FF2269;
+}
+
+#title-screen {
+  font-family: "elizeth", serif;
+  font-weight: 800;
+  font-style: normal;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #FC7D01;
+  z-index: 99999;
+  color: #9ECCDE;
+  text-align: center;
+  padding: 20px;
+}
+
+#title-screen h1 {
+  font-size: clamp(4rem, 14vw, 8rem); /* responsive mobile scaling */
+  line-height: .85em;
+  margin: 0;
+  color: #06d6a0;
+  -webkit-text-stroke: #06d6a0;
+  -webkit-text-stroke-width: 2pt;
+}
+
+#title-screen p {
+  font-size: 18pt; 
+  line-height: 40pt;
+  font-family: "futura-100", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  color: #CAE4E3;
+}
+
+#title-screen button {
+  font-family: "elizeth", serif;
+  font-weight: 800;
+  font-style: normal;
+  margin-left: 8px;
+  padding: 10px 10px;
+  font-size: 18pt; 
+  border: none;
+  background: transparent;
+  color: #2E2518;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#title-screen button:hover {
+  background: transparent;
+  color: #FF2269;
+}
+
+/* ------------------------------
    GLOBAL MOBILE RESET + BODY
 ------------------------------ */
 body, html {

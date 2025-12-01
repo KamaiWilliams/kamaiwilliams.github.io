@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Keyboard Pixel Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="controls">
+    <div class="title">Keyboard Pixel Visualizer</div>
+    <div class="buttons">
+      <button id="clearBtn" class="btn">Clear</button>
+      <button id="exportBtn" class="btn">Export PNG</button>
+    </div>
+  </header>
+
+  <main>
+    <canvas id="stage" class="stage"></canvas>
+    <div class="hint">Press any letter or number key to create visuals. Layers remain until cleared.</div>
+  </main>
+
+  <footer class="legend">
+    <div>Lower keys → bigger blocks; higher keys → finer pixels.</div>
+    <div>All keys generate unique visual patterns.</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

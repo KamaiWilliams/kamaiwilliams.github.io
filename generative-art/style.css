@@ -1,0 +1,54 @@
+:root{
+    --bg: #000;
+    --fg: #fff;
+    --accent: #ff4;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  body{display:flex;flex-direction:column;align-items:stretch;}
+  
+  .controls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 16px;
+    gap:16px;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    background:rgba(255,255,255,0.02);
+  }
+  .controls .title{
+    font-weight:700;
+    letter-spacing:0.06em;
+  }
+  .btn{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.06);
+    color:var(--fg);
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+  }
+  .btn:active{transform:translateY(1px)}
+  .buttons{display:flex;gap:8px}
+  
+  /* Canvas stage */
+  main{display:flex;flex-direction:column;align-items:stretch;flex:1;position:relative;overflow:hidden}
+  .stage{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    z-index:0;
+    image-rendering: pixelated;
+    background: #000;
+  }
+  
+  /* Hint text */
+  .hint{position:relative;z-index:1;font-size:12px;color:rgba(255,255,255,0.45);margin:12px;text-align:center}
+  
+  /* Footer legend */
+  .legend{padding:8px 16px;font-size:12px;color:rgba(255,255,255,0.35);border-top:1px solid rgba(255,255,255,0.02)}
+  

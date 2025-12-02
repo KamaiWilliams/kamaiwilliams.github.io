@@ -1,12 +1,13 @@
 :root {
-    --bg: #f8f6f0;
-    --accent: #4a90e2;
-    --dark: #222;
-    --muted: #9b9b9b;
-    --apple-red: #e23b3b;
-    --apple-green: #6fbf49;
-    --apple-yellow: #f1c40f;
-  }
+  --bg: #f3e4c6;       /* warm farmhouse paper */
+  --accent: #9b5f2f;   /* rustic brown */
+  --dark: #3e2a1a;     /* deep wood */
+  --muted: #bfa98a;   /* wheat dust */
+
+  --apple-red: #d94343;
+  --apple-green: #6fa84f;
+  --apple-yellow: #f1c84b;
+}
   
   html,body{
     height:100%;
@@ -90,3 +91,7 @@
 #nextBtn:active {
     transform: scale(0.97);
 }
+
+/*font-family: "jubilat", serif;
+font-weight: 400;
+font-style: normal;*/

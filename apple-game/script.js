@@ -48,100 +48,114 @@ function showInstruction(text, duration=3000){
 // ------------------------
 // SVG Primitives
 // ------------------------
-function makeTree(x, y){
-  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-  g.setAttribute('transform', `translate(${x},${y})`);
-  const trunk = document.createElementNS('http://www.w3.org/2000/svg','rect');
-  trunk.setAttribute('x', -18); trunk.setAttribute('y', 60); trunk.setAttribute('width', 36); trunk.setAttribute('height', 80);
-  trunk.setAttribute('class', 'tree-trunk');
-  g.appendChild(trunk);
-  const crownCols = [-60, -20, 20, 60];
-  crownCols.forEach(cx=>{
-    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx', cx); c.setAttribute('cy', 0); c.setAttribute('r', 60);
-    c.setAttribute('class', 'tree-crown');
-    g.appendChild(c);
-  });
-  return g;
+function makeTree(x, y, w = 400, h = 500){
+  const tree = document.createElementNS("http://www.w3.org/2000/svg", "image");
+
+  tree.setAttribute("href", "svg/tree.svg"); // ✅ your Illustrator file
+  tree.setAttribute("x", x);
+  tree.setAttribute("y", y);
+  tree.setAttribute("width", w);
+  tree.setAttribute("height", h);
+
+  tree.setAttribute("pointer-events", "none"); // ✅ hand passes through it
+  tree.setAttribute("style", "user-select:none;");
+
+  return tree;
 }
+
 
 function makeApple(type, cx, cy){
   const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-  g.setAttribute('class','appleGroup');
+  g.setAttribute('class', 'appleGroup');
   g.setAttribute('data-type', type);
   g.setAttribute('data-id', appleId);
-  const r = 16;
-  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', r);
-  c.setAttribute('class','apple');
-  let fill = '#e23b3b';
-  if(type==='green') fill = '#6fbf49';
-  if(type==='yellow') fill = '#f1c40f';
-  c.setAttribute('fill', fill);
-  g.appendChild(c);
-  const stem = document.createElementNS('http://www.w3.org/2000/svg','rect');
-  stem.setAttribute('x', cx - 2); stem.setAttribute('y', cy - r - 6);
-  stem.setAttribute('width', 4); stem.setAttribute('height', 8);
-  stem.setAttribute('fill','#5b3a1a');
-  g.appendChild(stem);
+
+  // Pick random version 1–3
+  const version = Math.floor(Math.random() * 3) + 1;
+
+  let file = '';
+  if(type === 'red') file = `svg/redapple${version}.svg`;
+  if(type === 'green') file = `svg/greenapple${version}.svg`;
+  if(type === 'yellow') file = `svg/yellowapple${version}.svg`;
+
+  const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+  img.setAttribute('href', file);
+  img.setAttribute('x', cx - 50);
+  img.setAttribute('y', cy - 50);
+  img.setAttribute('width', 100);
+  img.setAttribute('height', 100);
+  img.setAttribute('pointer-events', 'none');
+
+  g.appendChild(img);
+
   const id = appleId++;
   g.appleState = { id, type, cx, cy, held:false };
+
   return g;
 }
 
-function stemPosFix(appleGroup){
-  const c = appleGroup.querySelector('circle');
-  const cx = parseFloat(c.getAttribute('cx')), cy = parseFloat(c.getAttribute('cy'));
-  const stem = appleGroup.querySelector('rect');
-  if(stem){
-    stem.setAttribute('x', cx - 2);
-    stem.setAttribute('y', cy - 22);
-  }
-}
 
-function makeBasket(x, y, label){
-  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-  g.setAttribute('transform', `translate(${x},${y})`);
-  const box = document.createElementNS('http://www.w3.org/2000/svg','rect');
-  box.setAttribute('x', -60); box.setAttribute('y', -30); box.setAttribute('width', 120); box.setAttribute('height', 60);
-  box.setAttribute('class','basket');
-  g.appendChild(box);
-  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-  t.setAttribute('x',0); t.setAttribute('y',50); t.setAttribute('text-anchor','middle');
-  t.setAttribute('class','buttonless-hint');
+
+
+function makeBasket(x, y, label) {
+  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  g.setAttribute("transform", `translate(${x},${y})`);
+
+  // ✅ Your custom basket SVG
+  const img = document.createElementNS("http://www.w3.org/2000/svg", "image");
+  img.setAttribute("href", "svg/basket.svg"); // <-- your file
+  img.setAttribute("x", -190);
+  img.setAttribute("y", -130);
+  img.setAttribute("width", 300);
+  img.setAttribute("height", 340);
+  img.setAttribute("pointer-events", "none");
+  g.appendChild(img);
+
+  // ✅ Label under basket (still works)
+  const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  t.setAttribute("x", 0);
+  t.setAttribute("y", 70);
+  t.setAttribute("text-anchor", "middle");
+  t.setAttribute("class", "buttonless-hint");
   t.textContent = label;
   g.appendChild(t);
 
-  // Transparent hitbox for drop detection
+  // ✅ Invisible hitbox for dropping apples
   const hitbox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-  hitbox.setAttribute("x", -60);
-  hitbox.setAttribute("y", -30);
-  hitbox.setAttribute("width", 120);
-  hitbox.setAttribute("height", 60);
+  hitbox.setAttribute("x", -70);
+  hitbox.setAttribute("y", -50);
+  hitbox.setAttribute("width", 140);
+  hitbox.setAttribute("height", 100);
   hitbox.setAttribute("fill", "transparent");
   hitbox.setAttribute("pointer-events", "none");
   g.appendChild(hitbox);
+
   g._hitbox = hitbox;
 
   return g;
 }
 
+
 /* ---------------- SCENE 0 ---------------- */
+
+
 function enterScene0(){
   sceneLayer.innerHTML = "";
-  sceneData = { apples: [], basketCount: 0, pickedApples: [] };
+  sceneData = { apples: [], pickedApples: [] };
+  heldItem = null;
 
-  const tree = makeTree(180, 140);
+  const tree = makeTree(80, 10, 400, 500);
   sceneLayer.appendChild(tree);
 
   const types = ["red","green","yellow"];
-  for(let i=0;i<12;i++){
+
+  for(let i=0;i<20;i++){
     const angle = Math.random()*Math.PI*2;
-    const rx = 120 + Math.cos(angle)*80 + (Math.random()*40 - 20);
-    const ry = 80 + Math.sin(angle)*50 + (Math.random()*30 - 15);
+    const rx = 120 + Math.cos(angle) * 150 + (Math.random() * 70 - 35);
+    const ry = 70 + Math.sin(angle) * 90 + (Math.random() * 50 - 25);
     const type = types[Math.floor(Math.random()*types.length)];
-    const a = makeApple(type, rx + 60, ry + 40);
-    stemPosFix(a);
+
+    const a = makeApple(type, rx + 160, ry + 160);
     sceneLayer.appendChild(a);
     sceneData.apples.push(a);
   }
@@ -150,18 +164,23 @@ function enterScene0(){
   sceneLayer.appendChild(basket);
   sceneData.basket = basket;
 
-  showInstruction('Move your hand over an apple to pick it up. Move it over the basket to drop it in.', 6000);
+  showInstruction(
+    "Move your hand over an apple to pick it up. Drop it in the basket.",
+    6000
+  );
 }
 
 function tickScene0(){
   if(!sceneData || !sceneData.apples) return;
 
+  // AUTO GRAB
   if(!heldItem){
     for(const apple of sceneData.apples){
       if(apple.appleState.held) continue;
-      const circle = apple.querySelector('circle');
-      const ax = parseFloat(circle.getAttribute('cx'));
-      const ay = parseFloat(circle.getAttribute('cy'));
+
+      const ax = apple.appleState.cx;
+      const ay = apple.appleState.cy;
+
       if(dist({x:ax,y:ay},{x:hand.x,y:hand.y}) < 40){
         heldItem = apple;
         apple.appleState.held = true;
@@ -172,91 +191,110 @@ function tickScene0(){
     }
   }
 
+  // MOVE HELD APPLE
   if(heldItem){
-    const circle = heldItem.querySelector('circle');
     const newX = hand.x + heldOffset.x;
     const newY = hand.y + heldOffset.y;
-    circle.setAttribute('cx', newX);
-    circle.setAttribute('cy', newY);
+
+    const img = heldItem.querySelector("image");
+    img.setAttribute("x", newX - 22);
+    img.setAttribute("y", newY - 22);
+
     heldItem.appleState.cx = newX;
     heldItem.appleState.cy = newY;
-    stemPosFix(heldItem);
 
-    // check basket
-    const bx = 820, by = 440;
+    // BASKET DROP CHECK
+    const bx = 820;
+    const by = 440;
+
     if(Math.abs(newX - bx) < 60 && Math.abs(newY - by) < 40){
-      // store picked apple type for next scene
-      sceneData.pickedApples.push({ type: heldItem.appleState.type });
+      sceneData.pickedApples.push({
+        type: heldItem.appleState.type,
+        id: heldItem.appleState.id
+      });
 
-      // remove apple visually
       sceneLayer.removeChild(heldItem);
       sceneData.apples = sceneData.apples.filter(a => a !== heldItem);
-      sceneData.basketCount++;
       heldItem = null;
 
-      // advance to Scene 1 when all apples picked
       if(sceneData.apples.length === 0){
-        setTimeout(()=> runScene(1, sceneData.pickedApples), 600);
+        setTimeout(() => runScene(1, sceneData.pickedApples), 600);
       }
     }
   }
 }
 
-/* ------------------------
-   Scene 1: Sorting Apples
-------------------------- */
+/* ---------------- SCENE 1 ---------------- */
 function enterScene1(prevPicked){
   sceneLayer.innerHTML = '';
-  sceneData = { apples: [], sortedCount: 0, needed: prevPicked.length, baskets: {} };
+  heldItem = null;
 
-  // Create baskets
-  const bx = 700, byStart = 150;
+  sceneData = {
+    apples: [],
+    sortedCount: 0,
+    needed: prevPicked.length,
+    baskets: {}
+  };
+
+  // ✅ HORIZONTAL BASKET LAYOUT (TOP OF SCREEN)
+  const by = 120;          // vertical position
+  const bxStart = 280;    // starting X
+  const spacing = 220;    // space between baskets
+
   const labels = ['Red','Green','Yellow'];
   const colors = ['red','green','yellow'];
+
   for(let i=0;i<3;i++){
-    const b = makeBasket(bx, byStart + i*180, labels[i]);
+    const bx = bxStart + i * spacing;
+
+    const b = makeBasket(bx, by, labels[i]);
     sceneLayer.appendChild(b);
 
-    // Attach hitbox for dropping
     const hitbox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     hitbox.setAttribute("x", bx - 60);
-    hitbox.setAttribute("y", byStart + i*180 - 30);
+    hitbox.setAttribute("y", by - 30);
     hitbox.setAttribute("width", 120);
     hitbox.setAttribute("height", 60);
     hitbox.setAttribute("fill", "transparent");
-    hitbox.setAttribute("pointer-events", "none");
+
     sceneLayer.appendChild(hitbox);
 
-    sceneData.baskets[colors[i]] = { node: b, hitbox: hitbox, type: colors[i] };
+    sceneData.baskets[colors[i]] = {
+      node: b,
+      hitbox: hitbox,
+      type: colors[i]
+    };
   }
 
-  // Create apples
-  let startX = 300, startY = 220;
+  // ✅ Apples spawn lower so they move upward into baskets
+  let startX = 260;
+  let startY = 360;
+
   prevPicked.forEach((ap, idx) => {
-    const a = makeApple(ap.type, startX + (idx%5)*28 - 60, startY + Math.floor(idx/5)*28 );
+    const ax = startX + (idx % 6) * 60;
+    const ay = startY + Math.floor(idx / 6) * 60;
 
-    // Ensure appleState is correct for auto-grab
-    a.appleState = { id: a.appleState.id, type: ap.type, cx: a.appleState.cx, cy: a.appleState.cy, held: false };
-
-    stemPosFix(a);
+    const a = makeApple(ap.type, ax, ay);
     sceneLayer.appendChild(a);
+
     sceneData.apples.push(a);
   });
 
-  showInstruction('Sort apples into matching baskets. Move your hand over an apple to pick it up; move it into a basket to drop.', 6000);
+  showInstruction("Sort apples into matching baskets.", 5000);
 }
 
 function tickScene1(){
   if(!sceneData || !sceneData.apples) return;
 
-  // AUTO-GRAB
+  // AUTO GRAB
   if(!heldItem){
     for(const apple of sceneData.apples){
       if(apple.appleState.held) continue;
-      const circle = apple.querySelector('circle');
-      const ax = parseFloat(circle.getAttribute('cx')), ay = parseFloat(circle.getAttribute('cy'));
-      const d = dist({x:ax,y:ay}, {x:hand.x, y:hand.y});
-      if(d < 40){
+
+      const ax = apple.appleState.cx;
+      const ay = apple.appleState.cy;
+
+      if(dist({x:ax,y:ay}, {x:hand.x, y:hand.y}) < 40){
         heldItem = apple;
         apple.appleState.held = true;
         heldOffset.x = ax - hand.x;
@@ -266,44 +304,46 @@ function tickScene1(){
     }
   }
 
-  // Move held apple
+  // MOVE HELD APPLE
   if(heldItem){
-    const circle = heldItem.querySelector('circle');
-    const newX = hand.x + heldOffset.x, newY = hand.y + heldOffset.y;
-    circle.setAttribute('cx', newX);
-    circle.setAttribute('cy', newY);
-    heldItem.appleState.cx = newX; heldItem.appleState.cy = newY;
-    stemPosFix(heldItem);
+    const newX = hand.x + heldOffset.x;
+    const newY = hand.y + heldOffset.y;
 
-    // Check each basket for drop
+    const img = heldItem.querySelector("image");
+    img.setAttribute("x", newX - 22);
+    img.setAttribute("y", newY - 22);
+
+    heldItem.appleState.cx = newX;
+    heldItem.appleState.cy = newY;
+
+    // CHECK BASKETS (NOW AT TOP)
     for(const key in sceneData.baskets){
       const basket = sceneData.baskets[key];
       const bb = basket.hitbox.getBBox();
-      if(newX > bb.x && newX < bb.x + bb.width && newY > bb.y && newY < bb.y + bb.height){
+
+      if(newX > bb.x && newX < bb.x + bb.width &&
+         newY > bb.y && newY < bb.y + bb.height){
+
         if(heldItem.appleState.type === key){
-          // Correct: remove apple
           sceneLayer.removeChild(heldItem);
-          const idx = sceneData.apples.indexOf(heldItem);
-          if(idx >= 0) sceneData.apples.splice(idx,1);
+          sceneData.apples = sceneData.apples.filter(a => a !== heldItem);
           sceneData.sortedCount++;
           heldItem = null;
 
           if(sceneData.sortedCount >= sceneData.needed){
-            // Pass the sorted apples to the next scene
-            const sortedApples = sceneData.apples.map(a => ({ type: a.appleState.type, id: a.appleState.id }));
-            setTimeout(() => runScene(2, sortedApples), 500);
-        }
-          return;
+            setTimeout(() => runScene(2, sceneData.apples), 600);
+          }
         } else {
-          // Incorrect: just drop it
           heldItem.appleState.held = false;
           heldItem = null;
-          return;
         }
+
+        return;
       }
     }
   }
 }
+
 
 /* Scene 2: Wash Apples */
 function enterScene2(prevPicked) {
@@ -365,11 +405,11 @@ function tickScene2() {
 
   // Move held apple with hand
   if (heldItem) {
-    const circle = heldItem.querySelector('circle');
-    const newX = hand.x + heldOffset.x,
-      newY = hand.y + heldOffset.y;
-    circle.setAttribute('cx', newX);
-    circle.setAttribute('cy', newY);
+    const img = heldItem.querySelector('image');
+img.setAttribute('x', newX - 22);
+img.setAttribute('y', newY - 22);
+heldItem.appleState.cx = newX;
+heldItem.appleState.cy = newY;
     heldItem.appleState.cx = newX;
     heldItem.appleState.cy = newY;
     stemPosFix(heldItem);

@@ -16,12 +16,12 @@
 
 #home-link {
   font-family: "elizeth", serif;
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 60px;
+  font-weight: 700;
   text-decoration: none;
-  color: #06d6a0;
+  color: #2E2518;
   -webkit-text-stroke: #06d6a0;
-  -webkit-text-stroke-width: 0.5pt;
+  -webkit-text-stroke-width: 0.pt;
   cursor: pointer;
   transition: color 0.2s ease;
 }
@@ -58,8 +58,8 @@
 }
 
 #title-screen p {
-  font-size: 18pt; 
-  line-height: 40pt;
+  font-size: 30pt; 
+  line-height: 35pt;
   font-family: "futura-100", sans-serif;
   font-weight: 600;
   font-style: normal;
@@ -72,7 +72,7 @@
   font-style: normal;
   margin-left: 8px;
   padding: 10px 10px;
-  font-size: 18pt; 
+  font-size: 30pt; 
   border: none;
   background: transparent;
   color: #2E2518;
@@ -160,7 +160,7 @@ body, html {
    RESTROOM MARKERS
 ------------------------------ */
 .restroom {
-  fill: #CAE4E3;
+  fill: #9ECCDE;
   stroke: transparent;
   opacity: 0.9;
 }
@@ -243,11 +243,13 @@ body, html {
   bottom: 20px;
   left: 20px;
   background: #2E2518;
-  color: #CAE4E3;
+  color: #FC7D01;
   border: none;
+  border-radius: 0px;
   font-family: "elizeth", serif;
+  font-weight: 500;
   font-size: 1rem;
-  padding: 10px 14px;
+  padding: 10px 12px;
   z-index: 40;
 }
 
@@ -324,7 +326,7 @@ body {
   padding: 6px 10px;
   background: #1F0E02;
   color: white;
-  border-radius: 6px;
+  border-radius: 0px;
   font-size: 12px;
   pointer-events: none;
   z-index: 999;
@@ -342,8 +344,8 @@ body {
   transition: transform 0.35s ease-in-out;
   z-index: 9999;
   font-family: sans-serif;
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
 
 #info-panel.show {
@@ -353,6 +355,11 @@ body {
 #info-panel h3 {
   margin: 0 0 6px 0;
   font-size: 18px;
+  font-family: "elizeth", serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #9ECCDE;
+  
 }
 
 #info-panel p {
@@ -360,17 +367,24 @@ body {
   font-size: 14px;
   opacity: 0.9;
   line-height: 1.35;
+  font-family: "futura-100", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #FC7D01;
 }
 
 #info-close {
   margin-top: 18px;
-  padding: 12px 16px;
-  width: 100%;
+  padding: 8px 4px;
+  width: 30%;
   border: none;
-  border-radius: 10px;
+  border-radius: 0px;
   font-size: 16px;
   background: #FC7D01;
-  color: white;
+  font-family: "elizeth", serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #1F0E02;;
   cursor: pointer;
   position: static;  /* <-- IMPORTANT: puts it at the bottom */
   display: block;

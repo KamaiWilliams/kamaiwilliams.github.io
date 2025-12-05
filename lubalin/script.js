@@ -234,8 +234,9 @@ function buildFontSlides(){
     content.appendChild(list);
 
     const cuisines = [
-      "Mexican","Chinese","Italian","Korean","Indian",
-      "Thai","Japanese","Greek","I'm not sure","None of the above"
+      "Italian","Chinese","Indian","Mexican","Korean","Thai",
+    "Egyptian","Puerto Rican","Brazilian","American",
+    "Not sure","None of the above"
     ];
 
     cuisines.forEach(c => {
@@ -322,9 +323,9 @@ function buildSymbolSlides(){
     slide.appendChild(list);
 
     const cuisines = [
-      "Italian","Chinese","Indian","Mexican","Korean",
-      "Pakistani","French","Thai","Greek",
-      "Puerto Rican","Dominican","Brazilian"
+      "Italian","Chinese","Indian","Mexican","Korean","Thai",
+    "Egyptian","Puerto Rican","Brazilian","American",
+    "Not sure","None of the above"
     ];
 
     cuisines.forEach(c => {
@@ -391,13 +392,13 @@ function buildLayeredSlides(){
     main.className = 'slide';
 
     main.innerHTML = `
-      <h2>Does this sign look like it belongs to a Mexican restaurant? — ${group.label}</h2>
+      <h2>Please select the first design where you can confidently identify this as a Mexican restaurant. Pressing next will change the image. </h2>
 
       <img class="symbol-img" src="${group.prefix}1.png">
 
       <div class="logo-buttons">
         <button class="navBtn stopBtn">STOP</button>
-        <button class="navBtn nextLayerBtn">Next (show next layer)</button>
+        <button class="navBtn nextLayerBtn">Show Next Layer)</button>
       </div>
 
       <div class="logo-count">Layer 1 of ${LAYERS}</div>

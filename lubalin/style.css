@@ -8,7 +8,9 @@
 
 body{
   margin:0;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "komet", sans-serif;
+  font-weight: 400;
+  font-style: normal;
   background:var(--bg);
   color:var(--accent);
   display:flex;
@@ -116,7 +118,6 @@ textarea{min-height:80px}
 .checkbox-item{
   background: rgba(0,0,0,0.05);
   padding: 3px 3px;
-  font-size: 12px;   /* ✅ smaller text */
   display: flex;
   align-items: center;
   gap: 2px;
@@ -182,7 +183,7 @@ textarea{min-height:80px}
   border:2px solid #000;
   padding:12px 6px;
   text-align:center;
-  font-size:14px;
+  font-size: 16px;   /* ✅ smaller text */
   font-weight:600;
   cursor:pointer;
   user-select:none;

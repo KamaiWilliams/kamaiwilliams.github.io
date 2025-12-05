@@ -7,56 +7,62 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div class="container">
+
     <!-- Slide 1: Intro -->
-    <div class="slide active" id="slide-intro">
+    <div class="slide intro-slide active" id="slide-intro">
       <h1>Hello!</h1>
-      <p>Today you will participate in a short survey (less than 10 min) about restaurant design. We will collect your answers as part of our research for the Rhoda Lubalin Fellowship at The Cooper Union.</p>
-      <button id="startBtn">Start</button>
+      <p>
+        Today you will participate in a short survey (less than 10 min) about
+        restaurant design. We will collect your answers as part of our research
+        for the Rhoda Lubalin Fellowship at The Cooper Union.
+      </p>
+      <button id="startBtn" class="navBtn" data-action="next">Start</button>
     </div>
 
     <!-- Slide 1b: Personal Info -->
-<div class="slide" id="slide-personal">
-  <h2>Tell us about yourself</h2>
-
-  <label>
-    Age
-    <select id="r_age">
-      <option value="">Select</option>
-      <option>Under 18</option>
-      <option>18–24</option>
-      <option>25–34</option>
-      <option>35–44</option>
-      <option>45–54</option>
-      <option>55–64</option>
-      <option>65+</option>
-    </select>
-  </label>
-
-  <label>
-    Where are you currently living?  
-    <input type="text" id="r_location" placeholder="City, State — if NYC, include neighborhood">
-  </label>
-
-  <label>
-    Where did you grow up?  
-    <input type="text" id="r_hometown" placeholder="City, State, Country">
-  </label>
-
-  <label>
-    Ethnic background  
-    <input type="text" id="r_ethnicity" placeholder="Optional">
-  </label>
-
-  <button class="navBtn" data-action="next">Next</button>
-</div>
-
-
-    <!-- Slide 2: Respondent Info -->
-    <div class="slide" id="slide-respondent">
+    <div class="slide intro-slide" id="slide-personal">
       <h2>Tell us about yourself</h2>
 
-      <label>How often do you eat out?
+      <label>
+        Age
+        <select id="r_age">
+          <option value="">Select</option>
+          <option>Under 18</option>
+          <option>18–24</option>
+          <option>25–34</option>
+          <option>35–44</option>
+          <option>45–54</option>
+          <option>55–64</option>
+          <option>65+</option>
+        </select>
+      </label>
+
+      <label>
+        Where are you currently living?
+        <input type="text" id="r_location" placeholder="City, State (If NYC, include neighborhood)">
+      </label>
+
+      <label>
+        Where did you grow up?
+        <input type="text" id="r_hometown" placeholder="City, State, Country">
+      </label>
+
+      <label>
+        Ethnic background
+        <input type="text" id="r_ethnicity" placeholder="Text Here">
+      </label>
+
+      <button class="navBtn" data-action="next">Next</button>
+    </div>
+
+    <!-- Slide 2: Respondent Info -->
+    <div class="slide intro-slide" id="slide-respondent">
+      <h2>Tell us about yourself</h2>
+
+      <label>
+        How often do you eat out?
         <select id="r_eatout">
           <option value="">Select</option>
           <option>Daily</option>
@@ -67,7 +73,8 @@
         </select>
       </label>
 
-      <label>If you eat out, what cuisine do you eat most?
+      <label>
+        If you eat out, what cuisine do you eat most?
         <select id="r_mostcuisine">
           <option value="">Select</option>
           <option>American</option>
@@ -84,91 +91,53 @@
     <!-- Slide 3: Formal Association intro -->
     <div class="slide" id="slide-formal-intro">
       <h2>Formal Association Section</h2>
-      <p>You will select the top three answers from the options you associate with the prompt.</p>
+      <p>
+        You will select the top three answers from the options you associate with the prompt.
+      </p>
       <button class="navBtn" data-action="next">Next</button>
     </div>
 
-    <!-- Color slides (Indian, Vietnamese, Mexican, Ecuadorian, Lebanese) -->
-    <div class="slide" id="slide-color-indian">
-      <h2>Formal Association — Color</h2>
-      <p>Which color is best representative of <strong>Indian</strong> food? (pick up to 3)</p>
-      <div class="swatches" data-name="indian"></div>
-      <div class="controls">
-        <button class="navBtn" data-action="next">Next</button>
-      </div>
-    </div>
+    <!-- ✅ Color slides will be dynamically injected AFTER the formal intro by JS -->
 
-    <div class="slide" id="slide-color-vietnamese">
-      <h2>Formal Association — Color</h2>
-      <p>Which color is best representative of <strong>Vietnamese</strong> food? (pick up to 3)</p>
-      <div class="swatches" data-name="vietnamese"></div>
-      <div class="controls">
-        <button class="navBtn" data-action="back">Back</button>
-        <button class="navBtn" data-action="next">Next</button>
-      </div>
-    </div>
-
-    <div class="slide" id="slide-color-mexican">
-      <h2>Formal Association — Color</h2>
-      <p>Which color is best representative of <strong>Mexican</strong> food? (pick up to 3)</p>
-      <div class="swatches" data-name="mexican"></div>
-      <div class="controls">
-        <button class="navBtn" data-action="back">Back</button>
-        <button class="navBtn" data-action="next">Next</button>
-      </div>
-    </div>
-
-    <div class="slide" id="slide-color-ecuadorian">
-      <h2>Formal Association — Color</h2>
-      <p>Which color is best representative of <strong>Ecuadorian</strong> food? (pick up to 3)</p>
-      <div class="swatches" data-name="ecuadorian"></div>
-      <div class="controls">
-        <button class="navBtn" data-action="back">Back</button>
-        <button class="navBtn" data-action="next">Next</button>
-      </div>
-    </div>
-
-    <div class="slide" id="slide-color-lebanese">
-      <h2>Formal Association — Color</h2>
-      <p>Which color is best representative of <strong>Lebanese</strong> food? (pick up to 3)</p>
-      <div class="swatches" data-name="lebanese"></div>
-      <div class="controls">
-        <button class="navBtn" data-action="back">Back</button>
-        <button class="navBtn" data-action="next">Next</button>
-      </div>
-    </div>
-
-    <!-- Slides 8-14: Fonts (font8.png - font14.png) -->
+    <!-- ✅ Font Slides (Inserted by JS) -->
     <div id="fonts-container"></div>
 
-    <!-- Slides 15-26: Symbols (symbol15.png - symbol26.png) -->
+    <!-- ✅ Symbol Slides (Inserted by JS) -->
     <div id="symbols-container"></div>
 
     <!-- Slide: Accumulating sign intro -->
     <div class="slide" id="slide-accum-intro">
       <h2>What does a Mexican restaurant look like?</h2>
-      <p>In this next section you click <strong>STOP</strong> once you feel the sign looks believably Mexican.</p>
+      <p>
+        In this next section you click <strong>STOP</strong> once you feel the sign
+        looks believably Mexican.
+      </p>
       <button class="navBtn" data-action="next">Next</button>
     </div>
 
-    <!-- Layered sign containers (each group will be inserted here) -->
+    <!-- ✅ Layered sign slides injected here -->
     <div id="layered-container"></div>
 
-    <!-- Final slide -->
+    <!-- Final Slide -->
     <div class="slide" id="slide-final">
       <h2>Thank You!</h2>
       <p>The survey has now ended — we appreciate your time.</p>
+
       <label>Do you have any additional thoughts/comments for us?</label>
       <textarea id="finalComments" placeholder="Optional comments..."></textarea>
+
       <div class="controls">
         <button class="navBtn" data-action="back">Back</button>
         <button id="finishBtn">End</button>
       </div>
     </div>
 
-    <!-- Progress -->
-    <div id="progressWrap"><div id="progressBar"></div></div>
-  </div>
+    <!-- ✅ Progress Bar -->
+    <div id="progressWrap">
+      <div id="progressBar"></div>
+    </div>
+
+  </div> <!-- ✅ ONLY container close -->
 
   <script src="script.js"></script>
 </body>

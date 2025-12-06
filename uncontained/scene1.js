@@ -3,6 +3,9 @@
 // ------------------------------
 
 async function showRestroomMap() {
+  // signal that scene1 is active
+if (typeof setCurrentScene === 'function') setCurrentScene('scene1');
+
     // Remove old map elements but keep buttons
     d3.selectAll("#map-svg, #map-svg-les, #map-svg-les-nearest, .tooltip, #filter-panel, #les-desc-overlay, #chart-popup-1")
       .remove();
@@ -304,12 +307,29 @@ function showCharts(data) {
     svgStatus.append("g").attr("transform", `translate(${margin},0)`).call(d3.axisLeft(y2));
     svgStatus.append("text").attr("x", w / 2).attr("y", 20).attr("text-anchor", "middle").text("Restrooms by Status");
   }
+  // ------------------------------
+// Scene 1 Navigation Buttons
+// ------------------------------
+const navButtons = d3.select("body").append("div")
+  .attr("id", "scene1-nav")
+  .style("position", "absolute")
+  .style("width", "100%")
+  .style("bottom", "0px")
+  .style("display", "flex")
+  .style("justify-content", "space-between")
+  .style("padding", "0 0px")
+  .style("z-index", 9999);
+
+navButtons.append("button")
+  .attr("id", "back-button")
+  .text("←")
+  .on("click", () => window.location.href = "index.html");
+
+navButtons.append("button")
+  .attr("id", "next-button")
+  .text("→")
+  .on("click", () => window.location.href = "scene2.html");
+
   
-  
-  // --- DOM Ready ---
-  document.addEventListener("DOMContentLoaded", () => {
-    showRestroomMap();
-    document.getElementById("back-button").onclick = () => window.location.href = "index.html";
-    document.getElementById("next-button").onclick = () => window.location.href = "scene2.html";
-  });
+
   

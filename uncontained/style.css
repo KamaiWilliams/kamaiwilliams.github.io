@@ -624,7 +624,51 @@ html, body {
   color: #FF2269;
 }
 
+.begin-buttons {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+}
 
+.begin-buttons button {
+  font-family: "elizeth", serif;
+  font-size: 24pt;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #2E2518;
+  transition: color 0.2s ease;
+}
+
+.begin-buttons button:hover {
+  color: #FF2269;
+}
+/* GLOBAL SCENE NAV (bottom overlay) */
+#global-back,
+#global-next {
+  position: fixed;
+  bottom: 20px;
+  padding: 10px 20px;
+  font-size: 20px;
+  background: rgba(0,0,0,0);
+  color: #FC7D01;
+  border: none;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+/* Left and right placement */
+#global-back {
+  left: 20px;
+}
+
+#global-next {
+  right: 20px;
+}
+#back-button,
+#next-button {
+  display: none;   /* ✅ hidden on intro by default */
+}
 /* TEMP FIX: Prevent any background overlay */
 
 

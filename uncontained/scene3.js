@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function showScene3() {
+    if (typeof setCurrentScene === 'function') setCurrentScene('scene3');
+
     const width = window.innerWidth;
     const height = window.innerHeight;
 
@@ -248,15 +250,18 @@ const lesRestrooms = restroomData
             .style("padding", "0 0px")
             .style("z-index", 9999);
 
-        navButtons.append("button")
+            navButtons.append("button")
             .attr("id", "back-button")
+            .style("display", "block")   // ✅ FORCE VISIBILITY
             .text("←")
             .on("click", () => window.location.href = "scene2.html");
-
-        navButtons.append("button")
+          
+          navButtons.append("button")
             .attr("id", "next-button")
+            .style("display", "block")   // ✅ FORCE VISIBILITY
             .text("→")
             .on("click", () => window.location.href = "info.html");
+          
 
     } catch (err) {
         console.error("🚨 Error in showLESScene():", err);

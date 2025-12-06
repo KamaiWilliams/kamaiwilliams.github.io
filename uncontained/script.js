@@ -1,3 +1,61 @@
+
+// ---------- Global navigation helper ----------
+/*
+ - Use the global buttons (global-back / global-next) for navigation.
+ - Scenes should call setCurrentScene('scene1'|'scene2'|'scene3') when activated.
+*/
+
+let currentScene = 'title'; // default
+
+function setCurrentScene(sceneId) {
+  currentScene = sceneId;
+  // decide whether to show nav on this page
+  const backBtn = document.getElementById('global-back');
+  const nextBtn = document.getElementById('global-next');
+
+  // if the global buttons don't exist on the page, do nothing
+  if (!backBtn || !nextBtn) return;
+
+  // hide on title
+  if (sceneId === 'title') {
+    backBtn.hidden = true;
+    nextBtn.hidden = true;
+    return;
+  }
+
+  // show for scenes
+  backBtn.hidden = false;
+  nextBtn.hidden = false;
+}
+
+// navigation actions (full-page navigation to avoid partial/broken DOM states)
+function navBack() {
+  if (currentScene === 'scene1') return window.location.href = 'index.html';
+  if (currentScene === 'scene2') return window.location.href = 'scene1.html';
+  if (currentScene === 'scene3') return window.location.href = 'scene2.html';
+  // fallback
+  window.location.href = 'index.html';
+}
+function navNext() {
+  if (currentScene === 'scene1') return window.location.href = 'scene2.html';
+  if (currentScene === 'scene2') return window.location.href = 'scene3.html';
+  if (currentScene === 'scene3') return window.location.href = 'info.html';
+  // fallback
+  window.location.href = 'scene1.html';
+}
+
+// wire global buttons after DOM ready (safe even if buttons missing)
+document.addEventListener('DOMContentLoaded', () => {
+  const backBtn = document.getElementById('global-back');
+  const nextBtn = document.getElementById('global-next');
+
+  if (backBtn) backBtn.addEventListener('click', navBack);
+  if (nextBtn) nextBtn.addEventListener('click', navNext);
+
+  // ensure title screen hides nav
+  setCurrentScene('title');
+});
+
 // ------------------------------
 // Entry point: title → Scene 1
 // ------------------------------
@@ -8,7 +66,14 @@ d3.select("#start").on("click", () => {
     .style("opacity", 0)
     .remove();
 
-  // Load Scene 1 (defined in scene1.js)
+  // ✅ SHOW NAV BUTTONS
+  d3.select("#back-button").style("display", "block");
+  d3.select("#next-button").style("display", "block");
+
+  // ✅ SHOW DESCRIPTION PANEL
+  d3.select("#map-description").style("display", "block");
+
+  // ✅ LOAD SCENE
   showRestroomMap();
 });
 
@@ -16,9 +81,17 @@ d3.select("#start").on("click", () => {
 // Shared helpers
 // ------------------------------
 function removeSceneElements() {
-  d3.selectAll("#map-svg, #map-svg-les, #map-svg-les-nearest, .tooltip, #filter-panel, #next-button, #back-button, #les-desc-overlay, #chart-popup")
-    .remove();
+  d3.selectAll(`
+    #map-svg,
+    #map-svg-les,
+    #map-svg-les-nearest,
+    .tooltip,
+    #filter-panel,
+    #les-desc-overlay,
+    #chart-popup
+  `).remove();
 }
+
 
 function buildFilterPanel(containerSelection, dotsSelection, typeColors, dataKeyNames = { operator: "Operator", status: "Status", access: "Accessibility" }) {
   const typeCategories = Object.keys(typeColors);

@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function showLESScene() {
+    if (typeof setCurrentScene === 'function') setCurrentScene('scene2');
+
     removeSceneElements();
 
     const width = window.innerWidth;
@@ -215,15 +217,18 @@ async function showLESScene() {
             .style("padding", "0 0px")
             .style("z-index", 1000);
 
-        navButtons.append("button")
+            navButtons.append("button")
             .attr("id", "back-button")
+            .style("display", "block")   // ✅ FORCE VISIBILITY
             .text("←")
             .on("click", () => window.location.href = "scene1.html");
-
-        navButtons.append("button")
+          
+          navButtons.append("button")
             .attr("id", "next-button")
+            .style("display", "block")   // ✅ FORCE VISIBILITY
             .text("→")
             .on("click", () => window.location.href = "scene3.html");
+          
 
     } catch (err) {
         console.error("🚨 Error in showLESScene():", err);

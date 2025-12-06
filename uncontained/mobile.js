@@ -79,6 +79,8 @@ async function buildMobileMap() {
       });
 
       const valid = restrooms.filter(d => !isNaN(d.Latitude) && !isNaN(d.Longitude));
+        window.mobileRestrooms = valid; // ✅ make data available to GPS feature
+
 
       // Scene 1 color palette
       const typeColors = {
@@ -145,3 +147,140 @@ document.getElementById("info-close").addEventListener("click", () => {
       console.error("Mobile map error:", err);
   }
 }
+
+// ------------------------------------
+// FIND NEAREST RESTROOM (GPS)
+// ------------------------------------
+console.log("GPS SCRIPT LOADED ✅");
+
+let userLocation = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const findBtn = document.getElementById("find-me");
+
+  if (!findBtn) {
+    console.error("❌ FIND ME BUTTON NOT FOUND");
+    return;
+  }
+
+  findBtn.addEventListener("click", () => {
+    console.log("FIND ME CLICKED ✅");
+
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your device.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        userLocation = {
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        };
+
+        console.log("✅ LOCATION FOUND:", userLocation);
+
+        showUserOnMap();
+        findNearestRestroom();
+      },
+      error => {
+        console.error("❌ GPS ERROR:", error);
+        alert("Location access denied or blocked.");
+      }
+    );
+  });
+});
+
+// ------------------------------------
+// SHOW USER DOT ON MAP
+// ------------------------------------
+function showUserOnMap() {
+    if (!userLocation) return;
+  
+    const svg = d3.select("#mobile-map-svg");
+    const g = svg.select("g");
+  
+    const projection = d3.geoMercator()
+      .center([-74.006, 40.7128])
+      .scale(130000)
+      .translate([window.innerWidth / 2, window.innerHeight / 2]);
+  
+    d3.select("#user-dot").remove();
+  
+    g.append("circle")
+      .attr("id", "user-dot")
+      .attr("cx", projection([userLocation.lon, userLocation.lat])[0])
+      .attr("cy", projection([userLocation.lon, userLocation.lat])[1])
+      .attr("r", 7)
+      .attr("fill", "#06d6a0")
+      .attr("stroke", "#1F0E02")
+      .attr("stroke-width", 2);
+  }
+  
+
+// ------------------------------------
+// FIND NEAREST RESTROOM
+// ------------------------------------
+function findNearestRestroom() {
+    if (!userLocation) {
+      console.warn("No user location yet.");
+      return;
+    }
+  
+    if (!window.mobileRestrooms || window.mobileRestrooms.length === 0) {
+      alert("Restroom data not loaded yet. Try again in a second.");
+      return;
+    }
+  
+    let closest = null;
+    let minDist = Infinity;
+  
+    window.mobileRestrooms.forEach(r => {
+      const d = haversine(
+        userLocation.lat,
+        userLocation.lon,
+        r.Latitude,
+        r.Longitude
+      );
+  
+      if (d < minDist) {
+        minDist = d;
+        closest = r;
+      }
+    });
+  
+    if (closest) {
+      showInfoPanel(closest);
+    } else {
+      alert("No restroom found.");
+    }
+  }
+  
+// ------------------------------------
+// DISTANCE FORMULA
+// ------------------------------------
+function haversine(lat1, lon1, lat2, lon2) {
+  const toRad = d => d * Math.PI / 180;
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) *
+    Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) ** 2;
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+document.getElementById("stop-sharing").addEventListener("click", () => {
+    userLocation = null;
+    d3.select("#user-dot").remove();
+    alert("Location sharing stopped.");
+  });
+
+  if (location.protocol !== "https:" && location.hostname !== "localhost") {
+    alert("⚠️ Location only works on HTTPS or localhost.");
+  }
+  

@@ -9,8 +9,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <button id="back-button">←</button>
-  <button id="next-button">→</button>
+
 
   <!-- Description box -->
   <div id="map-description"></div>
@@ -21,13 +20,5 @@
   <!-- Load Scene 1 code -->
   <script src="scene1.js"></script>
 
-  <script>
-     document.getElementById("back-button").onclick = () => window.location.href = "index.html";
-    document.getElementById("next-button").onclick = () => window.location.href = "scene2.html";
-
-    document.addEventListener("DOMContentLoaded", () => {
-    showRestroomMap();
-  });
-  </script>
 </body>
 </html>

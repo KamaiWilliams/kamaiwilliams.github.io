@@ -29,12 +29,13 @@ async function buildMobileMap() {
   const g = svg.append("g");
 
   // Projection (same as Scene 1)
-  const projection = d3.geoMercator()
+  window.mobileProjection = d3.geoMercator()
       .center([-74.006, 40.7128])
       .scale(130000)
       .translate([width / 2, height / 2]);
 
-  const path = d3.geoPath().projection(projection);
+      const path = d3.geoPath().projection(window.mobileProjection);
+
 
   // Tooltip (Scene 1 style but mobile-friendly)
   const tooltip = d3.select("body")
@@ -93,21 +94,21 @@ async function buildMobileMap() {
 
       // Draw dots
       // Draw dots with click/touch showing full details
-g.selectAll("circle.restroom")
-.data(valid)
-.enter()
-.append("circle")
-.attr("class", "restroom")
-.attr("cx", d => projection([d.Longitude, d.Latitude])[0])
-.attr("cy", d => projection([d.Longitude, d.Latitude])[1])
-.attr("r", 2.5)
-.attr("fill", d => typeColors[d.Operator])
-.style("opacity", 1)
-.on("click touchstart", (event, d) => {
-    event.stopPropagation();
-
-    showInfoPanel(d);
-});
+      g.selectAll("circle.restroom")
+      .data(valid)
+      .enter()
+      .append("circle")
+      .attr("class", "restroom")
+      .attr("cx", d => window.mobileProjection([d.Longitude, d.Latitude])[0])
+      .attr("cy", d => window.mobileProjection([d.Longitude, d.Latitude])[1])
+      .attr("r", 4)
+      .attr("fill", d => typeColors[d.Operator])
+      .style("opacity", 1)
+      .on("click touchstart", (event, d) => {
+        event.stopPropagation();
+        showInfoPanel(d);
+      });
+    
 
 // ----------------------------
 // Bottom Info Panel Logic
@@ -130,11 +131,7 @@ function showInfoPanel(d) {
 `;
 
   panel.classList.add("show");
-}
-
-document.getElementById("info-close").addEventListener("click", () => {
-  document.getElementById("info-panel").classList.remove("show");
-});
+} 
 
       // --------- ZOOM + TOUCH DRAG ----------
       const zoom = d3.zoom()
@@ -156,40 +153,38 @@ console.log("GPS SCRIPT LOADED ✅");
 let userLocation = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  const findBtn = document.getElementById("find-me");
-
-  if (!findBtn) {
-    console.error("❌ FIND ME BUTTON NOT FOUND");
-    return;
-  }
-
-  findBtn.addEventListener("click", () => {
-    console.log("FIND ME CLICKED ✅");
-
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your device.");
+    const findMeBtn = document.getElementById("find-me");
+  
+    if (!findMeBtn) {
+      console.error("❌ FIND-ME BUTTON NOT FOUND");
       return;
     }
-
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        userLocation = {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude
-        };
-
-        console.log("✅ LOCATION FOUND:", userLocation);
-
-        showUserOnMap();
-        findNearestRestroom();
-      },
-      error => {
-        console.error("❌ GPS ERROR:", error);
-        alert("Location access denied or blocked.");
+  
+    findMeBtn.addEventListener("click", () => {
+      console.log("FIND ME CLICKED ✅");
+  
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your device.");
+        return;
       }
-    );
+  
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          userLocation = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          };
+  
+          showUserOnMap();
+          findNearestRestroom();
+        },
+        error => {
+          alert("Location access denied. Please enable it in your browser.");
+        }
+      );
+    });
   });
-});
+  
 
 // ------------------------------------
 // SHOW USER DOT ON MAP
@@ -200,10 +195,8 @@ function showUserOnMap() {
     const svg = d3.select("#mobile-map-svg");
     const g = svg.select("g");
   
-    const projection = d3.geoMercator()
-      .center([-74.006, 40.7128])
-      .scale(130000)
-      .translate([window.innerWidth / 2, window.innerHeight / 2]);
+    const projection = window.mobileProjection;
+
   
     d3.select("#user-dot").remove();
   
@@ -283,4 +276,27 @@ document.getElementById("stop-sharing").addEventListener("click", () => {
   if (location.protocol !== "https:" && location.hostname !== "localhost") {
     alert("⚠️ Location only works on HTTPS or localhost.");
   }
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const closeBtn = document.getElementById("info-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        document.getElementById("info-panel").classList.remove("show");
+      });
+    }
+  
+    const stopBtn = document.getElementById("stop-sharing");
+    if (stopBtn) {
+      stopBtn.addEventListener("click", () => {
+        userLocation = null;
+        d3.select("#user-dot").remove();
+        alert("Location sharing stopped.");
+      });
+    }
+  
+    if (location.protocol !== "https:" && location.hostname !== "localhost") {
+      alert("⚠️ Location only works on HTTPS or localhost.");
+    }
+  
+  });
   

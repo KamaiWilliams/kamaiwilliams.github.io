@@ -139,6 +139,13 @@ function showInfoPanel(d) {
           .on("zoom", event => g.attr("transform", event.transform));
 
       svg.call(zoom);
+// expose map objects so other functions can zoom/transform it
+window.mobileZoom = zoom;
+window.mobileSvg = svg;
+window.mobileG = g;
+window.mobileProjection = window.mobileProjection || window.mobileProjection; // you already set this
+window.mobileWidth = width;
+window.mobileHeight = height;
 
   } catch (err) {
       console.error("Mobile map error:", err);
@@ -174,10 +181,17 @@ document.addEventListener("DOMContentLoaded", () => {
             lat: position.coords.latitude,
             lon: position.coords.longitude
           };
-  
+        
+          // show user on map right away
           showUserOnMap();
+        
+          // smoothly zoom and center map on user, then highlight nearby restrooms
+          revealMapAndZoomToUser(3);
+        
+          // highlight nearest restroom in the panel
           findNearestRestroom();
         },
+        
         error => {
           alert("Location access denied. Please enable it in your browser.");
         }
@@ -190,26 +204,58 @@ document.addEventListener("DOMContentLoaded", () => {
 // SHOW USER DOT ON MAP
 // ------------------------------------
 function showUserOnMap() {
-    if (!userLocation) return;
-  
-    const svg = d3.select("#mobile-map-svg");
-    const g = svg.select("g");
-  
-    const projection = window.mobileProjection;
+  if (!userLocation) return;
+  const svg = d3.select("#mobile-map-svg");
+  const g = window.mobileG || svg.select("g");
+  const projection = window.mobileProjection;
+  if (!projection) return;
+
+  d3.select("#user-dot").remove();
+
+  g.append("circle")
+    .attr("id", "user-dot")
+    .attr("cx", projection([userLocation.lon, userLocation.lat])[0])
+    .attr("cy", projection([userLocation.lon, userLocation.lat])[1])
+    .attr("r", 7)
+    .attr("fill", "#06d6a0")
+    .attr("stroke", "#1F0E02")
+    .attr("stroke-width", 2);
+}
 
   
-    d3.select("#user-dot").remove();
-  
-    g.append("circle")
-      .attr("id", "user-dot")
-      .attr("cx", projection([userLocation.lon, userLocation.lat])[0])
-      .attr("cy", projection([userLocation.lon, userLocation.lat])[1])
-      .attr("r", 7)
-      .attr("fill", "#06d6a0")
-      .attr("stroke", "#1F0E02")
-      .attr("stroke-width", 2);
+// call this after userLocation is set
+function revealMapAndZoomToUser(k = 3, removeTitle = true) {
+  // hide title screen if present
+  const title = d3.select("#title-screen");
+  if (!title.empty()) {
+    title.transition().duration(400).style("opacity", 0).on("end", () => title.remove());
   }
-  
+
+  if (!window.mobileSvg || !window.mobileProjection || !window.mobileZoom) return;
+
+  // project user point to pixel coordinates
+  const [x, y] = window.mobileProjection([userLocation.lon, userLocation.lat]);
+
+  // compute transform so user is centered with scale k
+  const tx = window.mobileWidth / 2 - k * x;
+  const ty = window.mobileHeight / 2 - k * y;
+
+  // use d3 zoom to animate transform (keeps zoom behavior intact)
+  window.mobileSvg.transition().duration(800).call(
+    window.mobileZoom.transform,
+    d3.zoomIdentity.translate(tx, ty).scale(k)
+  );
+
+  // ensure user dot is visible (create if missing)
+  showUserOnMap();
+
+  // reveal STOP button, hide the start-share button (if present)
+  const stopBtn = document.getElementById("stop-sharing");
+  if (stopBtn) stopBtn.style.display = "block";
+  const startBtn = document.getElementById("start-share");
+  if (startBtn) startBtn.style.display = "none";
+}
+
 
 // ------------------------------------
 // FIND NEAREST RESTROOM
@@ -247,6 +293,25 @@ function findNearestRestroom() {
     } else {
       alert("No restroom found.");
     }
+    if (closest) {
+      showInfoPanel(closest);
+      highlightNearest(closest);
+    }
+    
+  }
+  function highlightNearest(restroom) {
+    d3.selectAll(".restroom")
+      .transition()
+      .duration(400)
+      .style("opacity", 0.2);
+  
+    d3.selectAll(".restroom")
+      .filter(d => d === restroom)
+      .raise()
+      .transition()
+      .duration(400)
+      .attr("r", 10)
+      .style("opacity", 1);
   }
   
 // ------------------------------------
@@ -299,4 +364,37 @@ document.getElementById("stop-sharing").addEventListener("click", () => {
     }
   
   });
+  document.addEventListener("DOMContentLoaded", () => {
+    const startBtn = document.getElementById("start-gps");
   
+    if (startBtn) {
+      startBtn.addEventListener("click", () => {
+        document.getElementById("find-me").click();
+      });
+    }
+  });
+  
+  function activateUI() {
+    document.getElementById("intro-overlay").classList.add("hide");
+    document.getElementById("overlay-controls").classList.add("active");
+    document.getElementById("details-section").classList.add("active");
+  }
+  function zoomToUser() {
+    if (!userLocation) return;
+  
+    const svg = d3.select("#mobile-map-svg");
+    const zoom = d3.zoom();
+    const projection = window.mobileProjection;
+  
+    const [x, y] = projection([userLocation.lon, userLocation.lat]);
+  
+    svg.transition()
+      .duration(1200)
+      .call(
+        zoom.transform,
+        d3.zoomIdentity
+          .translate(window.innerWidth / 2 - x, window.innerHeight / 2 - y)
+          .scale(3)
+      );
+  }
+    

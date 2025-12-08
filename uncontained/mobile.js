@@ -224,37 +224,37 @@ function showUserOnMap() {
 
   
 // call this after userLocation is set
-function revealMapAndZoomToUser(k = 3, removeTitle = true) {
-  // hide title screen if present
-  const title = d3.select("#title-screen");
-  if (!title.empty()) {
-    title.transition().duration(400).style("opacity", 0).on("end", () => title.remove());
+function revealMapAndZoomToUser(k = 3) {
+
+  // ✅ HIDE THE REAL INTRO OVERLAY
+  const overlay = document.getElementById("intro-overlay");
+  if (overlay) {
+    overlay.classList.add("hide");
   }
+
+  // ✅ ACTIVATE UI BUTTONS + DETAILS
+  activateUI();
 
   if (!window.mobileSvg || !window.mobileProjection || !window.mobileZoom) return;
 
-  // project user point to pixel coordinates
   const [x, y] = window.mobileProjection([userLocation.lon, userLocation.lat]);
 
-  // compute transform so user is centered with scale k
   const tx = window.mobileWidth / 2 - k * x;
   const ty = window.mobileHeight / 2 - k * y;
 
-  // use d3 zoom to animate transform (keeps zoom behavior intact)
   window.mobileSvg.transition().duration(800).call(
     window.mobileZoom.transform,
     d3.zoomIdentity.translate(tx, ty).scale(k)
   );
 
-  // ensure user dot is visible (create if missing)
+  // ✅ show user dot
   showUserOnMap();
 
-  // reveal STOP button, hide the start-share button (if present)
+  // ✅ show STOP button
   const stopBtn = document.getElementById("stop-sharing");
   if (stopBtn) stopBtn.style.display = "block";
-  const startBtn = document.getElementById("start-share");
-  if (startBtn) startBtn.style.display = "none";
 }
+
 
 
 // ------------------------------------

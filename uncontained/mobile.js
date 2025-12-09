@@ -101,13 +101,15 @@ async function buildMobileMap() {
       .attr("class", "restroom")
       .attr("cx", d => window.mobileProjection([d.Longitude, d.Latitude])[0])
       .attr("cy", d => window.mobileProjection([d.Longitude, d.Latitude])[1])
-      .attr("r", 4)
+      .attr("r", 2)
       .attr("fill", d => typeColors[d.Operator])
       .style("opacity", 1)
-      .on("click touchstart", (event, d) => {
-        event.stopPropagation();
-        showInfoPanel(d);
-      });
+     .on("click touchstart", (event, d) => {
+  event.stopPropagation();
+  showInfoPanel(d);
+  highlightNearest(d);   // ✅ ADD THIS
+});
+
     
 
 // ----------------------------
@@ -216,10 +218,10 @@ function showUserOnMap() {
     .attr("id", "user-dot")
     .attr("cx", projection([userLocation.lon, userLocation.lat])[0])
     .attr("cy", projection([userLocation.lon, userLocation.lat])[1])
-    .attr("r", 7)
-    .attr("fill", "#06d6a0")
+    .attr("r", 3)
+    .attr("fill", "#FC7D01")
     .attr("stroke", "#1F0E02")
-    .attr("stroke-width", 2);
+    .attr("stroke-width", 1);
 }
 
   
@@ -300,19 +302,19 @@ function findNearestRestroom() {
     
   }
   function highlightNearest(restroom) {
+
+    // Reset all dots
     d3.selectAll(".restroom")
-      .transition()
-      .duration(400)
-      .style("opacity", 0.2);
+      .classed("active", false);
   
+    // Activate only the selected one
     d3.selectAll(".restroom")
       .filter(d => d === restroom)
       .raise()
-      .transition()
-      .duration(400)
-      .attr("r", 10)
-      .style("opacity", 1);
+      .classed("active", true);
   }
+  
+  
   
 // ------------------------------------
 // DISTANCE FORMULA
@@ -398,3 +400,17 @@ document.getElementById("stop-sharing").addEventListener("click", () => {
       );
   }
     
+  // ------------------------------
+// Location Settings Dropdown Toggle
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("location-toggle");
+  const dropdown = document.getElementById("location-dropdown");
+
+  if (!toggle || !dropdown) return;
+
+  toggle.addEventListener("click", () => {
+    const isOpen = dropdown.style.display === "flex";
+    dropdown.style.display = isOpen ? "none" : "flex";
+  });
+});

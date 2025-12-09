@@ -16,14 +16,15 @@
 
 #home-link {
   font-family: "elizeth", serif;
-  font-size: 60px;
+  font-size: 32px;
   font-weight: 700;
   text-decoration: none;
-  color: #2E2518;
+  color: #06d6a0;
   -webkit-text-stroke: #06d6a0;
   -webkit-text-stroke-width: 0.pt;
   cursor: pointer;
   transition: color 0.2s ease;
+  
 }
 
 #home-link:hover {
@@ -49,8 +50,8 @@
 }
 
 #title-screen h1 {
-  font-size: clamp(4rem, 14vw, 8rem); /* responsive mobile scaling */
-  line-height: .85em;
+  font-size: 35px; /* responsive mobile scaling */
+  line-height: 10px;
   margin: 0;
   color: #06d6a0;
   -webkit-text-stroke: #06d6a0;
@@ -123,8 +124,8 @@ body, html {
 }
 
 #loading-screen h1 {
-  font-size: 2.6rem;
-  margin-bottom: 8px;
+  font-size: 1.6rem;
+  margin-bottom: 0px;
   text-align: center;
   color: #06d6a0;
 }
@@ -167,6 +168,19 @@ body, html {
 
 .restroom:hover {
   opacity: 1;
+}
+/* Default restroom dots */
+.restroom {
+  fill: #9ECCDE;
+  stroke: transparent;
+  opacity: 0.9;
+}
+
+/* ACTIVE (selected) restroom */
+.restroom.active {
+  fill: #FF2269 !important;   /* bright highlight */
+  opacity: 1;
+  
 }
 
 /* ------------------------------
@@ -382,35 +396,14 @@ body {
    OVERLAY CONTROLS (GPS BUTTONS)
 ------------------------------ */
 
-#overlay-controls {
-  position: fixed;
-  top: 80px;
-  right: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  z-index: 99999;
-}
 
-#find-me,
-#stop-sharing {
-  min-width: 200px;
-  background: #1F0E02;
-  color: #FC7D01;
-  font-family: "elizeth", serif;
-  font-size: 14px;
-  padding: 12px 16px;
-  border: none;
-  cursor: pointer;
-  border-radius: 0px;
-  text-align: center;
-}
+
+
 
 #find-me:hover,
 #stop-sharing:hover {
-  background: #FF2269;
-  color: #1F0E02;
+  background: transparent;
+  color: #FF2269;
 }
 
 /* ------------------------------
@@ -440,25 +433,26 @@ body {
 
 #intro-overlay h1 {
   font-family: "elizeth", serif;
-  font-size: clamp(3rem, 10vw, 6rem);
+  font-size: 24px;
   color: #06d6a0;
-  margin-bottom: 32px;
+  margin-bottom: 0px;
 }
 
 #start-gps {
-  min-width: 240px;
-  font-size: 18px;
-  padding: 14px 20px;
-  background: #1F0E02;
-  color: #FC7D01;
+  min-width: 40px;
+  font-size: 30px;
+  padding: 4px 1px;
+  background: transparent;
+  color: #1F0E02;
   font-family: "elizeth", serif;
+  font-weight: 600;
   border: none;
   cursor: pointer;
 }
 
 #start-gps:hover {
-  background: #FF2269;
-  color: #1F0E02;
+  background: transparent;
+  color: #FF2269;
 }
 #overlay-controls,
 #details-section {
@@ -476,25 +470,109 @@ body {
 #stop-sharing { display: none; }
 
 /* ensure buttons stack with spacing and not overlapping */
+/* ------------------------------
+   OVERLAY CONTROLS (TOP LEFT UNDER TITLE)
+------------------------------ */
+
 #overlay-controls {
   position: fixed;
-  top: 120px;           /* pushed slightly lower so title sits centered above */
-  right: 16px;
+  top: 60px;           /* sits just under the Uncontained title */
+  left: 16px;          /* aligns with logo */
+  right: auto;
+  
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 8px;
+
   z-index: 99999;
 }
 
-/* make start-share visually consistent (if using the title screen button) */
-#title-screen button, #find-me {
-  min-width: 200px;
-  background: #1F0E02;
-  color: #FC7D01;
-  font-family: "elizeth", serif;
-  font-size: 16px;
-  padding: 12px 16px;
+#find-me,
+#stop-sharing {
+  font-family: "futura-100", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  min-width: 40px;       /* smaller width */
+  font-size: 14px;       /* smaller text */
+  padding: 0px 0px;     /* tighter padding */
+  
+  background: transparent;
+  color: #1F0E02;
+
   border: none;
   cursor: pointer;
+  border-radius: 0px;
+  text-align: center;
+}
+/* make start-share visually consistent (if using the title screen button) */
+#title-screen button, #find-me {
+  min-width: 40px;
+  background: transparent;
+  color: #1F0E02;
+  font-family: "futura-100", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 14px;
+  padding: 0px 0px;
+  border: none;
+  cursor: pointer;
+  margin-top: 5px;
+}
+/* ------------------------------
+   LOCATION DROPDOWN (TOP LEFT)
+------------------------------ */
+
+#overlay-controls {
+  position: fixed;
+  top: 60px;
+  left: 16px;
+  z-index: 99999;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* Dropdown toggle button */
+#location-toggle {
+  min-width: 160px;
+  font-size: 13px;
+  padding: 5px 5px;
+  font-weight: 600;
+
+  background: transparent;
+  color: #1F0E02;;
+  font-family: "elizeth", serif;
+
+  border: none;
+  cursor: pointer;
+}
+
+/* Hidden dropdown panel */
+#location-dropdown {
+  display: none;
+
+  flex-direction: column;
+  gap: 6px;
+
+  background: rgba(31, 14, 2, 0.95);
+  padding: 8px;
+  min-width: 160px;
+}
+
+/* Buttons inside dropdown */
+#find-me,
+#stop-sharing {
+  font-size: 12px;
+  padding: 6px 10px;
+
+  background: #FC7D01;
+  color: #1F0E02;
+  font-family: "elizeth", serif;
+
+  border: none;
+  cursor: pointer;
+  text-align: left;
 }

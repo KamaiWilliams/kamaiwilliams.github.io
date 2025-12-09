@@ -682,3 +682,36 @@ font-weight: 400;
 font-style: normal;
 
 */
+/* -----------------------------------
+   MOBILE INTRO RESPONSIVE FIX
+----------------------------------- */
+@media (max-width: 768px) {
+
+  #title-screen {
+    padding: 24px;
+    text-align: center;
+  }
+
+  #title-screen h1 {
+    font-size: 4.2rem;   /* FIXED giant text */
+    line-height: 1;
+  }
+
+  #title-screen p {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-top: 12px;
+  }
+
+  .begin-buttons {
+    flex-direction: column;   /* ✅ STACK BUTTONS */
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .begin-buttons button {
+    font-size: 1.1rem;
+    width: 100%;
+  }
+
+}

@@ -56,26 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setCurrentScene('title');
 });
 
-// ------------------------------
-// Entry point: title → Scene 1
-// ------------------------------
-d3.select("#start").on("click", () => {
-  d3.select("#title-screen")
-    .transition()
-    .duration(800)
-    .style("opacity", 0)
-    .remove();
 
-  // ✅ SHOW NAV BUTTONS
-  d3.select("#back-button").style("display", "block");
-  d3.select("#next-button").style("display", "block");
-
-  // ✅ SHOW DESCRIPTION PANEL
-  d3.select("#map-description").style("display", "block");
-
-  // ✅ LOAD SCENE
-  showRestroomMap();
-});
 
 // ------------------------------
 // Shared helpers

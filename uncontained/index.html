@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Uncontained — NYC Public Restrooms</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://use.typekit.net/vaz0ueu.css">
+  
 </head>
 
 <body>
@@ -17,9 +19,15 @@
 
     <!-- ✅ CHOICE BUTTONS -->
     <div class="begin-buttons">
-      <button id="start-desktop">Explore Desktop →</button>
-      <button id="start-mobile">Open Mobile Map →</button>
+      <button id="start-desktop" class="desktop-only">
+        Explore Desktop →
+      </button>
+    
+      <button id="start-mobile" class="mobile-only">
+        Open Mobile Map →
+      </button>
     </div>
+    
   </div>
 
   <!-- ✅ DESKTOP SCENE UI (HIDDEN UNTIL START) -->

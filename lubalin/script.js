@@ -506,19 +506,36 @@ init();
 
 /* -------------------------- FINISH BUTTON -------------------------- */
 
-document.getElementById('finishBtn').addEventListener('click', ()=>{
+document.getElementById('finishBtn').addEventListener('click', async () => {
   const finalText = document.getElementById('finalComments').value || '';
-  responses.push({ section:'finalComments', text: finalText });
 
-  const blob = new Blob([JSON.stringify(responses, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'survey_responses.json';
-  a.click();
-  URL.revokeObjectURL(url);
+  responses.push({
+    section: 'finalComments',
+    text: finalText
+  });
 
-  alert('Thanks! Your responses were saved locally.');
+  await submitToGoogleSheet();
+
+  alert("Thank you! Your responses have been submitted.");
   showSlideByIndex(0);
   responses.length = 0;
 });
+
+
+async function submitToGoogleSheet() {
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: crypto.randomUUID(),
+        answers: responses
+      })
+    });
+
+    console.log("Sent to Google Sheets:", responses);
+  } catch (err) {
+    console.error("SEND ERROR:", err);
+  }
+}

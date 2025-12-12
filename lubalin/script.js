@@ -8,10 +8,17 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0u_qFcaq52G
 
 /* -------------------------- CONFIG -------------------------- */
 
-const fontFiles = ['font8.png','font9.png','font10.png','font11.png','font12.png','font13.png','font14.png'];
+const fontFiles = [];
+for (let i = 1; i <= 15; i++) {
+  fontFiles.push(`font${i}.png`);
+}
+
 
 const symbolFiles = [];
-for(let i=15;i<=26;i++) symbolFiles.push(`symbol${i}.png`);
+for (let i = 1; i <= 18; i++) {
+  symbolFiles.push(`symbol${i}.png`);
+}
+
 
 const layeredGroups = [
   { id:'cowboy', label:'Cowboy', prefix:'images/cowboy' },
@@ -120,7 +127,7 @@ function buildColorAssociationSlides() {
     slide.className = "slide";
 
     const h2 = document.createElement("h2");
-    h2.textContent = "Formal Association — Color";
+    h2.textContent = "Which cuisine do you associate this color with? (pick up to 3)";
     slide.appendChild(h2);
 
     const content = document.createElement("div");
@@ -133,7 +140,7 @@ function buildColorAssociationSlides() {
     content.appendChild(swatchBox);
 
     const q = document.createElement("p");
-    q.textContent = "Which cuisine do you associate this color with? (pick up to 3)";
+    
     content.appendChild(q);
 
     const list = document.createElement("div");
@@ -213,7 +220,7 @@ function buildFontSlides(){
     slide.id = `font-${idx+8}`;
 
     const h2 = document.createElement('h2');
-    h2.textContent = `Formal Association Section: Font`;
+    h2.textContent = 'Which cuisine is best representative of this font? (pick up to 3)';
     slide.appendChild(h2);
 
     const content = document.createElement('div');
@@ -221,12 +228,13 @@ function buildFontSlides(){
     slide.appendChild(content);
 
     const q = document.createElement('p');
-    q.textContent = 'Which cuisine is best representative of this font? (pick up to 3)';
+
     content.appendChild(q);
 
     const preview = document.createElement('div');
     preview.className = 'font-preview';
-    preview.innerHTML = `<img src="images/${fn}">`;
+    preview.innerHTML = `<img class="font-img" src="images/${fn}">`;
+
     content.appendChild(preview);
 
     const list = document.createElement('div');
@@ -306,7 +314,7 @@ function buildSymbolSlides(){
     slide.className = 'slide';
 
     const h2 = document.createElement('h2');
-    h2.textContent = 'Formal Association Section: Symbol';
+    h2.textContent = 'Which cuisine is best representative of this symbol? (pick up to 3)';
     slide.appendChild(h2);
 
     const img = document.createElement('img');
@@ -315,7 +323,7 @@ function buildSymbolSlides(){
     slide.appendChild(img);
 
     const q = document.createElement('p');
-    q.textContent = 'Which cuisine is best representative of this symbol? (pick up to 3)';
+    
     slide.appendChild(q);
 
     const list = document.createElement('div');
@@ -394,17 +402,19 @@ function buildLayeredSlides(){
     main.innerHTML = `
       <h2>Please select the first design where you can confidently identify this as a Mexican restaurant. Pressing next will change the image. </h2>
 
-      <img class="symbol-img" src="${group.prefix}1.png">
+      <img class="layered-img" src="${group.prefix}1.png">
+
 
       <div class="logo-buttons">
-        <button class="navBtn stopBtn">STOP</button>
         <button class="navBtn nextLayerBtn">Show Next Layer)</button>
+        <button class="navBtn stopBtn">STOP</button>
+        
       </div>
 
       <div class="logo-count">Layer 1 of ${LAYERS}</div>
     `;
 
-    const img = main.querySelector('.symbol-img');
+    const img = main.querySelector('.layered-img');
     const stopBtn = main.querySelector('.stopBtn');
     const nextBtn = main.querySelector('.nextLayerBtn');
     const count = main.querySelector('.logo-count');
@@ -452,7 +462,7 @@ function buildFinalReflectionSlide(){
 
     <div class="controls">
       <button class="navBtn" data-action="back">Back</button>
-      <button class="navBtn" data-action="next">Submit</button>
+      <button class="navBtn" data-action="next">Next</button>
     </div>
   `;
 

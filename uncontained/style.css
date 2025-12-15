@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background: #FC7D01;
+  background: #2E2518;
   overflow: hidden;
 }
 
@@ -518,7 +518,7 @@ html, body {
   padding: 0;
   overflow-y: hidden !important;  /* ✅ force vertical scrolling */
   overflow-x: hidden;
-  background: #FC7D01;
+  background: #2E2518;
   color: #FC7D01;
   font-family: "futura-100", sans-serif;
 }
@@ -716,7 +716,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background: #FC7D01;
+  background: #2E2518;
 }
 
 /* ✅ Force title screen to ALWAYS fill phone */

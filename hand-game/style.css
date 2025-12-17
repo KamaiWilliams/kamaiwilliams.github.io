@@ -47,27 +47,39 @@ video {
 
   /* Start screen title */
 #start-screen h1 {
-font-family: "Verdana", sans-serif; /* or any font you like */
-font-size: 5vw;                     /* responsive size based on screen width */
-color: #ffea00;                     /* visible fill color */
--webkit-text-stroke: 2px #150800;   /* outline effect */
+  font-family: "halyard-text", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+font-size: 4vw;                     /* responsive size based on screen width */
+color:  #ffea00;                     /* visible fill color */
+/*-webkit-text-stroke: 6px #ffea00;*/
+border: 15px solid #ffea00;  /* yellow outline */
+border-radius: 90px; 
+padding: 35px 60px;/* outline effect */
 text-align: center;
-margin: 0 0 20px 0;                  /* some space below title */
+margin: 0 0 10px 0;                  /* some space below title */
 line-height: 1;
-text-transform: uppercase;          /* optional, makes all caps */
-letter-spacing: 0.1em;              /* spacing between letters */
+/*text-transform: uppercase;          /* optional, makes all caps */
+letter-spacing: -7px;              /* spacing between letters */
 pointer-events: none;               /* ensures button is clickable */
 }
 
 /* Start button styling */
 #start-btn {
-  padding: 15px 40px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffea00;             /* yellow text */
-  background: transparent;    /* transparent fill */
-  border: 3px solid #ffea00;  /* yellow outline */
-  border-radius: 10px;
+  font-family: "halyard-text", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+font-size: 4vw;                     /* responsive size based on screen width */
+color:  #ffea00;   
+background: transparent;                  /* visible fill color */
+/*-webkit-text-stroke: 6px #ffea00;*/
+border: 15px solid #ffea00;  /* yellow outline */
+border-radius: 90px; 
+padding: 35px 60px;/* outline effect */
+text-align: center;
+margin: 0 0 10px 0;                  /* some space below title */
+line-height: 1;
+letter-spacing: -7px; 
   cursor: pointer;
   transition: transform 0.1s ease, background 0.2s ease, color 0.2s ease;
   z-index: 20;                /* above everything */
@@ -131,30 +143,43 @@ pointer-events: none;               /* ensures button is clickable */
 
 
 /* Timer styling */
+/* Timer */
 #timer {
-  font-family: "Verdana", sans-serif;
+  position: absolute;
+  top: -40px;        /* sits lower */
+  right: 50px;
+
+  font-family: "halyard-text", sans-serif;
+  font-weight: 800;
   font-size: 1.5rem;
-  font-weight: bold;
+  letter-spacing: -1px;
+
   color: #ffea00;
-  text-shadow: 1px 1px 2px #150800;
-  margin: 0;              /* remove bottom margin */
-  position: absolute;     /* position on screen */
-  top: 20px;              /* distance from top */
-  left: 20px;             /* distance from left */
+  border: 5px solid #ffea00;
+  border-radius: 90px;
+  padding: 10px 10px;
 }
 
-
-/* Instruction text styling */
+/* Instruction (above timer) */
 #instruction {
-  font-family: "Verdana", sans-serif;
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: #ffffff;
-  text-align: center;
-  text-shadow: 1px 1px 2px #000000;
-  margin-bottom: 10px;
-  max-width: 90%;
+  position: absolute;
+  top: -40px;        /* ABOVE timer */
+  left: 20px;
+
+  font-family: "halyard-text", sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -1px;
+
+  color: #ffea00;
+  border: 5px solid #ffea00;
+  border-radius: 90px;
+  padding: 10px 10px;
+
+  max-width: calc(100% - 40px);
+  text-align: left;
 }
+
 
 /* Star counter styling */
 #star-counter {
@@ -166,4 +191,24 @@ pointer-events: none;               /* ensures button is clickable */
   position: absolute;
   bottom: 20px; /* fixed near bottom of screen */
   pointer-events: none;
+}
+/*
+font-family: "oi", sans-serif;
+font-weight: 400;
+font-style: normal; 
+
+font-family: "margot", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+*/
+
+/* Hide UI while start screen is visible */
+#start-screen ~ #ui-overlay {
+  display: none;
+}
+
+/* Show UI once start screen is hidden */
+#start-screen[style*="display: none"] ~ #ui-overlay {
+  display: block;
 }

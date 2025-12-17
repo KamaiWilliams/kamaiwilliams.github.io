@@ -83,15 +83,26 @@ const fingertipMap = [
 function spawnPianoGrid() {
   pianoDots = [];
 
-  const cols = 12;
-  const rows = 10;
-  const spacing = 50;
+  // ⭐ Visual tuning
+  const radius = 25;        // star size
+  const spacing = 60;       // distance between stars
+  const margin = 80;        // safe screen margin (IMPORTANT)
 
+  // 🧠 Available drawing area
+  const usableWidth = canvas.width - margin * 2;
+  const usableHeight = canvas.height - margin * 2;
+
+  // 🧮 Responsive grid count
+  const cols = Math.floor(usableWidth / spacing);
+  const rows = Math.floor(usableHeight / spacing);
+
+  // 🧩 Actual grid size
   const gridWidth = (cols - 1) * spacing;
   const gridHeight = (rows - 1) * spacing;
 
-  const startX = canvas.width / 2 - gridWidth / 2;
-  const startY = canvas.height / 2 - gridHeight / 2;
+  // 🎯 Center grid within usable area
+  const startX = margin + (usableWidth - gridWidth) / 2;
+  const startY = margin + (usableHeight - gridHeight) / 2;
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -100,7 +111,7 @@ function spawnPianoGrid() {
       pianoDots.push({
         x: startX + c * spacing,
         y: startY + r * spacing,
-        radius: 12,
+        radius,
         color,
         alive: true
       });
@@ -109,14 +120,32 @@ function spawnPianoGrid() {
 }
 
 
+function drawStar(x, y, radius, color, points = 5) {
+  const innerRadius = radius * 0.45;
+  ctx.beginPath();
+  ctx.moveTo(x, y - radius);
+
+  for (let i = 0; i < points * 2; i++) {
+    const angle = (Math.PI / points) * i;
+    const r = i % 2 === 0 ? radius : innerRadius;
+    ctx.lineTo(
+      x + Math.sin(angle) * r,
+      y - Math.cos(angle) * r
+    );
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+
 function drawPianoGrid() {
   pianoDots.forEach(dot => {
     if (!dot.alive) return;
 
-    ctx.beginPath();
-    ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
-    ctx.fillStyle = dot.color;
-    ctx.fill();
+    drawStar(dot.x, dot.y, dot.radius, dot.color);
+
   });
 }
 
@@ -161,8 +190,8 @@ const exerciseInstructions = {
     left:  "Have your LEFT palm facing the screen and wiggle your fingers like you are playing the piano"
   },
   duck: {
-    right: "That was great! Now eat the circles. Turn your RIGHT palm left and open/close like an alligator.",
-    left:  "That was great! Now eat the circles. Turn your LEFT palm right and open/close like an alligator."
+    right: "Now EAT the circles. Turn your RIGHT palm left and open/close like an alligator.",
+    left:  " Now EAT the circles. Turn your LEFT palm right and open/close like an alligator."
   },
   hook: {
     right: "Hook Tendon Glide: Curl your RIGHT fingers like a hook, flick open, repeat.",
@@ -215,10 +244,8 @@ function updateHookDots(landmarks, lastLandmarks) {
     dot.vx *= 0.95;
     dot.vy *= 0.95;
 
-    ctx.beginPath();
-    ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
-    ctx.fillStyle = dot.color;
-    ctx.fill();
+    drawStar(dot.x, dot.y, dot.radius, dot.color);
+
   });
 
   // Flick detection
@@ -356,7 +383,11 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
+// 🔁 Rebuild piano grid on resize
+window.addEventListener("resize", spawnPianoGrid);
+
 spawnPianoGrid();
+
 
 // --------------------
 // MediaPipe Hands
@@ -404,12 +435,15 @@ function onResults(results) {
 function drawHand(landmarks) {
   fingertipMap.forEach(finger => {
     const p = landmarks[finger.index];
-    ctx.beginPath();
-    ctx.arc(p.x * canvas.width, p.y * canvas.height, 6, 0, Math.PI * 2);
-    ctx.fillStyle = finger.color;
-    ctx.fill();
+    drawStar(
+      p.x * canvas.width,
+      p.y * canvas.height,
+      6,                 // fingertip size
+      finger.color
+    );
   });
 }
+
 
 
 
@@ -424,10 +458,8 @@ function updateDuckDots() {
     }
 
     // draw the circle
-    ctx.beginPath();
-    ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
-    ctx.fillStyle = dot.color;
-    ctx.fill();
+    drawStar(dot.x, dot.y, dot.radius, dot.color);
+
   });
 
   // remove offscreen dots
@@ -491,10 +523,7 @@ function createStarBurst(x, y, color) {
 
 function drawStarBursts() {
   starBursts.forEach((s, idx) => {
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${hexToRgb(s.color)},${s.alpha})`;
-    ctx.fill();
+    drawStar(s.x, s.y, s.radius, s.color);
 
     s.x += s.vx;
     s.y += s.vy;
@@ -503,6 +532,7 @@ function drawStarBursts() {
     if (s.alpha <= 0) starBursts.splice(idx, 1);
   });
 }
+
 
 
 

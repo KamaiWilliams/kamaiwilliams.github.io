@@ -1,5 +1,54 @@
 console.log("hand.js loaded");
 
+const startScreen = document.getElementById("start-screen");
+const startBtn = document.getElementById("start-btn");
+
+let gameStarted = false;
+
+startBtn.addEventListener("click", () => {
+  startScreen.style.display = "none";
+  gameStarted = true;
+  roundStartTime = Date.now();
+});
+
+const timerEl = document.getElementById("timer");
+const instructionEl = document.getElementById("instruction");
+const starEl = document.getElementById("star-counter");
+
+function updateUI() {
+  const remaining = Math.max(0, ROUND_DURATION - (Date.now() - roundStartTime)) / 1000;
+  timerEl.textContent = `${activeHand.toUpperCase()} hand — ${Math.ceil(remaining)}s`;
+
+  instructionEl.textContent = exerciseInstructions[currentExercise][activeHand];
+
+  starEl.textContent = `★ ${starCount}`;
+}
+
+
+
+const endScreen = document.getElementById("end-screen");
+const finalStars = document.getElementById("final-stars");
+const restartBtn = document.getElementById("restart-btn");
+
+function endGame() {
+  gameStarted = false;
+  finalStars.textContent = starCount;
+  endScreen.style.display = "flex";
+}
+
+restartBtn.addEventListener("click", () => {
+  endScreen.style.display = "none";
+  starCount = 0;        // reset stars for new game
+  currentExercise = "piano";
+  activeHand = "right";
+  spawnPianoGrid();
+  roundStartTime = Date.now();
+  fallingDots = [];
+  starBursts = [];
+  gameStarted = true;
+});
+
+
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -14,6 +63,97 @@ const ROUND_DURATION = 30_000; // 30 seconds
 let currentExercise = "piano";
 
 let fingerRollState = "open"; // "open" or "closed"
+
+let pianoDots = [];
+const MAX_PIANO_DOTS = 3;
+
+let starCount = 0;
+
+const fingertipMap = [
+  { index: 4,  name: "thumb",  color: fingerColors[4] },  // NEW
+  { index: 8,  name: "index",  color: fingerColors[0] },
+  { index: 12, name: "middle", color: fingerColors[1] },
+  { index: 16, name: "ring",   color: fingerColors[2] },
+  { index: 20, name: "pinky",  color: fingerColors[3] }
+];
+
+
+
+
+function spawnPianoGrid() {
+  pianoDots = [];
+
+  const cols = 12;
+  const rows = 10;
+  const spacing = 50;
+
+  const gridWidth = (cols - 1) * spacing;
+  const gridHeight = (rows - 1) * spacing;
+
+  const startX = canvas.width / 2 - gridWidth / 2;
+  const startY = canvas.height / 2 - gridHeight / 2;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const color = fingerColors[Math.floor(Math.random() * fingerColors.length)];
+
+      pianoDots.push({
+        x: startX + c * spacing,
+        y: startY + r * spacing,
+        radius: 12,
+        color,
+        alive: true
+      });
+    }
+  }
+}
+
+
+function drawPianoGrid() {
+  pianoDots.forEach(dot => {
+    if (!dot.alive) return;
+
+    ctx.beginPath();
+    ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+    ctx.fillStyle = dot.color;
+    ctx.fill();
+  });
+}
+
+function updatePianoInteraction(landmarks) {
+  let motion = 0;
+
+  fingertipMap.forEach(finger => {
+    const tip = landmarks[finger.index];
+    const pip = landmarks[finger.index - 2];
+    motion += Math.hypot(tip.x - pip.x, tip.y - pip.y);
+  });
+
+  // Require real piano wiggle
+  if (motion < 0.04) return;
+
+  fingertipMap.forEach(finger => {
+    const tip = landmarks[finger.index];
+    const fx = tip.x * canvas.width;
+    const fy = tip.y * canvas.height;
+
+    pianoDots.forEach(dot => {
+      if (!dot.alive) return;
+      if (dot.color !== finger.color) return;
+
+      const dist = Math.hypot(dot.x - fx, dot.y - fy);
+      if (dist < dot.radius + 12) {
+        dot.alive = false;
+        createStarBurst(dot.x, dot.y, dot.color);
+        starCount += 1;
+      }
+    });
+  });
+}
+
+
+
+
 
 const exerciseInstructions = {
   piano: {
@@ -216,6 +356,8 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
+spawnPianoGrid();
+
 // --------------------
 // MediaPipe Hands
 // --------------------
@@ -260,26 +402,17 @@ function onResults(results) {
 // Draw functions
 // --------------------
 function drawHand(landmarks) {
-  ctx.fillStyle = "red";
-  landmarks.forEach(p => {
+  fingertipMap.forEach(finger => {
+    const p = landmarks[finger.index];
     ctx.beginPath();
     ctx.arc(p.x * canvas.width, p.y * canvas.height, 6, 0, Math.PI * 2);
+    ctx.fillStyle = finger.color;
     ctx.fill();
   });
 }
 
-function drawFallingDots() {
-  fallingDots.forEach(dot => {
-    dot.y += dot.speedY;
-    ctx.beginPath();
-    ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
-    ctx.fillStyle = dot.color;
-    ctx.fill();
-  });
 
-  // remove offscreen dots
-  fallingDots = fallingDots.filter(dot => dot.y < canvas.height + 50);
-}
+
 
 function updateDuckDots() {
   fallingDots.forEach(dot => {
@@ -338,16 +471,7 @@ function spawnDuckDot() {
 }
 
 
-function drawInstruction() {
-  ctx.fillStyle = "#000";
-  ctx.font = "18px sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText(
-    exerciseInstructions[currentExercise][activeHand],
-    canvas.width / 2,
-    70
-  );
-}
+
 
 
 
@@ -380,58 +504,9 @@ function drawStarBursts() {
   });
 }
 
-// --------------------
-// Motion detection & dot spawning
-// --------------------
-function updateMotionAndSpawn(landmarks) {
-  const fingertipIndices = [8, 12, 16, 20];
-  let motion = 0;
 
-  fingertipIndices.forEach(i => {
-    const tip = landmarks[i];
-    const pip = landmarks[i - 2];
-    const dx = (tip.x - pip.x) * canvas.width;
-    const dy = (tip.y - pip.y) * canvas.height;
-    motion += Math.sqrt(dx * dx + dy * dy);
-  });
 
-  // Smooth motion
-  fingerMotionEnergy = fingerMotionEnergy * 0.7 + motion * 0.3;
 
-  // Spawn falling dots if motion is above threshold
-  if (fingerMotionEnergy > 2 && Date.now() - lastSpawn > SPAWN_RATE) {
-    // Spawn random falling dot from top
-    fallingDots.push({
-      x: Math.random() * canvas.width,
-      y: -20,
-      radius: 10 + Math.random() * 5,
-      speedY: 2 + Math.random() * 2,
-      color: dotColors[Math.floor(Math.random() * dotColors.length)]
-    });
-    lastSpawn = Date.now();
-  }
-}
-
-// --------------------
-// Detect hits
-// --------------------
-function checkDotHits(landmarks) {
-  const fingertipIndices = [8, 12, 16, 20];
-
-  fallingDots.forEach((dot, dotIdx) => {
-    fingertipIndices.forEach(i => {
-      const tip = landmarks[i];
-      const fingerX = tip.x * canvas.width;
-      const fingerY = tip.y * canvas.height;
-
-      const dist = Math.hypot(dot.x - fingerX, dot.y - fingerY);
-      if (dist < dot.radius + 6) {
-        createStarBurst(dot.x, dot.y, dot.color);
-        fallingDots.splice(dotIdx, 1);
-      }
-    });
-  });
-}
 // --------------------
 // Detect hook
 // --------------------
@@ -459,16 +534,7 @@ function detectHookFlick(landmarks, lastLandmarks) {
 }
 
 
-// --------------------
-// Round timer
-// --------------------
-function drawRoundTimer() {
-  const remaining = Math.max(0, ROUND_DURATION - (Date.now() - roundStartTime)) / 1000;
-  ctx.fillStyle = "#000";
-  ctx.font = "14px sans-serif";
-  ctx.textAlign = "left"; // ensure it aligns from left
-  ctx.fillText(`${activeHand.toUpperCase()} hand — ${Math.ceil(remaining)}s`, 20, 30); // 20px padding from left
-}
+
 
 function updateHandRound() {
   const elapsed = Date.now() - roundStartTime;
@@ -481,6 +547,11 @@ function updateHandRound() {
     // Clear visuals between rounds
     fallingDots = [];
     starBursts = [];
+
+    // Reset piano grid for the new hand
+    if (currentExercise === "piano") {
+      spawnPianoGrid();
+    }
 
     // --- Exercise transitions ---
     if (currentExercise === "piano" && activeHand === "right") {
@@ -501,7 +572,10 @@ function updateHandRound() {
       fallingDots = [];
       starBursts = [];
     }
-    
+    if (currentExercise === "fingerRoll" && activeHand === "left" && elapsed > ROUND_DURATION) {
+      endGame();
+      return;
+    }
   }
 }
 
@@ -512,47 +586,35 @@ function updateHandRound() {
 // Main loop
 // --------------------
 function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!gameStarted) return requestAnimationFrame(gameLoop);
 
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   updateHandRound(); 
-  drawInstruction(); 
-  drawRoundTimer();
 
   if (currentExercise === "piano") {
-    drawFallingDots();
-    if (lastLandmarks) {
-      updateMotionAndSpawn(lastLandmarks);
-      checkDotHits(lastLandmarks);
-    }
-  
+    drawPianoGrid();
+    if (lastLandmarks) updatePianoInteraction(lastLandmarks);
   } else if (currentExercise === "duck") {
     updateDuckDots();
-    if (lastLandmarks) {
-      checkDuckDotHits(lastLandmarks);
-    }
-  
+    if (lastLandmarks) checkDuckDotHits(lastLandmarks);
   } else if (currentExercise === "hook") {
-    if (lastLandmarks) {
-      updateHookDots(lastLandmarks, lastLandmarksPrev);
-    }
-  
+    if (lastLandmarks) updateHookDots(lastLandmarks, lastLandmarksPrev);
   } else if (currentExercise === "fingerRoll") {
     spawnFingerRollDots();
     drawFallingDots();
-  
-    if (lastLandmarks) {
-      updateFingerRoll(lastLandmarks);
-    }
+    if (lastLandmarks) updateFingerRoll(lastLandmarks);
   }
-  
 
   drawStarBursts();
   if (lastLandmarks) drawHand(lastLandmarks);
 
   lastLandmarksPrev = lastLandmarks ? JSON.parse(JSON.stringify(lastLandmarks)) : null;
 
+  updateUI(); // 🔹 NEW: update overlay instead of canvas text
+
   requestAnimationFrame(gameLoop);
 }
+
 
 
 

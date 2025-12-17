@@ -2,36 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css" />
   <title>Hand Tracking</title>
+  <div id="start-screen">
+    <h1>Hand Game</h1>
+    <button id="start-btn">Start</button>
+  </div>
+  
+  <div id="end-screen">
+    <h1>Game Over!</h1>
+    <p>Your total stars: <span id="final-stars">0</span></p>
+    <button id="restart-btn">Play Again</button>
+  </div>
+  
+  
 
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #f6f2ee;
-    }
-
-    video, canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-    }
-
-    video {
-      transform: scaleX(-1);
-    }
-
-    canvas {
-      pointer-events: none;
-    }
-  </style>
 </head>
 
 <body>
   <video id="video" autoplay playsinline></video>
+
+  <!-- Overlay for instructions, timer, and star counter -->
+<div id="ui-overlay">
+  <div id="timer"></div>
+  <div id="instruction"></div>
+  <div id="star-counter"></div>
+</div>
+
   <canvas id="canvas"></canvas>
 
   <!-- MediaPipe -->

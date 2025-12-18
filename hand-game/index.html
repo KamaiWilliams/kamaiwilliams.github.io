@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://use.typekit.net/vig4uju.css">
-  <title>Hand Tracking</title>
+  <title>Reach 4 STARS</title>
   <div id="start-screen">
     <h1>Use Your Hands</h1><h1>Use Your Hands</h1>
     <button id="start-btn">Use My Hands</button>
@@ -14,12 +14,15 @@
   <div id="intro-screen">
     <p>
       Have the palm of your hand facing the screen.<br><br>
-      Notice the stars on your fingertips —<br>
+      Notice the STARS on your fingertips,<br>
       this is your controller.<br><br>
       Make a fist to begin.
     </p>
   </div>
 
+  <div id="exercise-intro">
+    <p id="exercise-intro-text"></p>
+  </div>
   
   
 
@@ -40,33 +43,20 @@
   <canvas id="canvas"></canvas>
   <div id="end-screen" class="screen hidden">
     <div class="final-card">
-      <h1 class="final-title">Nice work ✨</h1>
+      <h1 class="final-title"> You just completed a carpal tunnel prevention exercise</h1>
   
-      <p class="final-subtitle">
-        You just completed a carpal tunnel relief exercise
-      </p>
-  
+
       <div class="score-section">
         <div class="score-block">
           <span class="score-label">Your Score</span>
           <span id="final-stars" class="score-number">0</span>
         </div>
-  
-        <div class="score-block muted">
-          <span class="score-label">Last Score</span>
-          <span id="last-score" class="score-number">—</span>
-        </div>
       </div>
+      
   
-      <div class="fact-box">
-        <p>
-          <strong>Did you know?</strong><br />
-          Gentle hand and finger exercises can reduce stiffness, improve circulation,
-          and help prevent repetitive strain injuries like carpal tunnel syndrome.
-        </p>
-      </div>
+      
   
-      <button id="restart-btn">Play Again</button>
+      <button id="restart-btn">Use My Hands Again</button>
     </div>
   </div>
   

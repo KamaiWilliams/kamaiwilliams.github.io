@@ -4,8 +4,27 @@ console.log("hand.js loaded");
 const startScreen = document.getElementById("start-screen");
 const startBtn = document.getElementById("start-btn");
 
+const exerciseOrder = ["piano", "duck", "hook", "finalSqueeze"];
+
+function canTriggerFistFast() {
+  if (fistCooldown) return false;
+  fistCooldown = true;
+  setTimeout(() => fistCooldown = false, 400); // shorter cooldown feels better
+  return true;
+}
+
+const burstSound = new Audio("sound/fx35.wav");
+burstSound.volume = 0.4;
+
+
+
 let gameStarted = false;
 let introActive = false;
+
+let introShownForExercise = {};
+
+let duckSpawnInterval = null;
+
 
 const STAR_STYLES = {
   fingerSize: 20,
@@ -17,6 +36,52 @@ const STAR_STYLES = {
 
 STAR_STYLES.fingerSize
 STAR_STYLES.gridSize
+
+let exerciseIntroActive = false;
+
+const exerciseIntroEl = document.getElementById("exercise-intro");
+const exerciseIntroText = document.getElementById("exercise-intro-text");
+
+function showExerciseIntro() {
+  // ✅ Only show intro for RIGHT hand, once per exercise
+  if (activeHand !== "right") return;
+  if (introShownForExercise[currentExercise]) return;
+
+  introShownForExercise[currentExercise] = true;
+
+  exerciseIntroActive = true;
+  gameStarted = false;
+
+  exerciseIntroText.innerHTML = `
+    <div class="exercise-text">
+      ${exerciseInstructions[currentExercise].right}
+    </div>
+    <div class="exercise-hint">
+      Make a fist to start
+    </div>
+  `;
+
+  exerciseIntroEl.style.display = "flex";
+  document.getElementById("ui-overlay").style.display = "none";
+
+}
+
+
+function hideExerciseIntro() {
+  exerciseIntroActive = false;
+  gameStarted = true;
+  roundStartTime = Date.now();
+  exerciseIntroEl.style.display = "none";
+
+  document.getElementById("ui-overlay").style.display = "flex";
+
+
+  // 🦆 START DUCK SPAWNING WHEN GAMEPLAY ACTUALLY STARTS
+  if (currentExercise === "duck") {
+    clearInterval(duckSpawnInterval);
+    duckSpawnInterval = setInterval(spawnDuckDot, 900);
+  }
+}
 
 
 
@@ -221,18 +286,45 @@ startBtn.addEventListener("click", () => {
 });
 
 
+const uiOverlay = document.getElementById("ui-overlay");
 const timerEl = document.getElementById("timer");
 const instructionEl = document.getElementById("instruction");
 const starEl = document.getElementById("star-counter");
 
+
+function showGameUI() {
+  uiOverlay.style.display = "flex";
+  timerEl.style.display = "block";
+  instructionEl.style.display = "block";
+  starEl.style.display = "block";
+}
+
+function hideGameUI() {
+  uiOverlay.style.display = "none";
+  timerEl.style.display = "none";
+  instructionEl.style.display = "none";
+  starEl.style.display = "none";
+}
+
+
 function updateUI() {
+  if (!gameStarted || exerciseIntroActive) {
+    // hide UI completely
+    uiOverlay.style.display = "none";
+    return;
+  }
+
+  // show UI
+  uiOverlay.style.display = "flex";
+
   const remaining = Math.max(0, ROUND_DURATION - (Date.now() - roundStartTime)) / 1000;
   timerEl.textContent = `${activeHand.toUpperCase()} hand — ${Math.ceil(remaining)}s`;
 
   instructionEl.textContent = exerciseInstructions[currentExercise][activeHand];
-
   starEl.textContent = `★ ${starCount}`;
 }
+
+
 
 function isFistClosed(landmarks) {
   const fingertips = [8, 12, 16, 20];
@@ -244,32 +336,77 @@ function isFistClosed(landmarks) {
     curl += Math.abs(tip.y - pip.y);
   });
 
-  return curl < 0.18; // same threshold you already use
+  return curl < 0.12; // same threshold you already use
 }
 
+let fistHoldStart = null;
+
+function canTriggerFist() {
+  if (fistCooldown) return false;
+
+  if (isFistClosed(lastLandmarks)) {
+    if (!fistHoldStart) fistHoldStart = Date.now();
+    if (Date.now() - fistHoldStart > 250) { // hold for 0.25s
+      fistCooldown = true;
+      setTimeout(() => fistCooldown = false, 800);
+      fistHoldStart = null;
+      return true;
+    }
+  } else {
+    fistHoldStart = null;
+  }
+
+  return false;
+}
 
 const endScreen = document.getElementById("end-screen");
 const finalStars = document.getElementById("final-stars");
 const restartBtn = document.getElementById("restart-btn");
 
+let lastScore = null;
+
 function endGame() {
   gameStarted = false;
+
+  // update scores
   finalStars.textContent = starCount;
-  endScreen.style.display = "flex";
-  showEndScreen();
+
+  const lastScoreEl = document.getElementById("last-score");
+  if (lastScore !== null) {
+    lastScoreEl.textContent = lastScore;
+  }
+
+  // save for next round
+  lastScore = starCount;
+
+  // show styled HTML end screen
+  endScreen.classList.remove("hidden");
 }
 
+
 restartBtn.addEventListener("click", () => {
-  endScreen.style.display = "none";
-  starCount = 0;        // reset stars for new game
+  // hide end screen
+  endScreen.classList.add("hidden");
+
+  // reset game state
+  starCount = 0;
   currentExercise = "piano";
   activeHand = "right";
-  spawnPianoGrid();
-  roundStartTime = Date.now();
+  introShownForExercise = {};
   fallingDots = [];
   starBursts = [];
-  gameStarted = true;
+  hookField.stars = [];
+  duckSpawnInterval && clearInterval(duckSpawnInterval);
+
+  // reset UI + flow
+  gameStarted = false;
+  introActive = false;
+  exerciseIntroActive = false;
+
+  // show start screen again
+  startScreen.style.display = "flex";
 });
+
 
 
 const video = document.getElementById("video");
@@ -413,16 +550,16 @@ const exerciseInstructions = {
     left:  "Wiggle your fingers to burst the stars"
   },
   duck: {
-    right: "Now EAT the circles. Turn your RIGHT palm left and open/close like an alligator.",
-    left:  " Now EAT the circles. Turn your LEFT palm right and open/close like an alligator."
+    right: "Now EAT the circles. Turn your palm to the left, open/close like an alligator.",
+    left:  " Now EAT the circles. Turn your palm to the right and open/close like an alligator."
   },
   hook: {
-    right: "Hook Tendon Glide: Curl your RIGHT fingers like a hook, flick open, repeat.",
-    left:  "Hook Tendon Glide: Curl your LEFT fingers like a hook, flick open, repeat."
+    right: "Curl your fingers like a hook, flick open, repeat.",
+    left:  "Curl your fingers like a hook, flick open, repeat."
   },
   finalSqueeze: {
-    right: "Make a fist, squeeze gently, then slowly release.",
-    left: "Make a fist, squeeze gently, then slowly release."
+    right: "GRAB the stars! Make a fist, squeeze gently, then slowly release.",
+    left: "GRAB the stars! Make a fist, squeeze gently, then slowly release."
   }
   
 };
@@ -518,22 +655,42 @@ function onResults(results) {
   if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
     lastLandmarks = results.multiHandLandmarks[0];
 
-    // 👉 INTRO → GAME TRANSITION
-    if (introActive && isFistClosed(lastLandmarks)) {
-      document.getElementById("intro-screen").style.display = "none";
-      introActive = false;
+// ✊ INITIAL INTRO → START GAME
+if (
+  introActive &&
+  isFistClosed(lastLandmarks) &&
+  canTriggerFist()
+) {
+  hideInitialIntro();
+  return;
+}
 
-      gameStarted = true;
-      currentExercise = "piano";
-      activeHand = "right";
-      roundStartTime = Date.now();
-      spawnPianoGrid();
-    }
+// ✊ EXERCISE INTRO → START EXERCISE (FAST, like initial intro)
+if (
+  exerciseIntroActive &&
+  isFistClosed(lastLandmarks) &&
+  canTriggerFist()
+
+) {
+  hideExerciseIntro();
+}
+
+
+
+    
   } else {
     lastLandmarks = null;
   }
 }
 
+let fistCooldown = false;
+
+function canTriggerFist() {
+  if (fistCooldown) return false;
+  fistCooldown = true;
+  setTimeout(() => fistCooldown = false, 800);
+  return true;
+}
 
 // --------------------
 // Draw functions
@@ -614,6 +771,12 @@ function spawnDuckDot() {
 
 
 function createStarBurst(x, y, color) {
+  
+   // 🔊 play burst sound
+   const sound = burstSound.cloneNode();
+   sound.volume = 0.2;
+   sound.play();
+ 
   for (let i = 0; i < 10; i++) {
     starBursts.push({
       x,
@@ -650,134 +813,88 @@ function updateHandRound() {
   const elapsed = Date.now() - roundStartTime;
   if (elapsed <= ROUND_DURATION) return;
 
-  // --- END CONDITIONS ---
-  if (gameStarted && currentExercise === "finalSqueeze" && activeHand === "left") {
+  // 🛑 stop duck spawns if needed
+  if (currentExercise === "duck" && duckSpawnInterval) {
+    clearInterval(duckSpawnInterval);
+    duckSpawnInterval = null;
+  }
+
+  // --- FINAL END CONDITION ---
+  if (currentExercise === "finalSqueeze" && activeHand === "left") {
+    endGame();
+    return;
+  }
+  // --- FINAL END CONDITION ---
+  if (currentExercise === "finalSqueeze" && activeHand === "left") {
     endGame();
     return;
   }
 
-  // --- SWITCH HAND ---
-  activeHand = activeHand === "right" ? "left" : "right";
+  // --- HAND SWITCH ---
+  if (activeHand === "right") {
+    // move to LEFT hand
+    activeHand = "left";
+  } else {
+    // LEFT hand just finished → advance exercise
+    const currentIndex = exerciseOrder.indexOf(currentExercise);
+    currentExercise = exerciseOrder[currentIndex + 1];
+    activeHand = "right";
+  
+    // 🔁 allow intro for new exercise
+    introShownForExercise[currentExercise] = false;
+  }
+  
+
   roundStartTime = Date.now();
 
   // --- CLEAR TEMP OBJECTS ---
   fallingDots = [];
   starBursts = [];
-
-  // --- EXERCISE TRANSITIONS ---
+  
+  // 🦆 ensure duck stars always spawn
+  if (currentExercise === "duck") {
+    clearInterval(duckSpawnInterval);
+    duckSpawnInterval = setInterval(spawnDuckDot, 900);
+  }
+  
+  // --- EXERCISE SETUP ---
   switch (currentExercise) {
     case "piano":
-      // Left hand: just respawn the piano grid
       spawnPianoGrid();
-      // Right hand done: move to duck for right hand
-      if (activeHand === "right") {
-        currentExercise = "duck";
-        duckSpawnInterval = setInterval(spawnDuckDot, 800);
-      }
       break;
 
     case "duck":
-      // Only transition after right hand finishes
-      if (activeHand === "right") {
-        clearInterval(duckSpawnInterval);
-        currentExercise = "hook";
-        hookStarCount = 1;
-        spawnHookField(1);
-      }
+      spawnDuckDot();
       break;
 
     case "hook":
-      // Only transition after right hand finishes
-      if (activeHand === "right") {
-        currentExercise = "finalSqueeze";
-        spawnFinalStar();
-      }
+      hookStarCount = 1;
+      hookField.stars = [];
+      spawnHookField(1);
       break;
 
-    default:
-      // If in finalSqueeze or unknown, do nothing
+    case "finalSqueeze":
+      spawnFinalStar();
       break;
   }
+
+  // ✅ Show intro ONLY when starting RIGHT hand
+  showExerciseIntro();
 }
 
 
 
-function showEndScreen() {
-  gameStarted = false; // stop game
 
-  // create overlay
-  const overlay = document.createElement("div");
-  overlay.id = "end-screen-js";
-  Object.assign(overlay.style, {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0,0,0,0.9)",
-    color: "#fff",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    fontFamily: "Verdana, sans-serif",
-    textAlign: "center",
-    fontSize: "1.8rem",
-    zIndex: 9999,
-    padding: "2rem",
-  });
 
-  // star count display
-  const starsText = document.createElement("div");
-  starsText.textContent = `Total Stars: ★ ${starCount}`;
-  starsText.style.marginBottom = "2rem";
-  starsText.style.fontSize = "2.2rem";
-  starsText.style.fontWeight = "600";
-  overlay.appendChild(starsText);
+function hideInitialIntro() {
+  introActive = false;
+  document.getElementById("intro-screen").style.display = "none";
 
-  // fun fact
-  const funFact = document.createElement("div");
-  funFact.innerHTML = `💡 Fun Fact: Did you know regular hand exercises can help prevent <strong>carpal tunnel syndrome</strong>? Keep those fingers moving!`;
-  funFact.style.marginBottom = "2.5rem";
-  funFact.style.fontSize = "1.5rem";
-  funFact.style.lineHeight = "1.6";
-  overlay.appendChild(funFact);
+  // ⛔️ Do NOT start gameplay yet
+  gameStarted = false;
 
-  // restart button
-  const restartBtn = document.createElement("button");
-  restartBtn.textContent = "Restart Game";
-  Object.assign(restartBtn.style, {
-    padding: "1rem 2.5rem",
-    fontSize: "1.6rem",
-    cursor: "pointer",
-    borderRadius: "12px",
-    border: "none",
-    backgroundColor: "#5c7aff",
-    color: "#fff",
-    transition: "transform 0.2s ease",
-  });
-  restartBtn.addEventListener("mouseenter", () => restartBtn.style.transform = "scale(1.05)");
-  restartBtn.addEventListener("mouseleave", () => restartBtn.style.transform = "scale(1)");
-
-  function restartGame() {
-    starCount = 0;        
-    currentExercise = "piano";
-    activeHand = "right";
-    spawnPianoGrid();
-    roundStartTime = Date.now();
-    fallingDots = [];
-    starBursts = [];
-    gameStarted = true;
-  }
-
-  restartBtn.addEventListener("click", () => {
-    document.body.removeChild(overlay);
-    restartGame();
-  });
-
-  overlay.appendChild(restartBtn);
-
-  document.body.appendChild(overlay);
+  // 🎯 Immediately show first exercise intro
+  showExerciseIntro();
 }
 
 
@@ -795,11 +912,12 @@ function gameLoop() {
     drawHand(lastLandmarks);
   }
 
-  // ❌ Stop here if the game hasn't started yet
-  if (!gameStarted) {
-    requestAnimationFrame(gameLoop);
-    return;
-  }
+ // ❌ Stop game logic if exercise intro is active
+if (!gameStarted || exerciseIntroActive) {
+  requestAnimationFrame(gameLoop);
+  return;
+}
+
 
   // --------------------
   // GAME LOGIC (unchanged)

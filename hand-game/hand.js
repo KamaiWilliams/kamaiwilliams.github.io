@@ -1,15 +1,225 @@
 console.log("hand.js loaded");
 
+
 const startScreen = document.getElementById("start-screen");
 const startBtn = document.getElementById("start-btn");
 
 let gameStarted = false;
+let introActive = false;
+
+const STAR_STYLES = {
+  fingerSize: 20,
+  gridSize: 24,
+  fallingSize: 14,
+  burstMin: 3,
+  burstMax: 6
+};
+
+STAR_STYLES.fingerSize
+STAR_STYLES.gridSize
+
+
+
+let finalStar = null;
+
+let finalPhase = "open"; // open → grabbing → squeezed → released
+
+function spawnFinalStar() {
+  const margin = 120; // keeps star comfortably on screen
+
+  finalStar = {
+    x: margin + Math.random() * (canvas.width - margin * 2),
+    y: margin + Math.random() * (canvas.height - margin * 2),
+    radius: 70,
+    color: fingerColors[Math.floor(Math.random() * fingerColors.length)]
+  };
+
+  finalPhase = "open";
+}
+
+
+function getFistCurlAmount(landmarks) {
+  const tips = [4, 8, 12, 16, 20];
+  let curl = 0;
+
+  tips.forEach(i => {
+    const pip = i === 4 ? landmarks[3] : landmarks[i - 2];
+    curl += pip.y - landmarks[i].y;
+  });
+
+  return curl;
+}
+
+function updateFinalSqueeze(landmarks) {
+  if (!finalStar) return;
+
+  const curl = getFistCurlAmount(landmarks);
+
+  const closed = curl > 0.4;
+  const open = curl < 0.15;
+
+  // OPEN → GRABBING
+  if (finalPhase === "open" && !open) {
+    finalPhase = "grabbing";
+  }
+
+  // GRABBING → SQUEEZED
+  if (finalPhase === "grabbing") {
+    finalStar.radius = Math.max(25, finalStar.radius - 1.2);
+    if (closed) finalPhase = "squeezed";
+  }
+
+  // SQUEEZED → RELEASED
+  if (finalPhase === "squeezed" && open) {
+    createStarBurst(finalStar.x, finalStar.y, finalStar.color);
+    starCount += 1;
+    finalStar = null;
+
+    setTimeout(spawnFinalStar, 600);
+    finalPhase = "released";
+  }
+}
+
+function drawFinalStar() {
+  if (!finalStar) return;
+  drawStar(finalStar.x, finalStar.y, finalStar.radius, finalStar.color);
+}
+
+
+
+// --------------------
+// Hook Tendon Glide state
+// --------------------
+let hookStarCount = 1;
+
+// --------------------
+// NEW Hook Tendon Glide system
+// --------------------
+let hookField = {
+  stars: [],
+  phase: "open", // "open" → "curled" → "released"
+  maxRadius: 60,
+  minRadius: 20,
+  resetRadius: 30
+};
+
+function spawnHookField(targetCount) {
+  const existing = hookField.stars.length;
+  const toAdd = targetCount - existing;
+  if (toAdd <= 0) return;
+
+  const spreadX = canvas.width * 0.7;
+  const spreadY = canvas.height * 0.6;
+
+  for (let i = 0; i < toAdd; i++) {
+    setTimeout(() => {
+      hookField.stars.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * spreadX,
+        y: canvas.height / 2 + (Math.random() - 0.5) * spreadY,
+        radius: hookField.maxRadius,
+        color: fingerColors[Math.floor(Math.random() * fingerColors.length)]
+      });
+    }, i * 180); // ⭐ stagger timing
+  }
+
+  hookField.phase = "open";
+}
+
+
+function getHookCurlAmount(landmarks) {
+  const tips = [4, 8, 12, 16, 20];
+  let curl = 0;
+
+  tips.forEach(i => {
+    let pip = i === 4 ? landmarks[3] : landmarks[i - 2];
+    curl += pip.y - landmarks[i].y;
+  });
+
+  return curl;
+}
+
+function updateHookExercise(landmarks) {
+  const curl = getHookCurlAmount(landmarks);
+
+  // thresholds (VERY important feel-tuning)
+  const curlClosed = curl > 0.35;
+  const curlOpen = curl < 0.15;
+
+  // 1️⃣ OPEN → CURLED
+  if (hookField.phase === "open" && curlClosed) {
+    hookField.stars.forEach(s => {
+      s.radius += (hookField.minRadius - s.radius) * 0.35;
+    });
+    
+    hookField.phase = "curled";
+  }
+
+  // 2️⃣ CURLED → RELEASED (partial open)
+  if (hookField.phase === "curled" && curlOpen) {
+    hookField.stars.forEach(s => s.radius = hookField.resetRadius);
+    hookField.phase = "released";
+  }
+
+  
+ /// 3️⃣ RELEASED → CURLED AGAIN = BURST
+if (hookField.phase === "released" && curlClosed) {
+
+  // 💥 burst all current stars
+  hookField.stars.forEach(s => {
+    createStarBurst(s.x, s.y, s.color);
+  });
+
+  starCount += hookField.stars.length;
+
+  // 🫥 clear field
+  hookField.stars = [];
+
+  // ⭐ increase difficulty by ONE
+  hookStarCount += 1;
+
+  // 🌌 respawn fresh random stars
+  spawnHookField(hookStarCount);
+
+  hookField.phase = "curled"; // lock
+}
+
+
+
+
+}
+
+function drawHookStars() {
+  hookField.stars.forEach(s => {
+    drawStar(s.x, s.y, s.radius, s.color);
+  });
+}
+
+
+function getFingerCurl(landmarks, tipIndex) {
+  let pip;
+
+  // Thumb uses joint 3, not tipIndex - 2
+  if (tipIndex === 4) {
+    pip = landmarks[3];
+  } else {
+    pip = landmarks[tipIndex - 2];
+  }
+
+  const tip = landmarks[tipIndex];
+
+  return pip.y - tip.y;
+}
+
+
+
+
 
 startBtn.addEventListener("click", () => {
   startScreen.style.display = "none";
-  gameStarted = true;
-  roundStartTime = Date.now();
+  document.getElementById("intro-screen").style.display = "flex";
+  introActive = true;
 });
+
 
 const timerEl = document.getElementById("timer");
 const instructionEl = document.getElementById("instruction");
@@ -24,6 +234,18 @@ function updateUI() {
   starEl.textContent = `★ ${starCount}`;
 }
 
+function isFistClosed(landmarks) {
+  const fingertips = [8, 12, 16, 20];
+  let curl = 0;
+
+  fingertips.forEach(i => {
+    const tip = landmarks[i];
+    const pip = landmarks[i - 2];
+    curl += Math.abs(tip.y - pip.y);
+  });
+
+  return curl < 0.18; // same threshold you already use
+}
 
 
 const endScreen = document.getElementById("end-screen");
@@ -34,6 +256,7 @@ function endGame() {
   gameStarted = false;
   finalStars.textContent = starCount;
   endScreen.style.display = "flex";
+  showEndScreen();
 }
 
 restartBtn.addEventListener("click", () => {
@@ -54,7 +277,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let lastLandmarks = null;
-const fingerColors = ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"];
+const fingerColors = ["#5c7aff", "#ffff3f", "#f72585", "#ff801e", "#aacc00"];
 
 let activeHand = "right"; // "right" or "left"
 let roundStartTime = Date.now();
@@ -62,7 +285,7 @@ const ROUND_DURATION = 30_000; // 30 seconds
 
 let currentExercise = "piano";
 
-let fingerRollState = "open"; // "open" or "closed"
+
 
 let pianoDots = [];
 const MAX_PIANO_DOTS = 3;
@@ -186,8 +409,8 @@ function updatePianoInteraction(landmarks) {
 
 const exerciseInstructions = {
   piano: {
-    right: "Have your RIGHT palm facing the screen and wiggle your fingers like you are playing the piano",
-    left:  "Have your LEFT palm facing the screen and wiggle your fingers like you are playing the piano"
+    right: "Wiggle your fingers to burst the stars",
+    left:  "Wiggle your fingers to burst the stars"
   },
   duck: {
     right: "Now EAT the circles. Turn your RIGHT palm left and open/close like an alligator.",
@@ -197,102 +420,13 @@ const exerciseInstructions = {
     right: "Hook Tendon Glide: Curl your RIGHT fingers like a hook, flick open, repeat.",
     left:  "Hook Tendon Glide: Curl your LEFT fingers like a hook, flick open, repeat."
   },
-  fingerRoll: {
-    right: "Finger Roll: Slowly roll your RIGHT fingers into a fist, squeeze, then open back to a palm.",
-    left:  "Finger Roll: Slowly roll your LEFT fingers into a fist, squeeze, then open back to a palm."
+  finalSqueeze: {
+    right: "Make a fist, squeeze gently, then slowly release.",
+    left: "Make a fist, squeeze gently, then slowly release."
   }
+  
 };
 
-
-function detectHookCurl(landmarks) {
-  const fingertipIndices = [8, 12, 16, 20]; // index → pinky
-  let curlAmount = 0;
-
-  fingertipIndices.forEach(i => {
-    const tip = landmarks[i];
-    const pip = landmarks[i - 2];
-    const dx = tip.x - pip.x;
-    const dy = tip.y - pip.y;
-    const dist = Math.sqrt(dx * dx + dy * dy); // normalized distance
-    curlAmount += 1 - dist; // bigger when finger is more curled
-  });
-
-  return curlAmount / fingertipIndices.length; // average curl
-}
-function updateHookDots(landmarks, lastLandmarks) {
-  // Spawn dots from top
-  if (Date.now() - lastSpawn > SPAWN_RATE) {
-    fallingDots.push({
-      x: Math.random() * canvas.width,
-      y: -20,
-      radius: 12,
-      speedY: 1 + Math.random() * 2,
-      color: dotColors[Math.floor(Math.random() * dotColors.length)],
-      vx: 0, // horizontal movement for bounce
-      vy: 0
-    });
-    lastSpawn = Date.now();
-  }
-
-  // Move dots
-  fallingDots.forEach(dot => {
-    // Normal falling
-    dot.y += dot.speedY + dot.vy; 
-    dot.x += dot.vx;
-
-    // Apply friction/slowdown after bounce
-    dot.vx *= 0.95;
-    dot.vy *= 0.95;
-
-    drawStar(dot.x, dot.y, dot.radius, dot.color);
-
-  });
-
-  // Flick detection
-  const flickAmount = detectHookFlick(landmarks, lastLandmarks);
-
-  if (flickAmount > 0.5) {
-    // Check if fingertip hits any dot
-    const fingertipIndices = [8, 12, 16, 20];
-    fingertipIndices.forEach(i => {
-      const tip = landmarks[i];
-      const fingerX = tip.x * canvas.width;
-      const fingerY = tip.y * canvas.height;
-
-      fallingDots.forEach((dot, idx) => {
-        const dist = Math.hypot(dot.x - fingerX, dot.y - fingerY);
-        if (dist < dot.radius + 6) {
-          // Bounce dot: move it upward and sideways
-          dot.vy = -3 - Math.random() * 2;
-          dot.vx = (Math.random() - 0.5) * 4;
-
-          createStarBurst(dot.x, dot.y, dot.color);
-          // Optionally remove the dot after some time
-          setTimeout(() => {
-            fallingDots.splice(fallingDots.indexOf(dot), 1);
-          }, 500);
-        }
-      });
-    });
-  }
-
-  // Remove offscreen dots
-  fallingDots = fallingDots.filter(dot => dot.y < canvas.height + 50);
-}
-
-
-function spawnFingerRollDots() {
-  if (Date.now() - lastSpawn > 700) {
-    fallingDots.push({
-      x: Math.random() * canvas.width,
-      y: -20,
-      radius: 12,
-      speedY: 2,
-      color: dotColors[Math.floor(Math.random() * dotColors.length)]
-    });
-    lastSpawn = Date.now();
-  }
-}
 
 
 let fingerMotionEnergy = 0;
@@ -329,47 +463,6 @@ function getHandCurl(landmarks) {
   });
   return curl;
 }
-
-
-
-function updateFingerRoll(landmarks) {
-  const fingertips = [8, 12, 16, 20];
-
-  // Measure curl amount
-  let curl = 0;
-  fingertips.forEach(i => {
-    const tip = landmarks[i];
-    const pip = landmarks[i - 2];
-    curl += Math.abs(tip.y - pip.y);
-  });
-
-  const isClosed = curl < 0.18;
-
-  // 🔥 OPEN → CLOSED = grab + squeeze
-  if (fingerRollState === "open" && isClosed) {
-    fallingDots.forEach((dot, idx) => {
-      fingertips.forEach(i => {
-        const tip = landmarks[i];
-        const fx = tip.x * canvas.width;
-        const fy = tip.y * canvas.height;
-
-        const dist = Math.hypot(dot.x - fx, dot.y - fy);
-        if (dist < dot.radius + 20) {
-          createStarBurst(dot.x, dot.y, dot.color);
-          fallingDots.splice(idx, 1);
-        }
-      });
-    });
-
-    fingerRollState = "closed";
-  }
-
-  // CLOSED → OPEN = reset
-  if (fingerRollState === "closed" && !isClosed) {
-    fingerRollState = "open";
-  }
-}
-
 
 
 
@@ -424,10 +517,23 @@ camera.start();
 function onResults(results) {
   if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
     lastLandmarks = results.multiHandLandmarks[0];
+
+    // 👉 INTRO → GAME TRANSITION
+    if (introActive && isFistClosed(lastLandmarks)) {
+      document.getElementById("intro-screen").style.display = "none";
+      introActive = false;
+
+      gameStarted = true;
+      currentExercise = "piano";
+      activeHand = "right";
+      roundStartTime = Date.now();
+      spawnPianoGrid();
+    }
   } else {
     lastLandmarks = null;
   }
 }
+
 
 // --------------------
 // Draw functions
@@ -438,7 +544,7 @@ function drawHand(landmarks) {
     drawStar(
       p.x * canvas.width,
       p.y * canvas.height,
-      6,                 // fingertip size
+      20,                 // fingertip size
       finger.color
     );
   });
@@ -479,11 +585,11 @@ function checkDuckDotHits(landmarks) {
 
       const dist = Math.hypot(dot.x - fingerX, dot.y - fingerY);
       if (dist < dot.radius + 6) {
-        // Create star burst
         createStarBurst(dot.x, dot.y, dot.color);
-        // Remove dot
         fallingDots.splice(dotIdx, 1);
+        starCount += 1; // ⭐ ADD THIS
       }
+      
     });
   });
 }
@@ -496,7 +602,7 @@ function spawnDuckDot() {
   fallingDots.push({
     x,
     y,
-    radius: 12,
+    radius: 25,
     speedX: 2 + Math.random() * 2,
     color: dotColors[Math.floor(Math.random() * dotColors.length)]
   });
@@ -512,11 +618,13 @@ function createStarBurst(x, y, color) {
     starBursts.push({
       x,
       y,
-      vx: (Math.random() - 0.5) * 4,
-      vy: (Math.random() - 0.5) * 4,
+      vx: (Math.random() - 0.5) * 20,
+      vy: (Math.random() - 0.5) * 20,
+
       alpha: 1,
       color,
-      radius: 2 + Math.random() * 3
+      radius: 2 + Math.random() * 20
+
     });
   }
 }
@@ -537,77 +645,141 @@ function drawStarBursts() {
 
 
 
-// --------------------
-// Detect hook
-// --------------------
-function detectHookFlick(landmarks, lastLandmarks) {
-  const fingertipIndices = [8, 12, 16, 20];
-  let flickAmount = 0;
-
-  if (!lastLandmarks) return 0;
-
-  fingertipIndices.forEach(i => {
-    const tip = landmarks[i];
-    const pip = landmarks[i - 2];
-    const lastTip = lastLandmarks[i];
-    const lastPip = lastLandmarks[i - 2];
-
-    // Current distance = curled
-    const currentDist = Math.hypot((tip.x - pip.x) * canvas.width, (tip.y - pip.y) * canvas.height);
-    const lastDist = Math.hypot((lastTip.x - lastPip.x) * canvas.width, (lastTip.y - lastPip.y) * canvas.height);
-
-    const delta = currentDist - lastDist; // positive if finger straightened
-    if (delta > 0.5) flickAmount += delta; // threshold for flick
-  });
-
-  return flickAmount / fingertipIndices.length; // average flick intensity
-}
-
-
-
 
 function updateHandRound() {
   const elapsed = Date.now() - roundStartTime;
+  if (elapsed <= ROUND_DURATION) return;
 
-  if (elapsed > ROUND_DURATION) {
-    // Switch active hand
-    activeHand = activeHand === "right" ? "left" : "right";
-    roundStartTime = Date.now();
+  // --- END CONDITIONS ---
+  if (gameStarted && currentExercise === "finalSqueeze" && activeHand === "left") {
+    endGame();
+    return;
+  }
 
-    // Clear visuals between rounds
-    fallingDots = [];
-    starBursts = [];
+  // --- SWITCH HAND ---
+  activeHand = activeHand === "right" ? "left" : "right";
+  roundStartTime = Date.now();
 
-    // Reset piano grid for the new hand
-    if (currentExercise === "piano") {
+  // --- CLEAR TEMP OBJECTS ---
+  fallingDots = [];
+  starBursts = [];
+
+  // --- EXERCISE TRANSITIONS ---
+  switch (currentExercise) {
+    case "piano":
+      // Left hand: just respawn the piano grid
       spawnPianoGrid();
-    }
+      // Right hand done: move to duck for right hand
+      if (activeHand === "right") {
+        currentExercise = "duck";
+        duckSpawnInterval = setInterval(spawnDuckDot, 800);
+      }
+      break;
 
-    // --- Exercise transitions ---
-    if (currentExercise === "piano" && activeHand === "right") {
-      // Both hands of piano done → start Duck
-      currentExercise = "duck";
-      duckSpawnInterval = setInterval(spawnDuckDot, 800);
+    case "duck":
+      // Only transition after right hand finishes
+      if (activeHand === "right") {
+        clearInterval(duckSpawnInterval);
+        currentExercise = "hook";
+        hookStarCount = 1;
+        spawnHookField(1);
+      }
+      break;
 
-    } else if (currentExercise === "duck" && activeHand === "right") {
-      // Both hands of Duck done → start Hook
-      currentExercise = "hook";
-      clearInterval(duckSpawnInterval);
-      fallingDots = [];
-      starBursts = [];
-    }
-    else if (currentExercise === "hook" && activeHand === "right") {
-      // Both hands of Hook done → start Finger Roll
-      currentExercise = "fingerRoll";
-      fallingDots = [];
-      starBursts = [];
-    }
-    if (currentExercise === "fingerRoll" && activeHand === "left" && elapsed > ROUND_DURATION) {
-      endGame();
-      return;
-    }
+    case "hook":
+      // Only transition after right hand finishes
+      if (activeHand === "right") {
+        currentExercise = "finalSqueeze";
+        spawnFinalStar();
+      }
+      break;
+
+    default:
+      // If in finalSqueeze or unknown, do nothing
+      break;
   }
 }
+
+
+
+function showEndScreen() {
+  gameStarted = false; // stop game
+
+  // create overlay
+  const overlay = document.createElement("div");
+  overlay.id = "end-screen-js";
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(0,0,0,0.9)",
+    color: "#fff",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "Verdana, sans-serif",
+    textAlign: "center",
+    fontSize: "1.8rem",
+    zIndex: 9999,
+    padding: "2rem",
+  });
+
+  // star count display
+  const starsText = document.createElement("div");
+  starsText.textContent = `Total Stars: ★ ${starCount}`;
+  starsText.style.marginBottom = "2rem";
+  starsText.style.fontSize = "2.2rem";
+  starsText.style.fontWeight = "600";
+  overlay.appendChild(starsText);
+
+  // fun fact
+  const funFact = document.createElement("div");
+  funFact.innerHTML = `💡 Fun Fact: Did you know regular hand exercises can help prevent <strong>carpal tunnel syndrome</strong>? Keep those fingers moving!`;
+  funFact.style.marginBottom = "2.5rem";
+  funFact.style.fontSize = "1.5rem";
+  funFact.style.lineHeight = "1.6";
+  overlay.appendChild(funFact);
+
+  // restart button
+  const restartBtn = document.createElement("button");
+  restartBtn.textContent = "Restart Game";
+  Object.assign(restartBtn.style, {
+    padding: "1rem 2.5rem",
+    fontSize: "1.6rem",
+    cursor: "pointer",
+    borderRadius: "12px",
+    border: "none",
+    backgroundColor: "#5c7aff",
+    color: "#fff",
+    transition: "transform 0.2s ease",
+  });
+  restartBtn.addEventListener("mouseenter", () => restartBtn.style.transform = "scale(1.05)");
+  restartBtn.addEventListener("mouseleave", () => restartBtn.style.transform = "scale(1)");
+
+  function restartGame() {
+    starCount = 0;        
+    currentExercise = "piano";
+    activeHand = "right";
+    spawnPianoGrid();
+    roundStartTime = Date.now();
+    fallingDots = [];
+    starBursts = [];
+    gameStarted = true;
+  }
+
+  restartBtn.addEventListener("click", () => {
+    document.body.removeChild(overlay);
+    restartGame();
+  });
+
+  overlay.appendChild(restartBtn);
+
+  document.body.appendChild(overlay);
+}
+
 
 
 
@@ -616,34 +788,54 @@ function updateHandRound() {
 // Main loop
 // --------------------
 function gameLoop() {
-  if (!gameStarted) return requestAnimationFrame(gameLoop);
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // ⭐ ALWAYS draw fingertip stars if a hand exists (INTRO + GAME)
+  if (lastLandmarks) {
+    drawHand(lastLandmarks);
+  }
+
+  // ❌ Stop here if the game hasn't started yet
+  if (!gameStarted) {
+    requestAnimationFrame(gameLoop);
+    return;
+  }
+
+  // --------------------
+  // GAME LOGIC (unchanged)
+  // --------------------
   updateHandRound(); 
 
   if (currentExercise === "piano") {
     drawPianoGrid();
     if (lastLandmarks) updatePianoInteraction(lastLandmarks);
-  } else if (currentExercise === "duck") {
+  } 
+  else if (currentExercise === "duck") {
     updateDuckDots();
     if (lastLandmarks) checkDuckDotHits(lastLandmarks);
-  } else if (currentExercise === "hook") {
-    if (lastLandmarks) updateHookDots(lastLandmarks, lastLandmarksPrev);
-  } else if (currentExercise === "fingerRoll") {
-    spawnFingerRollDots();
-    drawFallingDots();
-    if (lastLandmarks) updateFingerRoll(lastLandmarks);
+  } 
+  else if (currentExercise === "hook") {
+    drawHookStars();
+    if (lastLandmarks) updateHookExercise(lastLandmarks);
   }
+  
+  
+  else if (currentExercise === "finalSqueeze") {
+    drawFinalStar();
+    if (lastLandmarks) updateFinalSqueeze(lastLandmarks);
+  }
+  
 
   drawStarBursts();
-  if (lastLandmarks) drawHand(lastLandmarks);
 
-  lastLandmarksPrev = lastLandmarks ? JSON.parse(JSON.stringify(lastLandmarks)) : null;
+  lastLandmarksPrev = lastLandmarks
+    ? JSON.parse(JSON.stringify(lastLandmarks))
+    : null;
 
-  updateUI(); // 🔹 NEW: update overlay instead of canvas text
-
+  updateUI();
   requestAnimationFrame(gameLoop);
 }
+
 
 
 

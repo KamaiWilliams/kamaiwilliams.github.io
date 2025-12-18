@@ -11,11 +11,15 @@
     <h1>Use Your Hands</h1><h1>Use Your Hands</h1>
   </div>
   
-  <div id="end-screen">
-    <h1>Game Over!</h1>
-    <p>Your total stars: <span id="final-stars">0</span></p>
-    <button id="restart-btn">Play Again</button>
+  <div id="intro-screen">
+    <p>
+      Have the palm of your hand facing the screen.<br><br>
+      Notice the stars on your fingertips —<br>
+      this is your controller.<br><br>
+      Make a fist to begin.
+    </p>
   </div>
+
   
   
 
@@ -31,7 +35,42 @@
   <div id="star-counter"></div>
 </div>
 
+
+
   <canvas id="canvas"></canvas>
+  <div id="end-screen" class="screen hidden">
+    <div class="final-card">
+      <h1 class="final-title">Nice work ✨</h1>
+  
+      <p class="final-subtitle">
+        You just completed a carpal tunnel relief exercise
+      </p>
+  
+      <div class="score-section">
+        <div class="score-block">
+          <span class="score-label">Your Score</span>
+          <span id="final-stars" class="score-number">0</span>
+        </div>
+  
+        <div class="score-block muted">
+          <span class="score-label">Last Score</span>
+          <span id="last-score" class="score-number">—</span>
+        </div>
+      </div>
+  
+      <div class="fact-box">
+        <p>
+          <strong>Did you know?</strong><br />
+          Gentle hand and finger exercises can reduce stiffness, improve circulation,
+          and help prevent repetitive strain injuries like carpal tunnel syndrome.
+        </p>
+      </div>
+  
+      <button id="restart-btn">Play Again</button>
+    </div>
+  </div>
+  
+
 
   <!-- MediaPipe -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
@@ -39,5 +78,6 @@
 
   <!-- YOUR JS -->
   <script src="hand.js"></script>
+
 </body>
 </html>

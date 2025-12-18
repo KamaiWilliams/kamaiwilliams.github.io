@@ -60,7 +60,7 @@ text-align: center;
 margin: 0 0 10px 0;                  /* some space below title */
 line-height: 1;
 /*text-transform: uppercase;          /* optional, makes all caps */
-letter-spacing: -7px;              /* spacing between letters */
+letter-spacing: -.35vw;               /* spacing between letters */
 pointer-events: none;               /* ensures button is clickable */
 }
 
@@ -79,7 +79,7 @@ padding: 35px 60px;/* outline effect */
 text-align: center;
 margin: 0 0 10px 0;                  /* some space below title */
 line-height: 1;
-letter-spacing: -7px; 
+letter-spacing: -.35vw; 
   cursor: pointer;
   transition: transform 0.1s ease, background 0.2s ease, color 0.2s ease;
   z-index: 20;                /* above everything */
@@ -152,7 +152,7 @@ letter-spacing: -7px;
   font-family: "halyard-text", sans-serif;
   font-weight: 800;
   font-size: 1.5rem;
-  letter-spacing: -1px;
+  letter-spacing: -.05vw; 
 
   color: #ffea00;
   border: 5px solid #ffea00;
@@ -169,7 +169,7 @@ letter-spacing: -7px;
   font-family: "halyard-text", sans-serif;
   font-weight: 800;
   font-size: 1.5rem;
-  letter-spacing: -1px;
+  letter-spacing: -.05vw; 
 
   color: #ffea00;
   border: 5px solid #ffea00;
@@ -191,6 +191,7 @@ letter-spacing: -7px;
   position: absolute;
   bottom: 20px; /* fixed near bottom of screen */
   pointer-events: none;
+  letter-spacing: -.05vw; 
 }
 /*
 font-family: "oi", sans-serif;
@@ -211,4 +212,135 @@ font-style: normal;
 /* Show UI once start screen is hidden */
 #start-screen[style*="display: none"] ~ #ui-overlay {
   display: block;
+}
+
+/* Intro screen */
+#intro-screen {
+  position: absolute;
+  inset: 0;
+  display: none;              /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 12;
+  pointer-events: none;       /* gesture-only interaction */
+}
+
+#intro-screen p {
+  font-family: "halyard-text", sans-serif;
+  font-weight: 800;
+  font-size: 3.5vw;
+  line-height: 1.1;
+  text-align: center;
+
+  color: #ffea00;
+  background: transparent;
+  border: 15px solid #ffea00;
+  border-radius: 90px;
+  padding: 60px 80px;
+
+  max-width: 80vw;
+  letter-spacing: -.25vw; 
+}
+
+/* End screen overlay */
+#end-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;                /* center content */
+  justify-content: center;
+  align-items: center;
+  z-index: 20;                  /* above canvas */
+  pointer-events: all;          /* allow button clicks */
+  background: rgba(0,0,0,0);    /* fully transparent so video shows through */
+  backdrop-filter: blur(5px);   /* optional: soft blur for readability */
+}
+
+/* Card container */
+.final-card {
+  width: 90%;
+  max-width: 500px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05); /* slight translucent overlay */
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  color: #ffea00;
+}
+
+/* Titles */
+.final-title {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.final-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+/* Scores */
+.score-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.score-block {
+  flex: 1;
+}
+
+.score-block.muted {
+  opacity: 0.5;
+}
+
+.score-label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  letter-spacing: 0.05em;
+}
+
+.score-number {
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+
+/* Fact box */
+.fact-box {
+  background: rgba(255, 255, 255, 0.05); /* subtle overlay */
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #ffea00;
+}
+
+/* Play Again button */
+#restart-btn {
+  padding: 14px 36px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  border: 3px solid #ffea00;
+  background: transparent;
+  color: #ffea00;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+#restart-btn:hover {
+  background: #ffea00;
+  color: #150800;
+  transform: scale(1.05);
+}
+
+#restart-btn:active {
+  transform: scale(0.95);
+}
+
+/* Hide by default */
+.hidden {
+  display: none !important;
 }

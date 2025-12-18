@@ -13,9 +13,6 @@ function canTriggerFistFast() {
   return true;
 }
 
-const burstSound = new Audio("sound/fx35.wav");
-burstSound.volume = 0.4;
-
 
 
 let gameStarted = false;
@@ -771,12 +768,6 @@ function spawnDuckDot() {
 
 
 function createStarBurst(x, y, color) {
-  
-   // 🔊 play burst sound
-   const sound = burstSound.cloneNode();
-   sound.volume = 0.2;
-   sound.play();
- 
   for (let i = 0; i < 10; i++) {
     starBursts.push({
       x,

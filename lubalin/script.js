@@ -44,10 +44,13 @@ function showSlideByIndex(i){
   slides.forEach(s => s.classList.remove('active'));
   if(i < 0) i = 0;
   if(i >= slides.length) i = slides.length - 1;
+
   slides[i].classList.add('active');
   currentIndex = i;
   updateProgress();
+  updateBottomNavVisibility(); // ✅ ADD THIS
 }
+
 
 function goNext(){ showSlideByIndex(currentIndex + 1); }
 function goBack(){ showSlideByIndex(currentIndex - 1); }
@@ -306,6 +309,27 @@ function buildFontSlides(){
   });
 }
 
+function updateBottomNavVisibility() {
+  const slide = slides[currentIndex];
+
+  const bottomNav = document.getElementById("bottom-nav");
+  if (!bottomNav) return;
+
+  // Hide on intro
+  if (slide.id === "slide-intro") {
+    bottomNav.style.display = "none";
+    return;
+  }
+
+  // Hide on final slide
+  if (slide.id === "slide-final") {
+    bottomNav.style.display = "none";
+    return;
+  }
+
+  bottomNav.style.display = "flex";
+}
+
 
 /* -------------------------- SYMBOL SLIDES ✅ FIXED -------------------------- */
 function buildSymbolSlides(){
@@ -363,6 +387,12 @@ function buildSymbolSlides(){
       });
     });
 
+    const explain = document.createElement("textarea");
+    explain.className = "explain-box";
+    explain.placeholder = "Explain your answer (optional)";
+    slide.appendChild(explain);
+    
+
     const controls = document.createElement('div');
     controls.className = 'controls';
     controls.innerHTML = `
@@ -373,15 +403,16 @@ function buildSymbolSlides(){
 
     // ✅ SAVE SYMBOL RESPONSES
     const nextBtn = controls.querySelector('[data-action="next"]');
-    nextBtn.addEventListener("click", () => {
-      const selected = Array.from(
-        list.querySelectorAll(".checkbox-item.selected")
-      ).map(el => el.innerText.trim());
+nextBtn.addEventListener("click", () => {
+  const selected = Array.from(
+    list.querySelectorAll(".checkbox-item.selected")
+  ).map(el => el.innerText.trim());
 
-      responses.push({
-        section: "symbol",
-        symbolFile: fn,
-        cuisines: selected
+  responses.push({
+    section: "symbol",
+    symbolFile: fn,
+    cuisines: selected,
+    explanation: explain.value || null
       });
     });
 
@@ -394,32 +425,84 @@ function buildSymbolSlides(){
 function buildLayeredSlides(){
   layeredGroups.forEach(group => {
 
-    let currentLayer = 1; // ✅ track which image layer you're on
+    let currentLayer = 1;
 
     const main = document.createElement('div');
     main.className = 'slide';
 
     main.innerHTML = `
-      <h2>Please select the first design where you can confidently identify this as a Mexican restaurant. Pressing next will change the image. </h2>
+      <h2>
+        Scroll through the layers until you can confidently identify this as a Mexican restaurant.
+        You may go back and forth before choosing.
+      </h2>
 
       <img class="layered-img" src="${group.prefix}1.png">
 
+     <div class="logo-buttons">
+  <div class="layer-nav-row">
+    <button class="layerBtn prevLayerBtn">←</button>
+    <button class="layerBtn nextLayerBtn">→</button>
+  </div>
 
-      <div class="logo-buttons">
-        <button class="navBtn nextLayerBtn">Show Next Layer)</button>
-        <button class="navBtn stopBtn">STOP</button>
-        
-      </div>
+  <button class="layerBtn stopBtn">Choose This Layer</button>
+</div>
+
 
       <div class="logo-count">Layer 1 of ${LAYERS}</div>
+
+      <div class="layer-question hidden">
+        <p><strong>What elements made you choose this signage over others?</strong></p>
+
+        <div class="checkbox-list elements-list">
+          <label class="checkbox-item"><span>Typography</span></label>
+          <label class="checkbox-item"><span>Color</span></label>
+          <label class="checkbox-item"><span>Symbol</span></label>
+          <label class="checkbox-item"><span>Composition</span></label>
+          <label class="checkbox-item"><span>Texture</span></label>
+          <label class="checkbox-item"><span>Pattern</span></label>
+        </div>
+
+        <input
+          type="text"
+          class="other-input"
+          placeholder="Other (optional)"
+        >
+
+        <div class="controls">
+          <button class="navBtn confirmLayerBtn" data-action="next">
+            Continue
+          </button>
+        </div>
+      </div>
     `;
 
     const img = main.querySelector('.layered-img');
-    const stopBtn = main.querySelector('.stopBtn');
-    const nextBtn = main.querySelector('.nextLayerBtn');
     const count = main.querySelector('.logo-count');
 
-    // ✅ NEXT LAYER BUTTON
+    const prevBtn = main.querySelector('.prevLayerBtn');
+    const nextBtn = main.querySelector('.nextLayerBtn');
+    const stopBtn = main.querySelector('.stopBtn');
+
+    const questionBlock = main.querySelector('.layer-question');
+    const confirmBtn = main.querySelector('.confirmLayerBtn');
+    const elementItems = main.querySelectorAll('.elements-list .checkbox-item');
+    const otherInput = main.querySelector('.other-input');
+
+    // toggle checkbox UI
+    elementItems.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('selected');
+      });
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentLayer > 1) {
+        currentLayer--;
+        img.src = `${group.prefix}${currentLayer}.png`;
+        count.textContent = `Layer ${currentLayer} of ${LAYERS}`;
+      }
+    });
+
     nextBtn.addEventListener('click', () => {
       if (currentLayer < LAYERS) {
         currentLayer++;
@@ -428,20 +511,35 @@ function buildLayeredSlides(){
       }
     });
 
-    // ✅ STOP BUTTON (records layer + moves on)
     stopBtn.addEventListener('click', () => {
+      questionBlock.classList.remove('hidden');
+      stopBtn.disabled = true;
+      prevBtn.disabled = true;
+      nextBtn.disabled = true;
+    });
+
+    confirmBtn.addEventListener('click', () => {
+      const selectedElements = Array.from(
+        elementItems
+      )
+        .filter(el => el.classList.contains('selected'))
+        .map(el => el.innerText.trim());
+
       responses.push({
         section: "layered-sign",
         group: group.label,
-        stoppedAtLayer: currentLayer
+        stoppedAtLayer: currentLayer,
+        elements: selectedElements,
+        other: otherInput.value || null
       });
 
-      goNext(); // ✅ advance to next survey slide
+      goNext();
     });
 
     layeredContainer.appendChild(main);
   });
 }
+
 
 function buildFinalReflectionSlide(){
   const slide = document.createElement('div');
@@ -451,7 +549,8 @@ function buildFinalReflectionSlide(){
     <h2>Final Reflection</h2>
 
     <p class="reflection-question">
-      What does it mean to sell Mexico to an American audience? Do you perceive the Mexican restaurant design you see in the world as reliant on stereotype, cultural signifiers, authentic experiences, nostalgia, or something else? Explain.
+      When walking around NYC, what was the last Mexican restaurant you saw that felt authentic? 
+      The last one that felt inauthentic? What specific details or markers shaped your perception in each case?
     </p>
 
     <textarea 
@@ -521,21 +620,37 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
   responses.length = 0;
 });
 
-
 async function submitToGoogleSheet() {
   try {
+    // Collect personal info from the personal slide
+    const personalInfo = {
+      section: "personal_info",
+      age: document.getElementById("r_age")?.value || "",
+      location: document.getElementById("r_location")?.value || "",
+      hometown: document.getElementById("r_hometown")?.value || "",
+      ethnicity: document.getElementById("r_ethnicity")?.value || "",
+      eatOut: document.getElementById("r_eatout")?.value || "",
+      mostCuisine: document.getElementById("r_mostcuisine")?.value || ""
+    };
+
+    // Add personal info as the first entry
+    const allResponses = [personalInfo, ...responses];
+
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: crypto.randomUUID(),
-        answers: responses
+        answers: allResponses
       })
     });
 
-    console.log("Sent to Google Sheets:", responses);
+    console.log("Sent to Google Sheets:", allResponses);
+
   } catch (err) {
     console.error("SEND ERROR:", err);
   }
 }
+
+

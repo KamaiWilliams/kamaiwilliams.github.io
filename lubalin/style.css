@@ -2,6 +2,12 @@
   --bg: #fefed4;
   --accent: #150800;
   --card: #fffef6;
+
+  /* TYPE SCALE */
+  --text-sm: clamp(0.75rem, 0.9vw, 0.85rem);
+  --text-base: clamp(0.9rem, 1.1vw, 1rem);
+  --text-lg: clamp(1.05rem, 1.4vw, 1.2rem);
+  --text-xl: clamp(1.3rem, 2vw, 1.6rem);
 }
 
 /* Global reset */
@@ -23,13 +29,19 @@ body {
   min-height: 100vh;
 }
 
-body, button, input, select, textarea {
-  font-size: 14px;
+body,
+button,
+input,
+select,
+textarea {
+  font-size: var(--text-base);
+  line-height: 1.4;
 }
 
 h2 {
-  font-size: 20px;
+  font-size: var(--text-xl);
   margin-bottom: 12px;
+  line-height: 1.25;
 }
 
 /* Main container */
@@ -38,10 +50,30 @@ h2 {
   height: 820px;
   background: var(--bg);
   padding: 2rem;
-  border: 3px solid #000;
   display: flex;
   flex-direction: column;
-  justify-content:space-around;
+  justify-content: space-around;
+}
+
+@media (max-width: 900px) {
+  .container {
+    width: 100%;
+    height: 100dvh;
+    padding: 1rem;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .slide.active {
+    justify-content: flex-start;
+    padding-top: 1rem;
+  }
+
+  .slide-content {
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 
 /* Slides */
@@ -52,10 +84,10 @@ h2 {
 .slide.active {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 12px;
+  padding: 40px 12px 12px; /* increase top padding from 12px → 40px */
 }
 
 /* Form structure */
@@ -66,6 +98,7 @@ h2 {
   flex-direction: column;
   gap: 6px;
   margin-bottom: 14px;
+  font-size: var(--text-sm);
 }
 
 .slide-content {
@@ -75,6 +108,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 24px;
 }
 
 /* Buttons */
@@ -90,15 +124,19 @@ button {
   border: 2px solid var(--accent);
   background: transparent;
   font-weight: 700;
-  padding: .6rem 1rem;
+  padding: 0.6rem 1rem;
+  font-size: var(--text-base);
 }
 
 /* Inputs */
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   border: 2px solid #000;
-  padding: .7rem;
+  padding: 0.7rem;
   background: transparent;
+  font-size: var(--text-base);
 }
 
 textarea {
@@ -123,7 +161,7 @@ textarea {
   gap: 6px;
   max-width: 520px;
   width: 100%;
-  margin: 12px auto;
+  margin: 5px auto;
 }
 
 .checkbox-item {
@@ -131,7 +169,7 @@ textarea {
   position: relative;
   border: 2px solid #000;
   padding: 6px 4px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   text-align: center;
   font-weight: 600;
   cursor: pointer;
@@ -157,7 +195,7 @@ textarea {
   position: absolute;
   top: 4px;
   right: 6px;
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: 900;
   color: white;
   display: none;
@@ -167,15 +205,14 @@ textarea {
   display: block;
 }
 
-/* -------------------------
-   Images
---------------------------*/
+/* Layered-sign element selection: force 3x2 grid */
+.elements-list {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 420px; /* keeps it compact + centered */
+}
 
-/* -------------------------
-   IMAGE SIZING PER TYPE
---------------------------*/
 
-/* SYMBOL IMAGES — need to be larger */
+/* Images */
 .symbol-img {
   margin-top: 60px;
   width: 55%;
@@ -183,7 +220,6 @@ textarea {
   height: auto;
 }
 
-/* FONT IMAGES — need to be smaller */
 .font-preview img {
   width: 90%;
   max-width: 320px;
@@ -191,7 +227,6 @@ textarea {
   margin: 10px auto;
 }
 
-/* LAYERED IMAGES — true to size */
 .layered-img {
   width: auto;
   height: auto;
@@ -200,14 +235,11 @@ textarea {
   margin-bottom: 10px;
 }
 
-
-/* -------------------------
-   Reflection Box
---------------------------*/
-
+/* Reflection */
 .reflection-question {
   margin: 1rem 0;
   line-height: 1.5;
+  font-size: var(--text-base);
 }
 
 .reflection-box {
@@ -215,7 +247,7 @@ textarea {
   border: 2px solid black;
   background: var(--bg);
   padding: 12px;
-  font-size: 14px;
+  font-size: var(--text-base);
   resize: none;
   outline: none;
 }
@@ -238,7 +270,7 @@ textarea {
   background: var(--accent);
 }
 
-/* Other buttons */
+/* Layer buttons */
 .logo-buttons {
   display: flex;
   flex-direction: column;
@@ -250,22 +282,57 @@ textarea {
   border: 2px solid #000;
   padding: 12px 20px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: var(--text-lg);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
 }
 
-/* NAV button animations */
+/* Nav buttons */
 .navBtn {
   background: transparent;
   border: 2px solid #000;
   padding: 12px 20px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: var(--text-base);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .navBtn:active {
   transform: scale(0.98);
+}
+
+/* Bottom nav */
+#bottom-nav {
+  position: relative;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  background: var(--bg);
+  z-index: 10;
+  margin-bottom: 4rem;
+}
+
+@media (max-width: 600px) {
+  #bottom-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #bottom-nav .navBtn {
+    width: 100%;
+  }
+}
+
+.slide .controls {
+  display: none;
+}
+
+/* Show controls for final slide */
+#slide-final .controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 18px;
 }

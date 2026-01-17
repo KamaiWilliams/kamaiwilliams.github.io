@@ -635,16 +635,18 @@ async function submitToGoogleSheet() {
 
     // Add personal info as the first entry
     const allResponses = [personalInfo, ...responses];
-
+    
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         userId: crypto.randomUUID(),
         answers: allResponses
       })
     });
+    
 
     console.log("Sent to Google Sheets:", allResponses);
 

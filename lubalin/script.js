@@ -4,7 +4,7 @@
    - progress bar and basic response aggregation (client-side)
 */
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0u_qFcaq52Gx1JlbUu7IOrVra5u03sfnU1qEVYzo_hgUAEUfgnVhKo3avVlNJ8m5auw/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwp4ZzyFhIPniMp2nIFKa0NRnDzRfLVVodFrzMulU_WllB51XmOOEyf2kY6YDiQN6dGfQ/exec";
 
 /* -------------------------- CONFIG -------------------------- */
 

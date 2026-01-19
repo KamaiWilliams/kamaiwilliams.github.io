@@ -150,13 +150,16 @@ document.addEventListener('click', (e) => {
         surveyData.ethnicity =
           document.getElementById("r_ethnicity")?.value || "";
     
+      }
+    
+      if (active.id === "slide-respondent") {
         surveyData.eatOut =
           document.getElementById("r_eatout")?.value || "";
-    
+      
         surveyData.mostCuisine =
           document.getElementById("r_mostcuisine")?.value || "";
       }
-    
+      
       goNext();
     }
     
@@ -678,8 +681,12 @@ async function submitToGoogleSheet() {
 
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(payload)
     });
+    
 
     const text = await response.text();
     console.log("Submitted:", text);

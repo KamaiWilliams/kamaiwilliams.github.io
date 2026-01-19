@@ -623,7 +623,7 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
 
 async function submitToGoogleSheet() {
   try {
-    // Collect personal info from the personal slide
+    // Collect personal info from the personal info slide
     const personalInfo = {
       section: "personal_info",
       age: document.getElementById("r_age")?.value || "",
@@ -634,25 +634,83 @@ async function submitToGoogleSheet() {
       mostCuisine: document.getElementById("r_mostcuisine")?.value || ""
     };
 
-    // Add personal info as the first entry
-    const allResponses = [personalInfo, ...responses];
+    // Collect color slide (assume you only have one color per respondent for simplicity)
+    const colorSlide = responses.find(r => r.section === "color") || {};
     
-    await fetch(GOOGLE_SCRIPT_URL, {
+    // Collect font slide
+    const fontSlide = responses.find(r => r.section === "font") || {};
+    
+    // Collect symbol slide
+    const symbolSlide = responses.find(r => r.section === "symbol") || {};
+    
+    // Collect layered slide
+    const layeredSlide = responses.find(r => r.section === "layered-sign") || {};
+    
+    // Collect final reflection
+    const finalReflection = responses.find(r => r.section === "final_reflection") || {};
+    
+    // Collect final comments
+    const finalComments = responses.find(r => r.section === "finalComments") || {};
+
+    // Build the payload for one row per respondent
+    const payload = {
+      userId: crypto.randomUUID(),
+      answers: [
+        personalInfo,
+        {
+          section: "color",
+          colorName: colorSlide.colorName || "",
+          colorValue: colorSlide.colorValue || "",
+          cuisines: colorSlide.cuisines || [],
+          explanation: colorSlide.explanation || ""
+        },
+        {
+          section: "font",
+          fontFile: fontSlide.fontFile || "",
+          cuisines: fontSlide.cuisines || [],
+          explanation: fontSlide.explanation || ""
+        },
+        {
+          section: "symbol",
+          symbolFile: symbolSlide.symbolFile || "",
+          cuisines: symbolSlide.cuisines || [],
+          explanation: symbolSlide.explanation || ""
+        },
+        {
+          section: "layered-sign",
+          group: layeredSlide.group || "",
+          stoppedAtLayer: layeredSlide.stoppedAtLayer || "",
+          elements: layeredSlide.elements || [],
+          other: layeredSlide.other || ""
+        },
+        {
+          section: "final_reflection",
+          answer: finalReflection.answer || ""
+        },
+        {
+          section: "finalComments",
+          text: finalComments.text || ""
+        }
+      ]
+    };
+
+    // Send the data to Google Apps Script
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        userId: crypto.randomUUID(),
-        answers: allResponses
-      })
+      body: JSON.stringify(payload)
     });
-    
 
-    console.log("Sent to Google Sheets:", allResponses);
+    if (!response.ok) throw new Error(`Server responded with ${response.status}`);
+
+    const result = await response.json();
+    console.log("Responses sent to Google Sheets:", payload, "Server response:", result);
 
   } catch (err) {
-    console.error("SEND ERROR:", err);
+    console.error("Error submitting to Google Sheets:", err);
+    alert("Error submitting responses. Please try again.");
   }
 }
 

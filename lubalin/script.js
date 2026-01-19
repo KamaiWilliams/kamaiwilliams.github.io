@@ -9,6 +9,45 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHUCLdd8wYH9
 
 /* -------------------------- CONFIG -------------------------- */
 
+const surveyData = {
+  userId: crypto.randomUUID(),
+
+  // personal
+  age: "",
+  location: "",
+  hometown: "",
+  ethnicity: "",
+  eatOut: "",
+  mostCuisine: "",
+
+  // color (store ALL color slides together)
+  colorName: "",
+  colorValue: "",
+  colorSelections: [],
+  colorExplanation: "",
+
+  // font
+  fontFile: "",
+  fontSelections: [],
+  fontExplanation: "",
+
+  // symbol
+  symbolFile: "",
+  symbolSelections: [],
+  symbolExplanation: "",
+
+  // layered
+  layeredGroup: "",
+  layeredStoppedAt: "",
+  layeredElements: [],
+  layeredOther: "",
+
+  // final
+  finalReflection: "",
+  finalComments: ""
+};
+
+
 const fontFiles = [];
 for (let i = 1; i <= 15; i++) {
   fontFiles.push(`font${i}.png`);
@@ -36,7 +75,7 @@ const progressBar = document.getElementById('progressBar');
 const fontsContainer = document.getElementById('fonts-container');
 const symbolsContainer = document.getElementById('symbols-container');
 const layeredContainer = document.getElementById('layered-container');
-const responses = [];
+
 let currentIndex = 0;
 
 /* -------------------------- NAVIGATION -------------------------- */
@@ -96,8 +135,31 @@ document.addEventListener('click', (e) => {
         alert("Please answer before continuing.");
         return;
       }
+    
+      // ✅ SAVE PERSONAL INFO WHEN LEAVING THAT SLIDE
+      if (active.id === "slide-personal") {
+        surveyData.age =
+          document.getElementById("r_age")?.value || "";
+    
+        surveyData.location =
+          document.getElementById("r_location")?.value || "";
+    
+        surveyData.hometown =
+          document.getElementById("r_hometown")?.value || "";
+    
+        surveyData.ethnicity =
+          document.getElementById("r_ethnicity")?.value || "";
+    
+        surveyData.eatOut =
+          document.getElementById("r_eatout")?.value || "";
+    
+        surveyData.mostCuisine =
+          document.getElementById("r_mostcuisine")?.value || "";
+      }
+    
       goNext();
     }
+    
 
     if(action === 'back'){
       goBack();
@@ -199,13 +261,10 @@ function buildColorAssociationSlides() {
         list.querySelectorAll(".checkbox-item.selected")
       ).map(el => el.innerText.trim());
 
-      responses.push({
-        section: "color",
-        colorName: swatch.name,
-        colorValue: swatch.color,
-        cuisines: selected,
-        explanation: explain.value || null
-      });
+      surveyData.colorName = swatch.name;
+      surveyData.colorValue = swatch.color;
+      surveyData.colorSelections = selected;
+      surveyData.colorExplanation = explain.value || "";
     });
 
     container.appendChild(slide);
@@ -298,12 +357,9 @@ function buildFontSlides(){
         list.querySelectorAll(".checkbox-item.selected")
       ).map(el => el.innerText.trim());
 
-      responses.push({
-        section: "font",
-        fontFile: fn,
-        cuisines: selected,
-        explanation: explain.value || null
-      });
+      surveyData.fontFile = fn;
+      surveyData.fontSelections = selected;
+      surveyData.fontExplanation = explain.value || "";
     });
 
     fontsContainer.appendChild(slide);
@@ -409,12 +465,9 @@ nextBtn.addEventListener("click", () => {
     list.querySelectorAll(".checkbox-item.selected")
   ).map(el => el.innerText.trim());
 
-  responses.push({
-    section: "symbol",
-    symbolFile: fn,
-    cuisines: selected,
-    explanation: explain.value || null
-      });
+  surveyData.symbolFile = fn;
+  surveyData.symbolSelections = selected;
+  surveyData.symbolExplanation = explain.value || "";
     });
 
     symbolsContainer.appendChild(slide);
@@ -526,13 +579,11 @@ function buildLayeredSlides(){
         .filter(el => el.classList.contains('selected'))
         .map(el => el.innerText.trim());
 
-      responses.push({
-        section: "layered-sign",
-        group: group.label,
-        stoppedAtLayer: currentLayer,
-        elements: selectedElements,
-        other: otherInput.value || null
-      });
+        surveyData.layeredGroup = group.label;
+        surveyData.layeredStoppedAt = currentLayer;
+        surveyData.layeredElements = selectedElements;
+        surveyData.layeredOther = otherInput.value || "";
+        
 
       goNext();
     });
@@ -570,10 +621,9 @@ function buildFinalReflectionSlide(){
   const nextBtn = slide.querySelector('[data-action="next"]');
 
   nextBtn.addEventListener("click", () => {
-    responses.push({
-      section: "final_reflection",
-      answer: textBox.value.trim()
-    });
+    
+    surveyData.finalReflection = textBox.value.trim();
+
   });
 
   // ✅ APPEND IT TO THE MAIN CONTAINER (NOT surveyContainer)
@@ -609,88 +659,34 @@ init();
 document.getElementById('finishBtn').addEventListener('click', async () => {
   const finalText = document.getElementById('finalComments').value || '';
 
-  responses.push({
-    section: 'finalComments',
-    text: finalText
-  });
+  surveyData.finalComments =
+  document.getElementById('finalComments').value || '';
+
 
   await submitToGoogleSheet();
 
   alert("Thank you! Your responses have been submitted.");
   showSlideByIndex(0);
-  responses.length = 0;
+ 
 });
 
 async function submitToGoogleSheet() {
   try {
-    const personalInfo = {
-      section: "personal_info",
-      age: document.getElementById("r_age")?.value || "",
-      location: document.getElementById("r_location")?.value || "",
-      hometown: document.getElementById("r_hometown")?.value || "",
-      ethnicity: document.getElementById("r_ethnicity")?.value || "",
-      eatOut: document.getElementById("r_eatout")?.value || "",
-      mostCuisine: document.getElementById("r_mostcuisine")?.value || ""
-    };
-
-    const color = responses.find(r => r.section === "color") || {};
-    const font = responses.find(r => r.section === "font") || {};
-    const symbol = responses.find(r => r.section === "symbol") || {};
-    const layered = responses.find(r => r.section === "layered-sign") || {};
-    const reflection = responses.find(r => r.section === "final_reflection") || {};
-    const finalComments = responses.find(r => r.section === "finalComments") || {};
-
     const payload = {
-      userId: crypto.randomUUID(),
-      answers: [
-        personalInfo,
-        {
-          section: "color",
-          colorName: color.colorName || "",
-          colorValue: color.colorValue || "",
-          cuisines: color.cuisines || [],
-          explanation: color.explanation || ""
-        },
-        {
-          section: "font",
-          fontFile: font.fontFile || "",
-          cuisines: font.cuisines || [],
-          explanation: font.explanation || ""
-        },
-        {
-          section: "symbol",
-          symbolFile: symbol.symbolFile || "",
-          cuisines: symbol.cuisines || [],
-          explanation: symbol.explanation || ""
-        },
-        {
-          section: "layered-sign",
-          group: layered.group || "",
-          stoppedAtLayer: layered.stoppedAtLayer || "",
-          elements: layered.elements || [],
-          other: layered.other || ""
-        },
-        {
-          section: "final_reflection",
-          answer: reflection.answer || ""
-        },
-        {
-          section: "finalComments",
-          text: finalComments.text || ""
-        }
-      ]
+      ...surveyData
     };
 
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      body: JSON.stringify(payload) // 🚨 NO headers
+      body: JSON.stringify(payload)
     });
 
     const text = await response.text();
-    console.log("Google response:", text);
+    console.log("Submitted:", text);
 
   } catch (err) {
-    console.error("Submission error:", err);
+    console.error(err);
     alert("Error submitting responses. Please try again.");
   }
 }
+

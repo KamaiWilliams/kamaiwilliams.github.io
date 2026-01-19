@@ -542,10 +542,9 @@ function buildLayeredSlides(){
 }
 
 
-function buildFinalReflectionSlide() {
+function buildFinalReflectionSlide(){
   const slide = document.createElement('div');
   slide.className = 'slide';
-  slide.id = 'slide-final';
 
   slide.innerHTML = `
     <h2>Final Reflection</h2>
@@ -557,75 +556,32 @@ function buildFinalReflectionSlide() {
 
     <textarea 
       class="reflection-box"
-      id="finalComments"
       placeholder="Type your thoughts here..."
       rows="7"
     ></textarea>
 
     <div class="controls">
       <button class="navBtn" data-action="back">Back</button>
-      <button id="finishBtn">Submit</button>
+      <button class="navBtn" data-action="next">Next</button>
     </div>
   `;
 
-  document.querySelector('.container').appendChild(slide);
-}
+  const textBox = slide.querySelector(".reflection-box");
+  const nextBtn = slide.querySelector('[data-action="next"]');
 
-// Event delegation for dynamically generated finishBtn
-document.addEventListener("click", async (e) => {
-  if (e.target.id === "finishBtn") {
-    e.preventDefault();
-
-    // Grab the final reflection text
-    const finalText = document.getElementById("finalComments")?.value || "";
-
-    // Push final text to responses array
+  nextBtn.addEventListener("click", () => {
     responses.push({
       section: "final_reflection",
-      answer: finalText
+      answer: textBox.value.trim()
     });
+  });
 
-    // Add personal info from inputs
-    const userId = crypto.randomUUID();
-    const personal = {
-      age: document.getElementById("r_age")?.value || "",
-      location: document.getElementById("r_location")?.value || "",
-      hometown: document.getElementById("r_hometown")?.value || "",
-      ethnicity: document.getElementById("r_ethnicity")?.value || "",
-      eatOut: document.getElementById("r_eatout")?.value || "",
-      mostCuisine: document.getElementById("r_mostcuisine")?.value || ""
-    };
-
-    const normalized = responses.map(r => ({
-      section: r.section || "",
-      item: r.colorName || r.fontFile || r.symbolFile || r.group || "",
-      selections: Array.isArray(r.cuisines) ? r.cuisines.join(", ") :
-                  Array.isArray(r.elements) ? r.elements.join(", ") : "",
-      explanation: r.explanation || "",
-      other: r.other || "",
-      finalText: r.answer || r.text || "",
-      ...personal
-    }));
-
-    try {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, answers: normalized })
-      });
-
-      alert("Thank you! Your responses have been submitted.");
-
-      // Reset survey
-      responses.length = 0;
-      showSlideByIndex(0);
-
-    } catch (err) {
-      console.error("Submission failed:", err);
-      alert("Error submitting responses. Please try again.");
-    }
-  }
-});
+  // ✅ APPEND IT TO THE MAIN CONTAINER (NOT surveyContainer)
+  document.querySelector(".container").insertBefore(
+    slide,
+    document.getElementById("slide-final") // ✅ puts it RIGHT BEFORE Thank You
+  );
+}
 
 
 /* -------------------------- FINALIZE ✅ FIXED -------------------------- */
@@ -650,48 +606,54 @@ init();
 
 /* -------------------------- FINISH BUTTON -------------------------- */
 
+document.getElementById('finishBtn').addEventListener('click', async () => {
+  const finalText = document.getElementById('finalComments').value || '';
 
-async function submitToGoogleSheet() {
-  const userId = crypto.randomUUID();
-
-  const personal = {
-    age: document.getElementById("r_age")?.value || "",
-    location: document.getElementById("r_location")?.value || "",
-    hometown: document.getElementById("r_hometown")?.value || "",
-    ethnicity: document.getElementById("r_ethnicity")?.value || "",
-    eatOut: document.getElementById("r_eatout")?.value || "",
-    mostCuisine: document.getElementById("r_mostcuisine")?.value || ""
-  };
-
-  const normalized = responses.map(r => ({
-    section: r.section || "",
-    item:
-      r.colorName ||
-      r.fontFile ||
-      r.symbolFile ||
-      r.group ||
-      "",
-    selections:
-      Array.isArray(r.cuisines) ? r.cuisines.join(", ") :
-      Array.isArray(r.elements) ? r.elements.join(", ") :
-      "",
-    explanation: r.explanation || "",
-    other: r.other || "",
-    finalText: r.answer || r.text || "",
-    ...personal
-  }));
-
-  await fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId,
-      answers: normalized
-    })
+  responses.push({
+    section: 'finalComments',
+    text: finalText
   });
 
-  console.log("Submitted:", normalized);
-}
+  await submitToGoogleSheet();
 
+  alert("Thank you! Your responses have been submitted.");
+  showSlideByIndex(0);
+  responses.length = 0;
+});
+
+async function submitToGoogleSheet() {
+  try {
+    // Collect personal info from the personal slide
+    const personalInfo = {
+      section: "personal_info",
+      age: document.getElementById("r_age")?.value || "",
+      location: document.getElementById("r_location")?.value || "",
+      hometown: document.getElementById("r_hometown")?.value || "",
+      ethnicity: document.getElementById("r_ethnicity")?.value || "",
+      eatOut: document.getElementById("r_eatout")?.value || "",
+      mostCuisine: document.getElementById("r_mostcuisine")?.value || ""
+    };
+
+    // Add personal info as the first entry
+    const allResponses = [personalInfo, ...responses];
+    
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userId: crypto.randomUUID(),
+        answers: allResponses
+      })
+    });
+    
+
+    console.log("Sent to Google Sheets:", allResponses);
+
+  } catch (err) {
+    console.error("SEND ERROR:", err);
+  }
+}
 
 

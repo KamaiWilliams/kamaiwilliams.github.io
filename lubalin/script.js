@@ -660,18 +660,24 @@ init();
 /* -------------------------- FINISH BUTTON -------------------------- */
 
 document.getElementById('finishBtn').addEventListener('click', async () => {
+
+  console.log("INSIDE SUBMIT HANDLER");
+  console.log(JSON.stringify(surveyData, null, 2));
+
   const finalText = document.getElementById('finalComments').value || '';
 
   surveyData.finalComments =
-  document.getElementById('finalComments').value || '';
+    document.getElementById('finalComments').value || '';
 
+  // ⛔ TEMP: stop submission so we can inspect data
+  // return;
 
   await submitToGoogleSheet();
 
   alert("Thank you! Your responses have been submitted.");
   showSlideByIndex(0);
- 
 });
+
 
 async function submitToGoogleSheet() {
   try {

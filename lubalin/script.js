@@ -206,6 +206,8 @@ function buildColorAssociationSlides() {
     const swatchBox = document.createElement("div");
     swatchBox.className = "single-swatch-display";
     swatchBox.style.background = swatch.color;
+    swatchBox.dataset.name = swatch.name;
+
     content.appendChild(swatchBox);
 
     const q = document.createElement("p");
@@ -586,7 +588,9 @@ function buildLayeredSlides(){
         surveyData.layeredStoppedAt = currentLayer;
         surveyData.layeredElements = selectedElements;
         surveyData.layeredOther = otherInput.value || "";
-        
+        main.dataset.group = group.label;
+        main.dataset.stopped = currentLayer;
+
 
       goNext();
     });
@@ -657,49 +661,125 @@ function init(){
 
 init();
 
+/* -------------------------- COLLECT ALL DATA -------------------------- */
+function collectAllSurveyData() {
+  // ---------------- PERSONAL ----------------
+  surveyData.age = document.getElementById("r_age")?.value || "";
+  surveyData.location = document.getElementById("r_location")?.value || "";
+  surveyData.hometown = document.getElementById("r_hometown")?.value || "";
+  surveyData.ethnicity = document.getElementById("r_ethnicity")?.value || "";
+  surveyData.eatOut = document.getElementById("r_eatout")?.value || "";
+  surveyData.mostCuisine = document.getElementById("r_mostcuisine")?.value || "";
+
+  // ---------------- COLORS ----------------
+  const colorSlides = document.querySelectorAll(".single-swatch-display");
+  let colorNames = [], colorValues = [], colorSelections = [], colorExplanations = [];
+  colorSlides.forEach(slide => {
+    const name = slide.dataset.name || "";
+    const value = slide.style.background || "";
+    const selected = Array.from(slide.querySelectorAll(".checkbox-item.selected")).map(el => el.innerText.trim());
+    const explain = slide.querySelector(".explain-box")?.value || "";
+
+    if (name) colorNames.push(name);
+    if (value) colorValues.push(value);
+    if (selected.length) colorSelections.push(selected.join(", "));
+    if (explain) colorExplanations.push(explain);
+  });
+  surveyData.colorName = colorNames.join(" | ");
+  surveyData.colorValue = colorValues.join(" | ");
+  surveyData.colorSelections = colorSelections.join(" | ");
+  surveyData.colorExplanation = colorExplanations.join(" | ");
+
+  // ---------------- FONTS ----------------
+  const fontSlides = document.querySelectorAll(".font-preview img");
+  let fontFiles = [], fontSelections = [], fontExplanations = [];
+  fontSlides.forEach(img => {
+    fontFiles.push(img.src.split("/").pop());
+    const slide = img.closest(".slide");
+    const selected = Array.from(slide.querySelectorAll(".checkbox-list .checkbox-item.selected")).map(el => el.innerText.trim());
+    const explain = slide.querySelector(".explain-box")?.value || "";
+
+    if (selected.length) fontSelections.push(selected.join(", "));
+    if (explain) fontExplanations.push(explain);
+  });
+  surveyData.fontFile = fontFiles.join(" | ");
+  surveyData.fontSelections = fontSelections.join(" | ");
+  surveyData.fontExplanation = fontExplanations.join(" | ");
+
+  // ---------------- SYMBOLS ----------------
+  const symbolSlides = document.querySelectorAll(".symbol-img");
+  let symbolFiles = [], symbolSelections = [], symbolExplanations = [];
+  symbolSlides.forEach(img => {
+    symbolFiles.push(img.src.split("/").pop());
+    const slide = img.closest(".slide");
+    const selected = Array.from(slide.querySelectorAll(".checkbox-list .checkbox-item.selected")).map(el => el.innerText.trim());
+    const explain = slide.querySelector(".explain-box")?.value || "";
+
+    if (selected.length) symbolSelections.push(selected.join(", "));
+    if (explain) symbolExplanations.push(explain);
+  });
+  surveyData.symbolFile = symbolFiles.join(" | ");
+  surveyData.symbolSelections = symbolSelections.join(" | ");
+  surveyData.symbolExplanation = symbolExplanations.join(" | ");
+
+  // ---------------- LAYERED ----------------
+  const layeredSlides = document.querySelectorAll(".layered-img");
+  let layeredGroups = [], layeredStoppedAt = [], layeredElements = [], layeredOther = [];
+  layeredSlides.forEach(img => {
+    const slide = img.closest(".slide");
+    const group = slide.dataset.group || "";
+    const stopped = slide.dataset.stopped || "";
+    const selected = Array.from(slide.querySelectorAll(".layer-question .elements-list .checkbox-item.selected")).map(el => el.innerText.trim());
+    const other = slide.querySelector(".layer-question .other-input")?.value || "";
+
+    if (group) layeredGroups.push(group);
+    if (stopped) layeredStoppedAt.push(stopped);
+    if (selected.length) layeredElements.push(selected.join(", "));
+    if (other) layeredOther.push(other);
+  });
+  surveyData.layeredGroup = layeredGroups.join(" | ");
+  surveyData.layeredStoppedAt = layeredStoppedAt.join(" | ");
+  surveyData.layeredElements = layeredElements.join(" | ");
+  surveyData.layeredOther = layeredOther.join(" | ");
+
+  // ---------------- FINAL ----------------
+  surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
+  surveyData.finalComments = document.getElementById("finalComments")?.value || "";
+}
+
+
 /* -------------------------- FINISH BUTTON -------------------------- */
 
 document.getElementById('finishBtn').addEventListener('click', async () => {
+  console.log("Submit button clicked — collecting all survey data...");
 
-  console.log("INSIDE SUBMIT HANDLER");
-  console.log(JSON.stringify(surveyData, null, 2));
+  // ✅ Collect all survey responses right before sending
+  collectAllSurveyData();
 
-  const finalText = document.getElementById('finalComments').value || '';
+  console.log("Final surveyData ready to submit:", JSON.stringify(surveyData, null, 2));
 
-  surveyData.finalComments =
-    document.getElementById('finalComments').value || '';
-
-  // ⛔ TEMP: stop submission so we can inspect data
-  // return;
-
-  await submitToGoogleSheet();
-
-  alert("Thank you! Your responses have been submitted.");
-  showSlideByIndex(0);
-});
-
-
-async function submitToGoogleSheet() {
   try {
-    const payload = {
-      ...surveyData
-    };
-
+    // Submit to Google Sheet
+    const payload = { ...surveyData };
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-    
 
     const text = await response.text();
-    console.log("Submitted:", text);
+    console.log("Submission response:", text);
+
+    if (text.startsWith("OK")) {
+      alert("Thank you! Your responses have been submitted.");
+      // Reset survey or go to intro slide
+      showSlideByIndex(0);
+    } else {
+      throw new Error(text);
+    }
 
   } catch (err) {
-    console.error(err);
+    console.error("Error submitting survey:", err);
     alert("Error submitting responses. Please try again.");
   }
-}
-
+});

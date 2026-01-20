@@ -4,7 +4,7 @@
    - progress bar and basic response aggregation (client-side)
 */
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHUCLdd8wYH9zJaP6HFlqdRaIzvuA21Z9qOpswBw_G73Xj4qs45zymCY_8mTZkehbjaQ/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyC4h3-Ppjn50dnh9IhjKdTWYQ4M0IlO84fDoM-YgsyStFO79fAZSP10kQmlVNu0wyFUw/exec";
 
 
 /* -------------------------- CONFIG -------------------------- */
@@ -768,9 +768,11 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
     });
 
     const text = await response.text();
-    console.log("Submission response:", text);
-
-    if (text.startsWith("OK")) {
+    console.log("STATUS:", response.status);
+    console.log("RAW RESPONSE:", JSON.stringify(text));
+    
+    if (response.ok) {
+    
       alert("Thank you! Your responses have been submitted.");
       // Reset survey or go to intro slide
       showSlideByIndex(0);

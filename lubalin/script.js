@@ -4,7 +4,7 @@
    - progress bar and basic response aggregation (client-side)
 */
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyC4h3-Ppjn50dnh9IhjKdTWYQ4M0IlO84fDoM-YgsyStFO79fAZSP10kQmlVNu0wyFUw/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIWhIcvXTDG2H8Od_m02qJi4CBgl12mZTbnBX685heRCvA7LLQvkglu4Hv7-kejf8ZHw/exec";
 
 
 /* -------------------------- CONFIG -------------------------- */
@@ -760,25 +760,21 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
 
   try {
     // Submit to Google Sheet
-    const payload = { ...surveyData };
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+const payload = { ...surveyData };
 
-    const text = await response.text();
-    console.log("STATUS:", response.status);
-    console.log("RAW RESPONSE:", JSON.stringify(text));
-    
-    if (response.ok) {
-    
-      alert("Thank you! Your responses have been submitted.");
-      // Reset survey or go to intro slide
-      showSlideByIndex(0);
-    } else {
-      throw new Error(text);
-    }
+await fetch(GOOGLE_SCRIPT_URL, {
+  method: "POST",
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(payload)
+});
+
+// If we reached here, the request was sent
+alert("Thank you! Your responses have been submitted.");
+showSlideByIndex(0);
+
 
   } catch (err) {
     console.error("Error submitting survey:", err);

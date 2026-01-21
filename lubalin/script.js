@@ -20,28 +20,7 @@ const surveyData = {
   eatOut: "",
   mostCuisine: "",
 
-  // color (store ALL color slides together)
-  colorName: "",
-  colorValue: "",
-  colorSelections: [],
-  colorExplanation: "",
-
-  // font
-  fontFile: "",
-  fontSelections: [],
-  fontExplanation: "",
-
-  // symbol
-  symbolFile: "",
-  symbolSelections: [],
-  symbolExplanation: "",
-
-  // layered
-  layeredGroup: "",
-  layeredStoppedAt: "",
-  layeredElements: [],
-  layeredOther: "",
-
+ 
   // final
   finalReflection: "",
   finalComments: ""
@@ -266,10 +245,13 @@ function buildColorAssociationSlides() {
         list.querySelectorAll(".checkbox-item.selected")
       ).map(el => el.innerText.trim());
 
-      surveyData.colorName = swatch.name;
-      surveyData.colorValue = swatch.color;
-      surveyData.colorSelections = selected;
-      surveyData.colorExplanation = explain.value || "";
+      surveyData.colors.push({
+        name: swatch.name,
+        value: swatch.color,
+        selections: selected,
+        explanation: explain.value || ""
+      });
+      
     });
 
     container.appendChild(slide);
@@ -362,9 +344,12 @@ function buildFontSlides(){
         list.querySelectorAll(".checkbox-item.selected")
       ).map(el => el.innerText.trim());
 
-      surveyData.fontFile = fn;
-      surveyData.fontSelections = selected;
-      surveyData.fontExplanation = explain.value || "";
+      surveyData.fonts.push({
+        file: fn,
+        selections: selected,
+        explanation: explain.value || ""
+      });
+      
     });
 
     fontsContainer.appendChild(slide);
@@ -470,9 +455,12 @@ nextBtn.addEventListener("click", () => {
     list.querySelectorAll(".checkbox-item.selected")
   ).map(el => el.innerText.trim());
 
-  surveyData.symbolFile = fn;
-  surveyData.symbolSelections = selected;
-  surveyData.symbolExplanation = explain.value || "";
+  surveyData.symbols.push({
+    file: fn,
+    selections: selected,
+    explanation: explain.value || ""
+  });
+  
     });
 
     symbolsContainer.appendChild(slide);
@@ -584,10 +572,13 @@ function buildLayeredSlides(){
         .filter(el => el.classList.contains('selected'))
         .map(el => el.innerText.trim());
 
-        surveyData.layeredGroup = group.label;
-        surveyData.layeredStoppedAt = currentLayer;
-        surveyData.layeredElements = selectedElements;
-        surveyData.layeredOther = otherInput.value || "";
+        surveyData.layers.push({
+          group: group.label,
+          stoppedAt: currentLayer,
+          elements: selectedElements,
+          other: otherInput.value || ""
+        });
+        
         main.dataset.group = group.label;
         main.dataset.stopped = currentLayer;
 
@@ -661,91 +652,6 @@ function init(){
 
 init();
 
-/* -------------------------- COLLECT ALL DATA -------------------------- */
-function collectAllSurveyData() {
-  // ---------------- PERSONAL ----------------
-  surveyData.age = document.getElementById("r_age")?.value || "";
-  surveyData.location = document.getElementById("r_location")?.value || "";
-  surveyData.hometown = document.getElementById("r_hometown")?.value || "";
-  surveyData.ethnicity = document.getElementById("r_ethnicity")?.value || "";
-  surveyData.eatOut = document.getElementById("r_eatout")?.value || "";
-  surveyData.mostCuisine = document.getElementById("r_mostcuisine")?.value || "";
-
-  // ---------------- COLORS ----------------
-  const colorSlides = document.querySelectorAll(".single-swatch-display");
-  let colorNames = [], colorValues = [], colorSelections = [], colorExplanations = [];
-  colorSlides.forEach(slide => {
-    const name = slide.dataset.name || "";
-    const value = slide.style.background || "";
-    const selected = Array.from(slide.querySelectorAll(".checkbox-item.selected")).map(el => el.innerText.trim());
-    const explain = slide.querySelector(".explain-box")?.value || "";
-
-    if (name) colorNames.push(name);
-    if (value) colorValues.push(value);
-    if (selected.length) colorSelections.push(selected.join(", "));
-    if (explain) colorExplanations.push(explain);
-  });
-  surveyData.colorName = colorNames.join(" | ");
-  surveyData.colorValue = colorValues.join(" | ");
-  surveyData.colorSelections = colorSelections.join(" | ");
-  surveyData.colorExplanation = colorExplanations.join(" | ");
-
-  // ---------------- FONTS ----------------
-  const fontSlides = document.querySelectorAll(".font-preview img");
-  let fontFiles = [], fontSelections = [], fontExplanations = [];
-  fontSlides.forEach(img => {
-    fontFiles.push(img.src.split("/").pop());
-    const slide = img.closest(".slide");
-    const selected = Array.from(slide.querySelectorAll(".checkbox-list .checkbox-item.selected")).map(el => el.innerText.trim());
-    const explain = slide.querySelector(".explain-box")?.value || "";
-
-    if (selected.length) fontSelections.push(selected.join(", "));
-    if (explain) fontExplanations.push(explain);
-  });
-  surveyData.fontFile = fontFiles.join(" | ");
-  surveyData.fontSelections = fontSelections.join(" | ");
-  surveyData.fontExplanation = fontExplanations.join(" | ");
-
-  // ---------------- SYMBOLS ----------------
-  const symbolSlides = document.querySelectorAll(".symbol-img");
-  let symbolFiles = [], symbolSelections = [], symbolExplanations = [];
-  symbolSlides.forEach(img => {
-    symbolFiles.push(img.src.split("/").pop());
-    const slide = img.closest(".slide");
-    const selected = Array.from(slide.querySelectorAll(".checkbox-list .checkbox-item.selected")).map(el => el.innerText.trim());
-    const explain = slide.querySelector(".explain-box")?.value || "";
-
-    if (selected.length) symbolSelections.push(selected.join(", "));
-    if (explain) symbolExplanations.push(explain);
-  });
-  surveyData.symbolFile = symbolFiles.join(" | ");
-  surveyData.symbolSelections = symbolSelections.join(" | ");
-  surveyData.symbolExplanation = symbolExplanations.join(" | ");
-
-  // ---------------- LAYERED ----------------
-  const layeredSlides = document.querySelectorAll(".layered-img");
-  let layeredGroups = [], layeredStoppedAt = [], layeredElements = [], layeredOther = [];
-  layeredSlides.forEach(img => {
-    const slide = img.closest(".slide");
-    const group = slide.dataset.group || "";
-    const stopped = slide.dataset.stopped || "";
-    const selected = Array.from(slide.querySelectorAll(".layer-question .elements-list .checkbox-item.selected")).map(el => el.innerText.trim());
-    const other = slide.querySelector(".layer-question .other-input")?.value || "";
-
-    if (group) layeredGroups.push(group);
-    if (stopped) layeredStoppedAt.push(stopped);
-    if (selected.length) layeredElements.push(selected.join(", "));
-    if (other) layeredOther.push(other);
-  });
-  surveyData.layeredGroup = layeredGroups.join(" | ");
-  surveyData.layeredStoppedAt = layeredStoppedAt.join(" | ");
-  surveyData.layeredElements = layeredElements.join(" | ");
-  surveyData.layeredOther = layeredOther.join(" | ");
-
-  // ---------------- FINAL ----------------
-  surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
-  surveyData.finalComments = document.getElementById("finalComments")?.value || "";
-}
 
 
 /* -------------------------- FINISH BUTTON -------------------------- */
@@ -754,22 +660,71 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
   console.log("Submit button clicked — collecting all survey data...");
 
   // ✅ Collect all survey responses right before sending
-  collectAllSurveyData();
+  const MAX_COLORS = 7;
+const MAX_FONTS = 15;
+const MAX_SYMBOLS = 18;
+const MAX_LAYERS = 4;
+
+function expandForSheet(data) {
+  const out = {
+    userId: data.userId,
+    age: data.age,
+    location: data.location,
+    hometown: data.hometown,
+    ethnicity: data.ethnicity,
+    eatOut: data.eatOut,
+    mostCuisine: data.mostCuisine,
+    finalReflection: data.finalReflection,
+    finalComments: data.finalComments
+  };
+
+  for (let i = 0; i < MAX_COLORS; i++) {
+    const c = data.colors[i] || {};
+    out[`Color_${i+1}_Name`] = c.name || "";
+    out[`Color_${i+1}_Value`] = c.value || "";
+    out[`Color_${i+1}_Selections`] = c.selections?.join(", ") || "";
+    out[`Color_${i+1}_Explanation`] = c.explanation || "";
+  }
+
+  for (let i = 0; i < MAX_FONTS; i++) {
+    const f = data.fonts[i] || {};
+    out[`Font_${i+1}_File`] = f.file || "";
+    out[`Font_${i+1}_Selections`] = f.selections?.join(", ") || "";
+    out[`Font_${i+1}_Explanation`] = f.explanation || "";
+  }
+
+  for (let i = 0; i < MAX_SYMBOLS; i++) {
+    const s = data.symbols[i] || {};
+    out[`Symbol_${i+1}_File`] = s.file || "";
+    out[`Symbol_${i+1}_Selections`] = s.selections?.join(", ") || "";
+    out[`Symbol_${i+1}_Explanation`] = s.explanation || "";
+  }
+
+  for (let i = 0; i < MAX_LAYERS; i++) {
+    const l = data.layers[i] || {};
+    out[`Layer_${i+1}_Group`] = l.group || "";
+    out[`Layer_${i+1}_StoppedAt`] = l.stoppedAt || "";
+    out[`Layer_${i+1}_Elements`] = l.elements?.join(", ") || "";
+    out[`Layer_${i+1}_Other`] = l.other || "";
+  }
+
+  return out;
+}
+
 
   console.log("Final surveyData ready to submit:", JSON.stringify(surveyData, null, 2));
 
   try {
     // Submit to Google Sheet
-const payload = { ...surveyData };
+    const payload = expandForSheet(surveyData);
 
-await fetch(GOOGLE_SCRIPT_URL, {
-  method: "POST",
-  mode: "no-cors",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(payload)
-});
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    
 
 // If we reached here, the request was sent
 alert("Thank you! Your responses have been submitted.");

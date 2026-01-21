@@ -20,7 +20,12 @@ const surveyData = {
   eatOut: "",
   mostCuisine: "",
 
- 
+  // structured responses
+  colors: [],
+  fonts: [],
+  symbols: [],
+  layers: [],
+
   // final
   finalReflection: "",
   finalComments: ""

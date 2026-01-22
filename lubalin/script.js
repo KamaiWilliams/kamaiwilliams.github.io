@@ -1,41 +1,48 @@
-console.log("hand.js loaded");
+/* Survey prototype logic
+   - dynamic slide generator for Section 1 & 2
+   - layered sign groups for Section 3 (manual click-through)
+   - progress bar and basic response aggregation (client-side)
+*/
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIWhIcvXTDG2H8Od_m02qJi4CBgl12mZTbnBX685heRCvA7LLQvkglu4Hv7-kejf8ZHw/exec";
+
 
 /* -------------------------- CONFIG -------------------------- */
 
 const surveyData = {
   userId: crypto.randomUUID(),
+
+  // personal
   age: "",
   location: "",
   hometown: "",
   ethnicity: "",
   eatOut: "",
   mostCuisine: "",
+
+  // structured responses
   colors: [],
   fonts: [],
   symbols: [],
   layers: [],
+
+  // final
   finalReflection: "",
   finalComments: ""
 };
 
-// PALETTE FIX
-const palette = [
-  { name: "Red", color: "#e74c3c" },
-  { name: "Blue", color: "#3498db" },
-  { name: "Green", color: "#2ecc71" },
-  { name: "Yellow", color: "#f1c40f" },
-  { name: "Purple", color: "#9b59b6" },
-  { name: "Orange", color: "#e67e22" },
-  { name: "Gray", color: "#95a5a6" }
-];
 
 const fontFiles = [];
-for (let i = 1; i <= 15; i++) fontFiles.push(`font${i}.png`);
+for (let i = 1; i <= 15; i++) {
+  fontFiles.push(`font${i}.png`);
+}
+
 
 const symbolFiles = [];
-for (let i = 1; i <= 18; i++) symbolFiles.push(`symbol${i}.png`);
+for (let i = 1; i <= 18; i++) {
+  symbolFiles.push(`symbol${i}.png`);
+}
+
 
 const layeredGroups = [
   { id:'cowboy', label:'Cowboy', prefix:'images/cowboy' },
@@ -46,6 +53,7 @@ const layeredGroups = [
 const LAYERS = 10;
 
 /* -------------------------- DOM & STATE -------------------------- */
+
 let slides = [];
 const progressBar = document.getElementById('progressBar');
 const fontsContainer = document.getElementById('fonts-container');
@@ -55,56 +63,205 @@ const layeredContainer = document.getElementById('layered-container');
 let currentIndex = 0;
 
 /* -------------------------- NAVIGATION -------------------------- */
+
 function showSlideByIndex(i){
   slides.forEach(s => s.classList.remove('active'));
   if(i < 0) i = 0;
   if(i >= slides.length) i = slides.length - 1;
+
   slides[i].classList.add('active');
   currentIndex = i;
   updateProgress();
-  updateBottomNavVisibility();
+  updateBottomNavVisibility(); // ✅ ADD THIS
 }
+
+
 function goNext(){ showSlideByIndex(currentIndex + 1); }
 function goBack(){ showSlideByIndex(currentIndex - 1); }
+
 function updateProgress(){
   const pct = (currentIndex / (slides.length - 1)) * 100;
   progressBar.style.width = `${pct}%`;
 }
+
+/* ✅ FIXED: SINGLE VALIDATION FUNCTION */
 function isSlideAnswered(slide) {
-  const visibleCheckboxes = Array.from(slide.querySelectorAll(".checkbox-item"))
-    .filter(cb => cb.offsetParent !== null);
-  if (visibleCheckboxes.length) return visibleCheckboxes.some(cb => cb.classList.contains("selected"));
+  const visibleCheckboxes = Array.from(
+    slide.querySelectorAll(".checkbox-item")
+  ).filter(cb => cb.offsetParent !== null);
+
+  if (visibleCheckboxes.length) {
+    return visibleCheckboxes.some(cb =>
+      cb.classList.contains("selected")
+    );
+  }
+
   const inputs = slide.querySelectorAll("input, select, textarea");
   if (!inputs.length) return true;
+
   return Array.from(inputs).some(el => el.value.trim() !== "");
 }
 
-/* -------------------------- NAV HANDLER -------------------------- */
+
+
+
+
+
+/* -------------------------- MAIN NAV HANDLER -------------------------- */
+
 document.addEventListener('click', (e) => {
   const t = e.target;
-  if(t.id === 'startBtn'){ goNext(); return; }
+
+  if(t.id === 'startBtn'){
+    goNext();
+    return;
+  }
+
   if(t.classList.contains('navBtn')){
     const action = t.getAttribute('data-action');
     const active = slides[currentIndex];
-    if(action === 'next'){
-      if(!isSlideAnswered(active)){ alert("Please answer before continuing."); return; }
 
+    if(action === 'next'){
+      if(!isSlideAnswered(active)){
+        alert("Please answer before continuing.");
+        return;
+      }
+    
+      // ✅ SAVE PERSONAL INFO WHEN LEAVING THAT SLIDE
       if (active.id === "slide-personal") {
-        surveyData.age = document.getElementById("r_age")?.value || "";
-        surveyData.location = document.getElementById("r_location")?.value || "";
-        surveyData.hometown = document.getElementById("r_hometown")?.value || "";
-        surveyData.ethnicity = document.getElementById("r_ethnicity")?.value || "";
+        surveyData.age =
+          document.getElementById("r_age")?.value || "";
+    
+        surveyData.location =
+          document.getElementById("r_location")?.value || "";
+    
+        surveyData.hometown =
+          document.getElementById("r_hometown")?.value || "";
+    
+        surveyData.ethnicity =
+          document.getElementById("r_ethnicity")?.value || "";
+    
       }
+    
       if (active.id === "slide-respondent") {
-        surveyData.eatOut = document.getElementById("r_eatout")?.value || "";
-        surveyData.mostCuisine = document.getElementById("r_mostcuisine")?.value || "";
+        surveyData.eatOut =
+          document.getElementById("r_eatout")?.value || "";
+      
+        surveyData.mostCuisine =
+          document.getElementById("r_mostcuisine")?.value || "";
       }
+      
       goNext();
     }
-    if(action === 'back'){ goBack(); }
+    
+
+    if(action === 'back'){
+      goBack();
+    }
   }
 });
 
+/* -------------------------- COLOR SECTION -------------------------- */
+
+const palette = [
+  { name: "Red", color: "#FE0000" },
+  { name: "Orange", color: "#FF7900" },
+  { name: "Yellow", color: "#FFD800" },
+  { name: "Green", color: "#4CBB17" },
+  { name: "Blue", color: "#273BE2" },
+  { name: "Purple", color: "#9400D3" },
+  { name: "Brown", color: "#6F4E37" },
+];
+
+function buildColorAssociationSlides() {
+  const cuisineOptions = [
+    "Italian","Chinese","Indian","Mexican","Korean","Thai",
+    "Egyptian","Puerto Rican","Brazilian","American",
+    "Not sure","None of the above"
+  ];
+
+  const container = document.createElement("div");
+
+  palette.forEach((swatch, index) => {
+    const slide = document.createElement("div");
+    slide.className = "slide";
+    slide.dataset.colorIndex = index;
+  
+
+    const h2 = document.createElement("h2");
+    h2.textContent = "Which cuisine do you associate this color with? (pick up to 3)";
+    slide.appendChild(h2);
+
+    const content = document.createElement("div");
+    content.className = "slide-content";
+    slide.appendChild(content);
+
+    const swatchBox = document.createElement("div");
+    swatchBox.className = "single-swatch-display";
+    swatchBox.style.background = swatch.color;
+    swatchBox.dataset.name = swatch.name;
+
+    content.appendChild(swatchBox);
+
+    const q = document.createElement("p");
+    
+    content.appendChild(q);
+
+    const list = document.createElement("div");
+    list.className = "checkbox-list";
+    content.appendChild(list);
+
+    cuisineOptions.forEach(c => {
+      const item = document.createElement("label");
+      item.className = "checkbox-item";
+      item.innerHTML = `<span>${c}</span>`;
+      list.appendChild(item);
+    });
+
+    // ✅ RANKED SELECTION LOGIC (MAX 3)
+    list.querySelectorAll(".checkbox-item").forEach(item => {
+      item.addEventListener("click", () => {
+        const selected = list.querySelectorAll(".checkbox-item.selected");
+
+        if (item.classList.contains("selected")) {
+          item.classList.remove("selected");
+          item.removeAttribute("data-rank");
+        } else {
+          if (selected.length >= 3) return;
+          item.classList.add("selected");
+        }
+
+        // ✅ RE-RANK
+        list.querySelectorAll(".checkbox-item.selected").forEach((el, i) => {
+          el.setAttribute("data-rank", i + 1);
+        });
+      });
+    });
+
+    const explain = document.createElement("textarea");
+    explain.className = "explain-box";
+    explain.placeholder = "Explain your answer (optional)";
+    content.appendChild(explain);
+
+    // ✅ ONLY ONE CONTROLS BLOCK
+    const controls = document.createElement("div");
+    controls.className = "controls";
+    controls.innerHTML = `
+      <button class="navBtn" data-action="back">Back</button>
+      <button class="navBtn" data-action="next">Next</button>
+    `;
+    slide.appendChild(controls);
+
+    // ✅ SAFE NEXT BUTTON HANDLER
+    const nextBtn = controls.querySelector('[data-action="next"]');
+    
+
+    container.appendChild(slide);
+  });
+
+  document.getElementById("slide-formal-intro")
+    .insertAdjacentElement("afterend", container);
+}
 
 /* -------------------------- FONT SLIDES ✅ FIXED -------------------------- */
 
@@ -455,12 +612,23 @@ function buildFinalReflectionSlide(){
 }
 
 
-// -------------------------- FINALIZE & INIT --------------------------
+
+/* -------------------------- FINALIZE SLIDES -------------------------- */
 function finalizeSlides() {
+  // Grab all slides after building them
   slides = Array.from(document.querySelectorAll('.container .slide'));
-  if(slides.length > 0) showSlideByIndex(0);
+
+  // Show the first slide
+  if (slides.length > 0) {
+    showSlideByIndex(0);
+  }
+
+  // Update bottom nav visibility immediately
   updateBottomNavVisibility();
 }
+
+/* -------------------------- INIT -------------------------- */
+
 function init(){
   buildColorAssociationSlides();
   buildFontSlides();
@@ -469,42 +637,168 @@ function init(){
   buildFinalReflectionSlide();
   setTimeout(finalizeSlides, 80);
 }
+
 init();
 
-/* -------------------------- SUBMIT -------------------------- */
-document.getElementById('finishBtn').addEventListener('click', async (e) => {
-  e.preventDefault();
-  // collect personal info on submit
-  surveyData.age = document.getElementById("r_age")?.value || "";
-  surveyData.location = document.getElementById("r_location")?.value || "";
-  surveyData.hometown = document.getElementById("r_hometown")?.value || "";
-  surveyData.ethnicity = document.getElementById("r_ethnicity")?.value || "";
-  surveyData.eatOut = document.getElementById("r_eatout")?.value || "";
-  surveyData.mostCuisine = document.getElementById("r_mostcuisine")?.value || "";
+function collectColors() {
+  surveyData.colors = [];
 
+  document.querySelectorAll('[data-color-index]').forEach(slide => {
+    const swatch = slide.querySelector(".single-swatch-display");
+
+    const selections = Array.from(
+      slide.querySelectorAll(".checkbox-item.selected")
+    ).map(el => el.innerText.trim());
+
+    const explanation =
+      slide.querySelector(".explain-box")?.value || "";
+
+    surveyData.colors.push({
+      name: swatch.dataset.name,
+      value: swatch.style.background,
+      selections,
+      explanation
+    });
+  });
+}
+
+
+
+
+function collectSymbols() {
+  surveyData.symbols = [];
+
+  document.querySelectorAll('[data-symbol-index]').forEach(slide => {
+    const img = slide.querySelector(".symbol-img");
+
+    const selections = Array.from(
+      slide.querySelectorAll(".checkbox-item.selected")
+    ).map(el => el.innerText.trim());
+
+    const explanation =
+      slide.querySelector(".explain-box")?.value || "";
+
+    surveyData.symbols.push({
+      file: img?.src?.split("/").pop() || "",
+      selections,
+      explanation
+    });
+  });
+}
+
+
+function collectFonts() {
+  surveyData.fonts = [];
+
+  document.querySelectorAll('[data-font-index]').forEach(slide => {
+    const img = slide.querySelector(".font-img");
+
+    const selections = Array.from(
+      slide.querySelectorAll(".checkbox-item.selected")
+    ).map(el => el.innerText.trim());
+
+    const explanation =
+      slide.querySelector(".explain-box")?.value || "";
+
+    surveyData.fonts.push({
+      file: img?.src?.split("/").pop() || "",
+      selections,
+      explanation
+    });
+  });
+}
+
+
+
+/* -------------------------- FINISH BUTTON -------------------------- */
+
+function expandForSheet(data) {
+  const row = {
+    userID: data.userId,
+    age: data.age,
+    location: data.location,
+    hometown: data.hometown,
+    ethnicity: data.ethnicity,
+    eatOut: data.eatOut,
+    mostCuisine: data.mostCuisine,
+    finalReflection: data.finalReflection,
+    finalComments: data.finalComments
+  };
+
+  // Flatten colors (up to 7)
+  for (let i = 0; i < 7; i++) {
+    const c = data.colors[i] || {};
+    row[`Color_${i+1}_Name`] = c.name || "";
+    row[`Color_${i+1}_Value`] = c.value || "";
+    row[`Color_${i+1}_Selections`] = (c.selections || []).join(", ");
+    row[`Color_${i+1}_Explanation`] = c.explanation || "";
+  }
+
+  // Flatten fonts (up to 15)
+  for (let i = 0; i < 15; i++) {
+    const f = data.fonts[i] || {};
+    row[`Font_${i+1}_File`] = f.file || "";
+    row[`Font_${i+1}_Selections`] = (f.selections || []).join(", ");
+    row[`Font_${i+1}_Explanation`] = f.explanation || "";
+  }
+
+  // Flatten symbols (up to 18)
+  for (let i = 0; i < 18; i++) {
+    const s = data.symbols[i] || {};
+    row[`Symbol_${i+1}_File`] = s.file || "";
+    row[`Symbol_${i+1}_Selections`] = (s.selections || []).join(", ");
+    row[`Symbol_${i+1}_Explanation`] = s.explanation || "";
+  }
+
+  // Flatten layers (up to 4)
+  for (let i = 0; i < 4; i++) {
+    const l = data.layers[i] || {};
+    row[`Layer_${i+1}_Group`] = l.group || "";
+    row[`Layer_${i+1}_StoppedAt`] = l.stoppedAt || "";
+    row[`Layer_${i+1}_Elements`] = (l.elements || []).join(", ");
+    row[`Layer_${i+1}_Other`] = l.other || "";
+  }
+
+  return row;
+}
+
+
+document.getElementById('finishBtn').addEventListener('click', async (e) => {
+  e.preventDefault(); // ⬅️ CRITICAL
+
+  // collect
   collectColors();
   collectFonts();
   collectSymbols();
 
-  surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
-  surveyData.finalComments = document.getElementById("finalComments")?.value || "";
+  surveyData.finalReflection =
+    document.querySelector(".reflection-box")?.value || "";
+
+  surveyData.finalComments =
+    document.getElementById("finalComments")?.value || "";
 
   const payload = expandForSheet(surveyData);
 
   console.log("Final payload ready:", payload);
 
+  // 🔒 ONLY FETCH IS IN TRY/CATCH
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(payload)
     });
+    
   } catch (err) {
     console.error("FETCH FAILED:", err);
     alert("Submission failed before reaching Google.");
     return;
   }
 
+  // ✅ Success UI (this WILL run now)
   alert("Thank you! Your responses have been submitted.");
   showSlideByIndex(0);
 });
+

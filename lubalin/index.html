@@ -85,6 +85,7 @@
         </select>
       </label>
 
+   
     </div>
 
     <!-- Slide 3: Formal Association intro -->
@@ -95,13 +96,12 @@
       </p>
     </div>
 
-    <!-- Color slides injected here -->
-    <div id="color-slides-container"></div>
+    <!-- ✅ Color slides will be dynamically injected AFTER the formal intro by JS -->
 
-    <!-- Font Slides -->
+    <!-- ✅ Font Slides (Inserted by JS) -->
     <div id="fonts-container"></div>
 
-    <!-- Symbol Slides -->
+    <!-- ✅ Symbol Slides (Inserted by JS) -->
     <div id="symbols-container"></div>
 
     <!-- Slide: Accumulating sign intro -->
@@ -111,9 +111,10 @@
         Next you will see a series of sign designs for an imaginary restaurant. 
         The designs progress from minimal to more elaborate, adding different visual elements at each stage.
       </p>
+      
     </div>
 
-    <!-- Layered sign slides -->
+    <!-- ✅ Layered sign slides injected here -->
     <div id="layered-container"></div>
 
     <!-- Final Slide -->
@@ -127,6 +128,7 @@
       <div class="controls">
         <button class="navBtn" data-action="back">Back</button>
         <button id="finishBtn" type="button">Submit</button>
+
       </div>
     </div>
 
@@ -136,12 +138,13 @@
       <button class="navBtn" data-action="next">Next</button>
     </div>
 
-    <!-- Progress Bar -->
+
+    <!-- ✅ Progress Bar -->
     <div id="progressWrap">
       <div id="progressBar"></div>
     </div>
 
-  </div>
+  </div> <!-- ✅ ONLY container close -->
 
   <script src="script.js"></script>
 </body>

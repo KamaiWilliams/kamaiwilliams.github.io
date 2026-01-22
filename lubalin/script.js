@@ -182,9 +182,11 @@ function buildColorAssociationSlides() {
 
   const container = document.createElement("div");
 
-  palette.forEach((swatch) => {
+  palette.forEach((swatch, index) => {
     const slide = document.createElement("div");
     slide.className = "slide";
+    slide.dataset.colorIndex = index;
+  
 
     const h2 = document.createElement("h2");
     h2.textContent = "Which cuisine do you associate this color with? (pick up to 3)";
@@ -267,7 +269,8 @@ function buildFontSlides(){
   fontFiles.forEach((fn, idx) => {
     const slide = document.createElement('div');
     slide.className = 'slide';
-    slide.id = `font-${idx + 1}`;
+    slide.dataset.fontIndex = idx;
+
 
 
     const h2 = document.createElement('h2');
@@ -373,6 +376,8 @@ function buildSymbolSlides(){
   symbolFiles.forEach((fn, idx) => {
     const slide = document.createElement('div');
     slide.className = 'slide';
+    slide.dataset.symbolIndex = idx;
+
 
     const h2 = document.createElement('h2');
     h2.textContent = 'Which cuisine is best representative of this symbol? (pick up to 3)';
@@ -608,11 +613,18 @@ function buildFinalReflectionSlide(){
 
 
 
-/* -------------------------- FINALIZE ✅ FIXED -------------------------- */
-
-function finalizeSlides(){
+/* -------------------------- FINALIZE SLIDES -------------------------- */
+function finalizeSlides() {
+  // Grab all slides after building them
   slides = Array.from(document.querySelectorAll('.container .slide'));
-  showSlideByIndex(0);
+
+  // Show the first slide
+  if (slides.length > 0) {
+    showSlideByIndex(0);
+  }
+
+  // Update bottom nav visibility immediately
+  updateBottomNavVisibility();
 }
 
 /* -------------------------- INIT -------------------------- */
@@ -629,69 +641,70 @@ function init(){
 init();
 
 function collectColors() {
-  surveyData.colors = Array.from(
-    document.querySelectorAll(".single-swatch-display")
-  ).map(swatch => {
-    const slide = swatch.closest(".slide"); // ✅ CRITICAL FIX
+  surveyData.colors = [];
 
-    const selected = Array.from(
+  document.querySelectorAll('[data-color-index]').forEach(slide => {
+    const swatch = slide.querySelector(".single-swatch-display");
+
+    const selections = Array.from(
       slide.querySelectorAll(".checkbox-item.selected")
     ).map(el => el.innerText.trim());
 
     const explanation =
       slide.querySelector(".explain-box")?.value || "";
 
-    return {
+    surveyData.colors.push({
       name: swatch.dataset.name,
       value: swatch.style.background,
-      selections: selected,
+      selections,
       explanation
-    };
+    });
+  });
+}
+
+
+
+
+function collectSymbols() {
+  surveyData.symbols = [];
+
+  document.querySelectorAll('[data-symbol-index]').forEach(slide => {
+    const img = slide.querySelector(".symbol-img");
+
+    const selections = Array.from(
+      slide.querySelectorAll(".checkbox-item.selected")
+    ).map(el => el.innerText.trim());
+
+    const explanation =
+      slide.querySelector(".explain-box")?.value || "";
+
+    surveyData.symbols.push({
+      file: img?.src?.split("/").pop() || "",
+      selections,
+      explanation
+    });
   });
 }
 
 
 function collectFonts() {
-  surveyData.fonts = Array.from(
-    document.querySelectorAll(".font-preview")
-  ).map(preview => {
-    const slide = preview.closest(".slide"); // ✅
+  surveyData.fonts = [];
 
-    const selected = Array.from(
-      slide.querySelectorAll(".checkbox-item.selected")
-    ).map(el => el.innerText.trim());
-
-    const explanation =
-      slide.querySelector(".explain-box")?.value || "";
-
+  document.querySelectorAll('[data-font-index]').forEach(slide => {
     const img = slide.querySelector(".font-img");
 
-    return {
-      file: img?.src?.split("/").pop() || "",
-      selections: selected,
-      explanation
-    };
-  });
-}
-
-function collectSymbols() {
-  surveyData.symbols = Array.from(
-    document.querySelectorAll(".symbol-img")
-  ).map(img => {
-    const slide = img.closest(".slide"); // ✅
-
-    const selected = Array.from(
+    const selections = Array.from(
       slide.querySelectorAll(".checkbox-item.selected")
     ).map(el => el.innerText.trim());
 
     const explanation =
       slide.querySelector(".explain-box")?.value || "";
 
-    return {
-      file: img.src.split("/").pop(),
-      selections: selected,
+    surveyData.fonts.push({
+      file: img?.src?.split("/").pop() || "",
+      selections,
       explanation
-    };
+    });
   });
 }
 

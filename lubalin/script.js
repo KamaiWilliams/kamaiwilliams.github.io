@@ -743,13 +743,13 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      
-      headers: { "Content-Type": "application/json" },
+      mode: "no-cors",
       body: JSON.stringify(payload)
     });
-
+    
     alert("Thank you! Your responses have been submitted.");
     showSlideByIndex(0);
+    
 
   } catch(err) {
     console.error(err);

@@ -724,35 +724,39 @@ function expandForSheet(data) {
 }
 
 
-document.getElementById('finishBtn').addEventListener('click', async () => {
-  // 1️⃣ collect all responses
+document.getElementById('finishBtn').addEventListener('click', async (e) => {
+  e.preventDefault(); // ⬅️ CRITICAL
+
+  // collect
   collectColors();
   collectFonts();
   collectSymbols();
- 
-  surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
+
+  surveyData.finalReflection =
+    document.querySelector(".reflection-box")?.value || "";
+
   surveyData.finalComments =
-  document.getElementById("finalComments")?.value || "";
+    document.getElementById("finalComments")?.value || "";
 
-
-  // 2️⃣ expand for sheet
   const payload = expandForSheet(surveyData);
 
   console.log("Final payload ready:", payload);
 
+  // 🔒 ONLY FETCH IS IN TRY/CATCH
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
       body: JSON.stringify(payload)
     });
-    
-    alert("Thank you! Your responses have been submitted.");
-    showSlideByIndex(0);
-    
-
-  } catch(err) {
-    console.error(err);
-    alert("Error submitting responses. Please try again.");
+  } catch (err) {
+    console.error("FETCH FAILED:", err);
+    alert("Submission failed before reaching Google.");
+    return;
   }
+
+  // ✅ Success UI (this WILL run now)
+  alert("Thank you! Your responses have been submitted.");
+  showSlideByIndex(0);
 });
+

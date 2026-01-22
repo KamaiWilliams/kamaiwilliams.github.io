@@ -86,18 +86,22 @@ function updateProgress(){
 
 /* ✅ FIXED: SINGLE VALIDATION FUNCTION */
 function isSlideAnswered(slide) {
-  // If there are checkbox tiles, require at least one selected
-  const checkboxes = slide.querySelectorAll(".checkbox-item");
-  if (checkboxes.length) {
-    return slide.querySelectorAll(".checkbox-item.selected").length > 0;
+  const visibleCheckboxes = Array.from(
+    slide.querySelectorAll(".checkbox-item")
+  ).filter(cb => cb.offsetParent !== null);
+
+  if (visibleCheckboxes.length) {
+    return visibleCheckboxes.some(cb =>
+      cb.classList.contains("selected")
+    );
   }
 
-  // Otherwise require some input
   const inputs = slide.querySelectorAll("input, select, textarea");
   if (!inputs.length) return true;
 
   return Array.from(inputs).some(el => el.value.trim() !== "");
 }
+
 
 
 
@@ -593,11 +597,7 @@ function buildFinalReflectionSlide(){
   const textBox = slide.querySelector(".reflection-box");
   const nextBtn = slide.querySelector('[data-action="next"]');
 
-  nextBtn.addEventListener("click", () => {
-    
-    surveyData.finalReflection = textBox.value.trim();
 
-  });
 
   // ✅ APPEND IT TO THE MAIN CONTAINER (NOT surveyContainer)
   document.querySelector(".container").insertBefore(
@@ -605,6 +605,7 @@ function buildFinalReflectionSlide(){
     document.getElementById("slide-final") // ✅ puts it RIGHT BEFORE Thank You
   );
 }
+
 
 
 /* -------------------------- FINALIZE ✅ FIXED -------------------------- */
@@ -628,10 +629,18 @@ function init(){
 init();
 
 function collectColors() {
-  surveyData.colors = Array.from(document.querySelectorAll(".single-swatch-display")).map(swatch => {
-    const parent = swatch.parentElement;
-    const selected = Array.from(parent.querySelectorAll(".checkbox-item.selected")).map(el => el.innerText.trim());
-    const explanation = parent.querySelector(".explain-box")?.value || "";
+  surveyData.colors = Array.from(
+    document.querySelectorAll(".single-swatch-display")
+  ).map(swatch => {
+    const slide = swatch.closest(".slide"); // ✅ CRITICAL FIX
+
+    const selected = Array.from(
+      slide.querySelectorAll(".checkbox-item.selected")
+    ).map(el => el.innerText.trim());
+
+    const explanation =
+      slide.querySelector(".explain-box")?.value || "";
+
     return {
       name: swatch.dataset.name,
       value: swatch.style.background,
@@ -641,12 +650,22 @@ function collectColors() {
   });
 }
 
+
 function collectFonts() {
-  surveyData.fonts = Array.from(document.querySelectorAll(".font-preview")).map(preview => {
-    const slide = preview.closest(".slide");
-    const selected = Array.from(slide.querySelectorAll(".checkbox-item.selected")).map(el => el.innerText.trim());
-    const explanation = slide.querySelector(".explain-box")?.value || "";
+  surveyData.fonts = Array.from(
+    document.querySelectorAll(".font-preview")
+  ).map(preview => {
+    const slide = preview.closest(".slide"); // ✅
+
+    const selected = Array.from(
+      slide.querySelectorAll(".checkbox-item.selected")
+    ).map(el => el.innerText.trim());
+
+    const explanation =
+      slide.querySelector(".explain-box")?.value || "";
+
     const img = slide.querySelector(".font-img");
+
     return {
       file: img?.src?.split("/").pop() || "",
       selections: selected,
@@ -656,10 +675,18 @@ function collectFonts() {
 }
 
 function collectSymbols() {
-  surveyData.symbols = Array.from(document.querySelectorAll(".symbol-img")).map(img => {
-    const slide = img.closest(".slide");
-    const selected = Array.from(slide.querySelectorAll(".checkbox-item.selected")).map(el => el.innerText.trim());
-    const explanation = slide.querySelector(".explain-box")?.value || "";
+  surveyData.symbols = Array.from(
+    document.querySelectorAll(".symbol-img")
+  ).map(img => {
+    const slide = img.closest(".slide"); // ✅
+
+    const selected = Array.from(
+      slide.querySelectorAll(".checkbox-item.selected")
+    ).map(el => el.innerText.trim());
+
+    const explanation =
+      slide.querySelector(".explain-box")?.value || "";
+
     return {
       file: img.src.split("/").pop(),
       selections: selected,
@@ -667,7 +694,6 @@ function collectSymbols() {
     };
   });
 }
-
 
 
 

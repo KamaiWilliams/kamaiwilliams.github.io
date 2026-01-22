@@ -785,15 +785,11 @@ document.getElementById('finishBtn').addEventListener('click', async (e) => {
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      mode: "no-cors",
       body: JSON.stringify(payload)
     });
-    
   } catch (err) {
-    console.error("FETCH FAILED:", err);
-    alert("Submission failed before reaching Google.");
+    alert("Submission failed.");
     return;
   }
 

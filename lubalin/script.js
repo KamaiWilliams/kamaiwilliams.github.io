@@ -85,19 +85,20 @@ function updateProgress(){
 }
 
 /* ✅ FIXED: SINGLE VALIDATION FUNCTION */
-function isSlideAnswered(slide){
-  // ✅ if ranked cuisine tiles exist, require at least 1 selected
-  const ranked = slide.querySelectorAll('.checkbox-item.selected');
-  if (ranked.length) return true;
+function isSlideAnswered(slide) {
+  // If there are checkbox tiles, require at least one selected
+  const checkboxes = slide.querySelectorAll(".checkbox-item");
+  if (checkboxes.length) {
+    return slide.querySelectorAll(".checkbox-item.selected").length > 0;
+  }
 
-  // ✅ otherwise fall back to normal inputs
-  const inputs = slide.querySelectorAll('input, select, textarea');
-  if(!inputs.length) return true;
+  // Otherwise require some input
+  const inputs = slide.querySelectorAll("input, select, textarea");
+  if (!inputs.length) return true;
 
-  return Array.from(inputs).some(el => {
-    return el.value && el.value.trim() !== '';
-  });
+  return Array.from(inputs).some(el => el.value.trim() !== "");
 }
+
 
 
 
@@ -262,7 +263,8 @@ function buildFontSlides(){
   fontFiles.forEach((fn, idx) => {
     const slide = document.createElement('div');
     slide.className = 'slide';
-    slide.id = `font-${idx+8}`;
+    slide.id = `font-${idx + 1}`;
+
 
     const h2 = document.createElement('h2');
     h2.textContent = 'Which cuisine is best representative of this font? (pick up to 3)';
@@ -627,7 +629,7 @@ init();
 
 function collectColors() {
   surveyData.colors = Array.from(document.querySelectorAll(".single-swatch-display")).map(swatch => {
-    const parent = swatch.closest(".slide-content");
+    const parent = swatch.parentElement;
     const selected = Array.from(parent.querySelectorAll(".checkbox-item.selected")).map(el => el.innerText.trim());
     const explanation = parent.querySelector(".explain-box")?.value || "";
     return {
@@ -641,7 +643,7 @@ function collectColors() {
 
 function collectFonts() {
   surveyData.fonts = Array.from(document.querySelectorAll(".font-preview")).map(preview => {
-    const slide = preview.closest(".slide-content");
+    const slide = preview.closest(".slide");
     const selected = Array.from(slide.querySelectorAll(".checkbox-item.selected")).map(el => el.innerText.trim());
     const explanation = slide.querySelector(".explain-box")?.value || "";
     const img = slide.querySelector(".font-img");
@@ -666,14 +668,7 @@ function collectSymbols() {
   });
 }
 
-function collectLayers() {
-  surveyData.layers = Array.from(document.querySelectorAll(".slide[data-group]")).map(slide => ({
-    group: slide.dataset.group || "",
-    stoppedAt: slide.dataset.stopped || "",
-    elements: Array.from(slide.querySelectorAll(".elements-list .checkbox-item.selected")).map(el => el.innerText.trim()),
-    other: slide.querySelector(".other-input")?.value || ""
-  }));
-}
+
 
 
 /* -------------------------- FINISH BUTTON -------------------------- */
@@ -734,9 +729,11 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
   collectColors();
   collectFonts();
   collectSymbols();
-  collectLayers();
+ 
   surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
-  surveyData.finalComments = ""; // or collect if you have a field
+  surveyData.finalComments =
+  document.getElementById("finalComments")?.value || "";
+
 
   // 2️⃣ expand for sheet
   const payload = expandForSheet(surveyData);
@@ -746,7 +743,7 @@ document.getElementById('finishBtn').addEventListener('click', async () => {
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      mode: "no-cors",
+      
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });

@@ -222,21 +222,17 @@ function buildColorAssociationSlides() {
     list.querySelectorAll(".checkbox-item").forEach(item => {
       item.addEventListener("click", () => {
         const selected = list.querySelectorAll(".checkbox-item.selected");
-
+    
         if (item.classList.contains("selected")) {
           item.classList.remove("selected");
-          item.removeAttribute("data-rank");
         } else {
           if (selected.length >= 3) return;
           item.classList.add("selected");
         }
-
-        // ✅ RE-RANK
-        list.querySelectorAll(".checkbox-item.selected").forEach((el, i) => {
-          el.setAttribute("data-rank", i + 1);
-        });
       });
     });
+    
+    
 
     const explain = document.createElement("textarea");
     explain.className = "explain-box";
@@ -312,21 +308,16 @@ function buildFontSlides(){
     list.querySelectorAll(".checkbox-item").forEach(item => {
       item.addEventListener("click", () => {
         const selected = list.querySelectorAll(".checkbox-item.selected");
-
+    
         if (item.classList.contains("selected")) {
           item.classList.remove("selected");
-          item.removeAttribute("data-rank");
         } else {
           if (selected.length >= 3) return;
           item.classList.add("selected");
         }
-
-        // ✅ RE-RANK AFTER EACH CHANGE
-        list.querySelectorAll(".checkbox-item.selected").forEach((el, i) => {
-          el.setAttribute("data-rank", i + 1);
-        });
       });
     });
+    
 
     const explain = document.createElement('textarea');
     explain.className = 'explain-box';
@@ -413,21 +404,16 @@ function buildSymbolSlides(){
     list.querySelectorAll(".checkbox-item").forEach(item => {
       item.addEventListener("click", () => {
         const selected = list.querySelectorAll(".checkbox-item.selected");
-
+    
         if (item.classList.contains("selected")) {
           item.classList.remove("selected");
-          item.removeAttribute("data-rank");
         } else {
           if (selected.length >= 3) return;
           item.classList.add("selected");
         }
-
-        // ✅ RE-RANK AFTER EACH CHANGE
-        list.querySelectorAll(".checkbox-item.selected").forEach((el, i) => {
-          el.setAttribute("data-rank", i + 1);
-        });
       });
     });
+    
 
     const explain = document.createElement("textarea");
     explain.className = "explain-box";

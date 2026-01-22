@@ -161,18 +161,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* -------------------------- COLOR SECTION -------------------------- */
-
-const palette = [
-  { name: "Red", color: "#FE0000" },
-  { name: "Orange", color: "#FF7900" },
-  { name: "Yellow", color: "#FFD800" },
-  { name: "Green", color: "#4CBB17" },
-  { name: "Blue", color: "#273BE2" },
-  { name: "Purple", color: "#9400D3" },
-  { name: "Brown", color: "#6F4E37" },
-];
-
 function buildColorAssociationSlides() {
   const cuisineOptions = [
     "Italian","Chinese","Indian","Mexican","Korean","Thai",
@@ -180,14 +168,11 @@ function buildColorAssociationSlides() {
     "Not sure","None of the above"
   ];
 
-  const container = document.createElement("div");
-
   palette.forEach((swatch, index) => {
     const slide = document.createElement("div");
     slide.className = "slide";
     slide.dataset.colorIndex = index;
   
-
     const h2 = document.createElement("h2");
     h2.textContent = "Which cuisine do you associate this color with? (pick up to 3)";
     slide.appendChild(h2);
@@ -200,11 +185,9 @@ function buildColorAssociationSlides() {
     swatchBox.className = "single-swatch-display";
     swatchBox.style.background = swatch.color;
     swatchBox.dataset.name = swatch.name;
-
     content.appendChild(swatchBox);
 
     const q = document.createElement("p");
-    
     content.appendChild(q);
 
     const list = document.createElement("div");
@@ -243,7 +226,6 @@ function buildColorAssociationSlides() {
     explain.placeholder = "Explain your answer (optional)";
     content.appendChild(explain);
 
-    // ✅ ONLY ONE CONTROLS BLOCK
     const controls = document.createElement("div");
     controls.className = "controls";
     controls.innerHTML = `
@@ -252,15 +234,10 @@ function buildColorAssociationSlides() {
     `;
     slide.appendChild(controls);
 
-    // ✅ SAFE NEXT BUTTON HANDLER
-    const nextBtn = controls.querySelector('[data-action="next"]');
-    
-
-    container.appendChild(slide);
+    // ✅ APPEND DIRECTLY, NOT INSIDE WRAPPER
+    document.getElementById("slide-formal-intro")
+      .insertAdjacentElement("afterend", slide);
   });
-
-  document.getElementById("slide-formal-intro")
-    .insertAdjacentElement("afterend", container);
 }
 
 /* -------------------------- FONT SLIDES ✅ FIXED -------------------------- */
@@ -765,6 +742,15 @@ function expandForSheet(data) {
 
 document.getElementById('finishBtn').addEventListener('click', async (e) => {
   e.preventDefault(); // ⬅️ CRITICAL
+
+// Always collect personal info on submit
+surveyData.age = document.getElementById("r_age")?.value || "";
+surveyData.location = document.getElementById("r_location")?.value || "";
+surveyData.hometown = document.getElementById("r_hometown")?.value || "";
+surveyData.ethnicity = document.getElementById("r_ethnicity")?.value || "";
+surveyData.eatOut = document.getElementById("r_eatout")?.value || "";
+surveyData.mostCuisine = document.getElementById("r_mostcuisine")?.value || "";
+
 
   // collect
   collectColors();

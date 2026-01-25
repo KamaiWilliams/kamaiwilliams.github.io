@@ -4,7 +4,7 @@
    - progress bar and basic response aggregation (client-side)
 */
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIWhIcvXTDG2H8Od_m02qJi4CBgl12mZTbnBX685heRCvA7LLQvkglu4Hv7-kejf8ZHw/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCytPm8Qdrs2VBHU6GtbDktEXOUPkTWOlorFoKn1tnrCRfAQbzdsT5CQe8VleTmEEX3Q/exec";
 
 
 /* -------------------------- CONFIG -------------------------- */
@@ -698,89 +698,61 @@ function collectFonts() {
 
 /* -------------------------- FINISH BUTTON -------------------------- */
 
-function expandForSheet(data) {
-  const row = {
-    userID: data.userId,
-    age: data.age,
-    location: data.location,
-    hometown: data.hometown,
-    ethnicity: data.ethnicity,
-    eatOut: data.eatOut,
-    mostCuisine: data.mostCuisine,
-    finalReflection: data.finalReflection,
-    finalComments: data.finalComments
-  };
-
-  // Flatten colors (up to 7)
-  for (let i = 0; i < 7; i++) {
-    const c = data.colors[i] || {};
-    row[`Color_${i+1}_Name`] = c.name || "";
-    row[`Color_${i+1}_Value`] = c.value || "";
-    row[`Color_${i+1}_Selections`] = (c.selections || []).join(", ");
-    row[`Color_${i+1}_Explanation`] = c.explanation || "";
+// Helper to safely get UUID or fallback
+function getSafeId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
   }
-
-  // Flatten fonts (up to 15)
-  for (let i = 0; i < 15; i++) {
-    const f = data.fonts[i] || {};
-    row[`Font_${i+1}_File`] = f.file || "";
-    row[`Font_${i+1}_Selections`] = (f.selections || []).join(", ");
-    row[`Font_${i+1}_Explanation`] = f.explanation || "";
-  }
-
-  // Flatten symbols (up to 18)
-  for (let i = 0; i < 18; i++) {
-    const s = data.symbols[i] || {};
-    row[`Symbol_${i+1}_File`] = s.file || "";
-    row[`Symbol_${i+1}_Selections`] = (s.selections || []).join(", ");
-    row[`Symbol_${i+1}_Explanation`] = s.explanation || "";
-  }
-
-  // Flatten layers (up to 4)
-  for (let i = 0; i < 4; i++) {
-    const l = data.layers[i] || {};
-    row[`Layer_${i+1}_Group`] = l.group || "";
-    row[`Layer_${i+1}_StoppedAt`] = l.stoppedAt || "";
-    row[`Layer_${i+1}_Elements`] = (l.elements || []).join(", ");
-    row[`Layer_${i+1}_Other`] = l.other || "";
-  }
-
-  return row;
+  return 'user-' + Math.random().toString(36).substr(2, 9);
 }
 
-
 document.getElementById('finishBtn').addEventListener('click', async (e) => {
-  e.preventDefault(); // ⬅️ CRITICAL
+  e.preventDefault(); 
+  const btn = e.target;
+  btn.disabled = true; // Prevent double clicking
+  btn.textContent = "Sending...";
 
-  // collect
+  // 1. Ensure User ID is set
+  if (!surveyData.userId) surveyData.userId = getSafeId();
+
+  // 2. Collect Data
   collectColors();
   collectFonts();
   collectSymbols();
 
-  surveyData.finalReflection =
-    document.querySelector(".reflection-box")?.value || "";
+  surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
+  surveyData.finalComments = document.getElementById("finalComments")?.value || "";
 
-  surveyData.finalComments =
-    document.getElementById("finalComments")?.value || "";
-
+  // 3. Flatten Data
   const payload = expandForSheet(surveyData);
+  console.log("Sending payload:", payload);
 
-  console.log("Final payload ready:", payload);
-
-  // 🔒 ONLY FETCH IS IN TRY/CATCH
   try {
-    await fetch(GOOGLE_SCRIPT_URL, {
+    // 4. Send to Google Sheet
+    // note: using text/plain prevents CORS preflight OPTIONS request
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      mode: "no-cors",
+      redirect: "follow", 
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8", 
+      },
       body: JSON.stringify(payload)
     });
+
+    const result = await response.json();
+    console.log("Server response:", result);
+
+    if (result.status === "success") {
+      alert("Thank you! Your responses have been submitted.");
+      window.location.reload(); // Optional: Reload to clear form
+    } else {
+      throw new Error(result.message || "Unknown error");
+    }
+
   } catch (err) {
-    alert("Submission failed.");
-    return;
+    console.error(err);
+    alert("Submission failed. Please try again.");
+    btn.disabled = false;
+    btn.textContent = "Submit";
   }
-
-  // ✅ Success UI (this WILL run now)
-  alert("Thank you! Your responses have been submitted.");
-  showSlideByIndex(0);
 });
-

@@ -698,38 +698,47 @@ function collectFonts() {
 
 /* -------------------------- FINISH BUTTON -------------------------- */
 
-// Helper to safely get UUID or fallback
-function getSafeId() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  return 'user-' + Math.random().toString(36).substr(2, 9);
-}
-
 document.getElementById('finishBtn').addEventListener('click', async (e) => {
   e.preventDefault(); 
   const btn = e.target;
-  btn.disabled = true; // Prevent double clicking
+  
+  // 1. Lock the button immediately
+  btn.disabled = true; 
   btn.textContent = "Sending...";
 
-  // 1. Ensure User ID is set
-  if (!surveyData.userId) surveyData.userId = getSafeId();
-
-  // 2. Collect Data
-  collectColors();
-  collectFonts();
-  collectSymbols();
-
-  surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
-  surveyData.finalComments = document.getElementById("finalComments")?.value || "";
-
-  // 3. Flatten Data
-  const payload = expandForSheet(surveyData);
-  console.log("Sending payload:", payload);
-
   try {
-    // 4. Send to Google Sheet
-    // note: using text/plain prevents CORS preflight OPTIONS request
+    // --- DATA PREPARATION ---
+    
+    // Generate ID if missing
+    if (!surveyData.userId) {
+       if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+         surveyData.userId = crypto.randomUUID();
+       } else {
+         surveyData.userId = 'user-' + Math.random().toString(36).substr(2, 9);
+       }
+    }
+
+    // Run collection functions
+    // (We wrap these to ensure they exist)
+    if (typeof collectColors === "function") collectColors();
+    if (typeof collectFonts === "function") collectFonts();
+    if (typeof collectSymbols === "function") collectSymbols();
+
+    // Grab text areas
+    surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
+    surveyData.finalComments = document.getElementById("finalComments")?.value || "";
+
+    // Prepare payload
+    // Ensure expandForSheet exists before calling
+    if (typeof expandForSheet !== "function") {
+      throw new Error("Helper function 'expandForSheet' is missing.");
+    }
+    const payload = expandForSheet(surveyData);
+    
+    console.log("Payload prepared:", payload);
+
+    // --- SENDING TO GOOGLE ---
+
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       redirect: "follow", 
@@ -744,14 +753,17 @@ document.getElementById('finishBtn').addEventListener('click', async (e) => {
 
     if (result.status === "success") {
       alert("Thank you! Your responses have been submitted.");
-      window.location.reload(); // Optional: Reload to clear form
+      window.location.reload(); 
     } else {
-      throw new Error(result.message || "Unknown error");
+      throw new Error(result.message || "Unknown error from server");
     }
 
   } catch (err) {
-    console.error(err);
-    alert("Submission failed. Please try again.");
+    // --- ERROR HANDLING ---
+    console.error("Submission Error:", err);
+    alert("Error: " + err.message);
+    
+    // Reset button so you can try again
     btn.disabled = false;
     btn.textContent = "Submit";
   }

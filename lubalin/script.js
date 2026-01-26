@@ -695,6 +695,7 @@ function collectFonts() {
 }
 
 /* -------------------------- DATA FORMATTING HELPER -------------------------- */
+/* (This must be here for the button to work) */
 
 function expandForSheet(data) {
   const row = {
@@ -709,7 +710,7 @@ function expandForSheet(data) {
     finalComments: data.finalComments
   };
 
-  // Flatten colors (up to 7)
+  // Flatten colors
   for (let i = 0; i < 7; i++) {
     const c = data.colors[i] || {};
     row[`Color_${i+1}_Name`] = c.name || "";
@@ -718,7 +719,7 @@ function expandForSheet(data) {
     row[`Color_${i+1}_Explanation`] = c.explanation || "";
   }
 
-  // Flatten fonts (up to 15)
+  // Flatten fonts
   for (let i = 0; i < 15; i++) {
     const f = data.fonts[i] || {};
     row[`Font_${i+1}_File`] = f.file || "";
@@ -726,7 +727,7 @@ function expandForSheet(data) {
     row[`Font_${i+1}_Explanation`] = f.explanation || "";
   }
 
-  // Flatten symbols (up to 18)
+  // Flatten symbols
   for (let i = 0; i < 18; i++) {
     const s = data.symbols[i] || {};
     row[`Symbol_${i+1}_File`] = s.file || "";
@@ -734,7 +735,7 @@ function expandForSheet(data) {
     row[`Symbol_${i+1}_Explanation`] = s.explanation || "";
   }
 
-  // Flatten layers (up to 4)
+  // Flatten layers
   for (let i = 0; i < 4; i++) {
     const l = data.layers[i] || {};
     row[`Layer_${i+1}_Group`] = l.group || "";
@@ -745,6 +746,7 @@ function expandForSheet(data) {
 
   return row;
 }
+
 
 /* -------------------------- FINISH BUTTON -------------------------- */
 
@@ -757,6 +759,12 @@ document.getElementById('finishBtn').addEventListener('click', async (e) => {
   btn.textContent = "Sending...";
 
   try {
+    // --- CHECK URL ---
+    // Common Mistake: Using the /dev URL instead of /exec
+    if (GOOGLE_SCRIPT_URL.includes("/dev")) {
+      throw new Error("You are using the test URL (/dev). Please use the Web App URL ending in /exec");
+    }
+
     // --- DATA PREPARATION ---
     if (!surveyData.userId) {
        surveyData.userId = (typeof crypto !== 'undefined' && crypto.randomUUID) 
@@ -764,6 +772,7 @@ document.getElementById('finishBtn').addEventListener('click', async (e) => {
          : 'user-' + Math.random().toString(36).substr(2, 9);
     }
 
+    // Run collection functions safely
     if (typeof collectColors === "function") collectColors();
     if (typeof collectFonts === "function") collectFonts();
     if (typeof collectSymbols === "function") collectSymbols();
@@ -771,25 +780,22 @@ document.getElementById('finishBtn').addEventListener('click', async (e) => {
     surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
     surveyData.finalComments = document.getElementById("finalComments")?.value || "";
 
-    // Helper check
-    if (typeof expandForSheet !== "function") {
-      throw new Error("Helper function 'expandForSheet' is missing. Please add it to your script.");
-    }
     const payload = expandForSheet(surveyData);
-    console.log("Payload ready:", payload);
+    console.log("Payload ready, sending blind...", payload);
 
-    // --- SENDING TO GOOGLE (no-cors mode) ---
-    // This mode sends data blindly but avoids most "Failed to fetch" errors
+    // --- SENDING TO GOOGLE (NO-CORS MODE) ---
+    // 'no-cors' means we send the data and don't wait for a "success" receipt.
+    // This prevents the "Failed to Fetch" error.
     await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors", 
       headers: {
-        "Content-Type": "text/plain", 
+        "Content-Type": "application/json", 
       },
       body: JSON.stringify(payload)
     });
 
-    // In no-cors mode, we can't read the server response, so we assume success.
+    // Since we are in no-cors mode, if we reach this line, the request was sent.
     alert("Thank you! Your responses have been submitted.");
     window.location.reload(); 
 

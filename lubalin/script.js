@@ -694,7 +694,57 @@ function collectFonts() {
   });
 }
 
+/* -------------------------- DATA FORMATTING HELPER -------------------------- */
 
+function expandForSheet(data) {
+  const row = {
+    userID: data.userId,
+    age: data.age,
+    location: data.location,
+    hometown: data.hometown,
+    ethnicity: data.ethnicity,
+    eatOut: data.eatOut,
+    mostCuisine: data.mostCuisine,
+    finalReflection: data.finalReflection,
+    finalComments: data.finalComments
+  };
+
+  // Flatten colors (up to 7)
+  for (let i = 0; i < 7; i++) {
+    const c = data.colors[i] || {};
+    row[`Color_${i+1}_Name`] = c.name || "";
+    row[`Color_${i+1}_Value`] = c.value || "";
+    row[`Color_${i+1}_Selections`] = (c.selections || []).join(", ");
+    row[`Color_${i+1}_Explanation`] = c.explanation || "";
+  }
+
+  // Flatten fonts (up to 15)
+  for (let i = 0; i < 15; i++) {
+    const f = data.fonts[i] || {};
+    row[`Font_${i+1}_File`] = f.file || "";
+    row[`Font_${i+1}_Selections`] = (f.selections || []).join(", ");
+    row[`Font_${i+1}_Explanation`] = f.explanation || "";
+  }
+
+  // Flatten symbols (up to 18)
+  for (let i = 0; i < 18; i++) {
+    const s = data.symbols[i] || {};
+    row[`Symbol_${i+1}_File`] = s.file || "";
+    row[`Symbol_${i+1}_Selections`] = (s.selections || []).join(", ");
+    row[`Symbol_${i+1}_Explanation`] = s.explanation || "";
+  }
+
+  // Flatten layers (up to 4)
+  for (let i = 0; i < 4; i++) {
+    const l = data.layers[i] || {};
+    row[`Layer_${i+1}_Group`] = l.group || "";
+    row[`Layer_${i+1}_StoppedAt`] = l.stoppedAt || "";
+    row[`Layer_${i+1}_Elements`] = (l.elements || []).join(", ");
+    row[`Layer_${i+1}_Other`] = l.other || "";
+  }
+
+  return row;
+}
 
 /* -------------------------- FINISH BUTTON -------------------------- */
 

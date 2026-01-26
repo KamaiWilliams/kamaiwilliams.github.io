@@ -752,68 +752,50 @@ document.getElementById('finishBtn').addEventListener('click', async (e) => {
   e.preventDefault(); 
   const btn = e.target;
   
-  // 1. Lock the button immediately
+  // 1. Lock the button
   btn.disabled = true; 
   btn.textContent = "Sending...";
 
   try {
     // --- DATA PREPARATION ---
-    
-    // Generate ID if missing
     if (!surveyData.userId) {
-       if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-         surveyData.userId = crypto.randomUUID();
-       } else {
-         surveyData.userId = 'user-' + Math.random().toString(36).substr(2, 9);
-       }
+       surveyData.userId = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+         ? crypto.randomUUID() 
+         : 'user-' + Math.random().toString(36).substr(2, 9);
     }
 
-    // Run collection functions
-    // (We wrap these to ensure they exist)
     if (typeof collectColors === "function") collectColors();
     if (typeof collectFonts === "function") collectFonts();
     if (typeof collectSymbols === "function") collectSymbols();
 
-    // Grab text areas
     surveyData.finalReflection = document.querySelector(".reflection-box")?.value || "";
     surveyData.finalComments = document.getElementById("finalComments")?.value || "";
 
-    // Prepare payload
-    // Ensure expandForSheet exists before calling
+    // Helper check
     if (typeof expandForSheet !== "function") {
-      throw new Error("Helper function 'expandForSheet' is missing.");
+      throw new Error("Helper function 'expandForSheet' is missing. Please add it to your script.");
     }
     const payload = expandForSheet(surveyData);
-    
-    console.log("Payload prepared:", payload);
+    console.log("Payload ready:", payload);
 
-    // --- SENDING TO GOOGLE ---
-
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
+    // --- SENDING TO GOOGLE (no-cors mode) ---
+    // This mode sends data blindly but avoids most "Failed to fetch" errors
+    await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-      redirect: "follow", 
+      mode: "no-cors", 
       headers: {
-        "Content-Type": "text/plain;charset=utf-8", 
+        "Content-Type": "text/plain", 
       },
       body: JSON.stringify(payload)
     });
 
-    const result = await response.json();
-    console.log("Server response:", result);
-
-    if (result.status === "success") {
-      alert("Thank you! Your responses have been submitted.");
-      window.location.reload(); 
-    } else {
-      throw new Error(result.message || "Unknown error from server");
-    }
+    // In no-cors mode, we can't read the server response, so we assume success.
+    alert("Thank you! Your responses have been submitted.");
+    window.location.reload(); 
 
   } catch (err) {
-    // --- ERROR HANDLING ---
     console.error("Submission Error:", err);
     alert("Error: " + err.message);
-    
-    // Reset button so you can try again
     btn.disabled = false;
     btn.textContent = "Submit";
   }

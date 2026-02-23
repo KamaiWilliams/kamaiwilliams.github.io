@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  
   <script>
     // === Retrieve and Display Saved Loops ===
     const savedLoopsGrid = document.getElementById("saved-loops-grid");
@@ -82,15 +82,14 @@
     // === Button: Play Saved Loop ===
     document.getElementById("playSavedBtn").addEventListener("click", () => {
       const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
-      const selectedIndex = localStorage.getItem("selectedLoopIndex");
+const selectedName = localStorage.getItem("selectedLoopName");
 
-      if (selectedIndex === null) {
-        alert("select a loop to play!");
-        return;
-      }
+if (!selectedName) {
+  alert("select a loop to play!");
+  return;
+}
 
-      const selectedLoop = savedLoops[selectedIndex];
-      if (!selectedLoop) return;
+const selectedLoop = savedLoops.find(loop => loop.name === selectedName);
 
       // store the loop data temporarily for loop-pad.html
       localStorage.setItem("currentLoop", JSON.stringify(selectedLoop));

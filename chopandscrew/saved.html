@@ -62,8 +62,6 @@
 
       // Create a tile for each saved loop
       savedLoops.forEach((loop, index) => {
-        const tile = document.createElement("div");
-        tile.classList.add("saved-loop-tile");
         tile.innerHTML = `<span class="loop-label">${loop.name}</span>`;
 
         tile.addEventListener("click", () => {

@@ -202,45 +202,27 @@ if (saveLoopConfirmBtn) {
     };
 
     // Load existing loops or create new
-    let savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || {};
+    let savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
 
-    // Prevent overwriting unless user agrees
-    if (savedLoops[name]) {
+    // Check for duplicate name
+    const existingIndex = savedLoops.findIndex(loop => loop.name === name);
+    
+    if (existingIndex !== -1) {
       const overwrite = confirm(`A loop named "${name}" already exists. Overwrite?`);
       if (!overwrite) return;
+      savedLoops[existingIndex] = { name, ...loopData };
+    } else {
+      savedLoops.push({ name, ...loopData });
     }
-
-    savedLoops[name] = loopData;
+    
     localStorage.setItem("savedLoops", JSON.stringify(savedLoops));
-
     // Close popup
     saveLoopPopup.classList.add("hidden");
     alert(`Saved loop "${name}" successfully!`);
   });
 }
 
-const savedLoopsGrid = document.getElementById("saved-loops-grid");
-const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || {};
 
-if (Object.keys(savedLoops).length === 0) {
-  savedLoopsGrid.innerHTML = "<p style='color:#3B042D;font-family:le-havre-rounded;'>no saved loops yet.</p>";
-} else {
-  for (const name in savedLoops) {
-    const tile = document.createElement("div");
-    tile.classList.add("saved-loop-tile");
-    tile.innerHTML = `<span class="loop-label">${name}</span>`;
-    savedLoopsGrid.appendChild(tile);
-
-    tile.addEventListener("click", () => {
-      document.querySelectorAll(".saved-loop-tile").forEach(t => t.classList.remove("active"));
-      tile.classList.add("active");
-      console.log("Selected loop:", name, savedLoops[name]);
-
-      // Example playback preview
-      // playLoop(savedLoops[name].sounds);
-    });
-  }
-}
 
   // --- UNDO (Ctrl+Z) ---
   document.addEventListener("keydown", e => {

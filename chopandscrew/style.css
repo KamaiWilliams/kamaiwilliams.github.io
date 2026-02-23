@@ -656,7 +656,7 @@ font-style: normal;
 .bpm-control label {
   font-family: "le-havre-rounded", sans-serif;
   font-weight: 600;
-  color: ##EFE6DD;
+  color: #EFE6DD;
   font-size: 1rem;
   text-transform: uppercase;
   white-space: nowrap;
@@ -692,9 +692,9 @@ font-style: normal;
   margin: 0;
 }
 
-.bpm-control input[type=number] {
-  -moz-appearance: textfield;
-}
+/*.bpm-control input[type=number] {
+-moz-appearance: textfield;
+}*/
 
 .dot-menu {
   position: fixed;

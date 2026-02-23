@@ -48,34 +48,36 @@
     const savedLoopsGrid = document.getElementById("saved-loops-grid");
 
     function loadSavedLoops() {
-      const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
+  const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || {};
 
-      savedLoopsGrid.innerHTML = ""; // Clear existing grid
+  savedLoopsGrid.innerHTML = "";
 
-      if (savedLoops.length === 0) {
-        savedLoopsGrid.innerHTML = `
-          <div style="text-align:center; color:#572236; font-family:'le-havre-rounded',sans-serif; font-size:1.2rem;">
-            no loops saved yet :(
-          </div>`;
-        return;
-      }
+  const loopNames = Object.keys(savedLoops);
 
-      // Create a tile for each saved loop
-      savedLoops.forEach((loop, index) => {
-        tile.innerHTML = `<span class="loop-label">${loop.name}</span>`;
+  if (loopNames.length === 0) {
+    savedLoopsGrid.innerHTML = `
+      <div style="text-align:center; color:#572236; font-family:'le-havre-rounded',sans-serif; font-size:1.2rem;">
+        no loops saved yet :(
+      </div>`;
+    return;
+  }
 
-        tile.addEventListener("click", () => {
-          document.querySelectorAll(".saved-loop-tile").forEach(t => t.classList.remove("active"));
-          tile.classList.add("active");
+  loopNames.forEach((name, index) => {
+    const tile = document.createElement("div");
+    tile.classList.add("saved-loop-tile");
+    tile.innerHTML = `<span class="loop-label">${name}</span>`;
 
-          // Store which loop was selected for playback
-          localStorage.setItem("selectedLoopIndex", index);
-          console.log("Selected loop:", loop.name);
-        });
+    tile.addEventListener("click", () => {
+      document.querySelectorAll(".saved-loop-tile").forEach(t => t.classList.remove("active"));
+      tile.classList.add("active");
 
-        savedLoopsGrid.appendChild(tile);
-      });
-    }
+      localStorage.setItem("selectedLoopName", name);
+      console.log("Selected loop:", name);
+    });
+
+    savedLoopsGrid.appendChild(tile);
+  });
+}
 
     // === Button: Play Saved Loop ===
     document.getElementById("playSavedBtn").addEventListener("click", () => {

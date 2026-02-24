@@ -48,13 +48,11 @@
     const savedLoopsGrid = document.getElementById("saved-loops-grid");
 
     function loadSavedLoops() {
-  const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || {};
+  const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
 
   savedLoopsGrid.innerHTML = "";
 
-  const loopNames = Object.keys(savedLoops);
-
-  if (loopNames.length === 0) {
+  if (savedLoops.length === 0) {
     savedLoopsGrid.innerHTML = `
       <div style="text-align:center; color:#572236; font-family:'le-havre-rounded',sans-serif; font-size:1.2rem;">
         no loops saved yet :(
@@ -62,39 +60,42 @@
     return;
   }
 
-  loopNames.forEach((name, index) => {
+  savedLoops.forEach((loop) => {
     const tile = document.createElement("div");
     tile.classList.add("saved-loop-tile");
-    tile.innerHTML = `<span class="loop-label">${name}</span>`;
+    tile.innerHTML = `<span class="loop-label">${loop.name}</span>`;
 
     tile.addEventListener("click", () => {
       document.querySelectorAll(".saved-loop-tile").forEach(t => t.classList.remove("active"));
       tile.classList.add("active");
 
-      localStorage.setItem("selectedLoopName", name);
-      console.log("Selected loop:", name);
+      localStorage.setItem("selectedLoopName", loop.name);
+      console.log("Selected loop:", loop.name);
     });
 
     savedLoopsGrid.appendChild(tile);
   });
 }
 
-    // === Button: Play Saved Loop ===
-    document.getElementById("playSavedBtn").addEventListener("click", () => {
-      const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
-const selectedName = localStorage.getItem("selectedLoopName");
+document.getElementById("playSavedBtn").addEventListener("click", () => {
+  const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
+  const selectedName = localStorage.getItem("selectedLoopName");
 
-if (!selectedName) {
-  alert("select a loop to play!");
-  return;
-}
+  if (!selectedName) {
+    alert("select a loop to play!");
+    return;
+  }
 
-const selectedLoop = savedLoops.find(loop => loop.name === selectedName);
+  const selectedLoop = savedLoops.find(loop => loop.name === selectedName);
 
-      // store the loop data temporarily for loop-pad.html
-      localStorage.setItem("currentLoop", JSON.stringify(selectedLoop));
-      window.location.href = "loop-pad.html";
-    });
+  if (!selectedLoop) {
+    alert("loop not found!");
+    return;
+  }
+
+  localStorage.setItem("currentLoop", JSON.stringify(selectedLoop));
+  window.location.href = "loop-pad.html";
+});
 
     // === Button: Pause ===
     document.getElementById("pauseSavedBtn").addEventListener("click", () => {

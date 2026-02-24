@@ -18,6 +18,31 @@ let currentVolume = 1;
 let scheduledTimeouts = [];
 let historyStack = []; // for undo
 
+// --- LOAD SAVED LOOP IF EXISTS ---
+const loadedLoop = JSON.parse(localStorage.getItem("currentLoop"));
+
+if (loadedLoop) {
+  bpm = loadedLoop.bpm;
+  loopLength = (60000 / bpm) * beatsPerLoop;
+
+  recordedEvents = loadedLoop.events || [];
+
+  // Clear existing dots
+  document.querySelectorAll(".measure-dot").forEach(dot => dot.remove());
+
+  // Rebuild dots visually
+  recordedEvents.forEach(event => {
+    addMeasureDot(event.category, event.time);
+  });
+
+  // Optional: update BPM input visually
+  const bpmInput = document.getElementById("bpm");
+  if (bpmInput) bpmInput.value = bpm;
+
+  // Clear temporary storage
+  localStorage.removeItem("currentLoop");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   // --- BPM Input ---
   const bpmInput = document.getElementById("bpm");

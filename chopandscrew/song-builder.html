@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>chop& screw — build</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://use.typekit.net/afn8srh.css">
+</head>
+<body>
+
+    <div class="main-container builder-main">
+    
+     <!-- Small Title Top Left -->
+<a href="loop-pad.html" class="title builder-title">
+    <span class="line1">chop&</span><br>
+    <span class="line2">screw</span>
+  </a>
+  
+  
+
+  <!-- Big Song Timeline Centered -->
+  <div id="song-timeline">
+    <div id="song-playhead"></div>
+  </div>
+
+  <div id="builder-controls">
+    <button id="playSongBtn">play</button>
+    <button id="pauseSongBtn">pause</button>
+    <button id="restartSongBtn">restart</button>
+    <div id="trash-zone">delete</div>
+  </div>
+
+      <!-- Big Song Timeline -->
+      
+    
+      <!-- Loop Bank -->
+      <div class="bank-section">
+        <div class="bank-header">
+          <span>loops</span>
+          <button id="toggleBankBtn">–</button>
+        </div>
+      
+        <div id="loop-bank"></div>
+      </div>
+      
+      
+    </div>
+    
+    <script src="audio.js"></script>
+<script src="song-builder.js"></script>
+    </body>
+</html>

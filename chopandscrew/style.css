@@ -105,7 +105,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 40px; /* keeps your original height */
+  height: 80px; /* keeps your original height */
   background: repeating-linear-gradient(
     to right,
     #8d8289,
@@ -145,7 +145,8 @@
   height: 14px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  pointer-events: auto; /* ← THIS IS THE FIX */
+  cursor: pointer;      /* optional but good UX */
   opacity: 0.9;
 }
 
@@ -219,7 +220,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  overflow: hidden; /* prevent scrolling */
+  overflow-x: hidden;
+  overflow-y: auto; 
 }
 
 *, *::before, *::after {
@@ -851,17 +853,17 @@ font-style: normal;
 }
 
 .saved-loop-tile {
-  background: #d2c7bc;
-  border: 6px solid #EFE6DD;
-  border-radius: 10px;
-  width: 160px;
+  width: 120px;
   height: 120px;
+  border-radius: 50%;
+  border: 6px solid #20232f;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0px 0px 0px transparent;
 }
 
 .saved-loop-tile:hover {
@@ -879,11 +881,11 @@ font-style: normal;
 
 .loop-label {
   font-family: "le-havre-rounded", sans-serif;
-  font-size: 1.3rem;
-  font-weight: 400;
-  color: #8d8289;
-  text-transform: lowercase;
-  user-select: none;
+  font-size: 0.9rem;
+  color: #20232f;
+  text-align: center;
+  padding: 8px;
+  pointer-events: none;
 }
 
 /* -------------------------
@@ -990,4 +992,505 @@ font-style: normal;
     font-size: 1rem;
     padding: 6px 10px;
   }
+}
+#arrangement-timeline {
+  width: 100%;
+  height: 80px;
+  background: #111;
+  border-top: 4px solid #8d8289;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  overflow-x: auto;
+}
+.pattern-block {
+  min-width: 120px;
+  height: 60px;
+  background: #B8DE27;
+  border: 4px solid #20232f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "le-havre-rounded", sans-serif;
+  cursor: pointer;
+}
+
+/* ===============================
+   SONG BUILDER PAGE
+================================ */
+
+.builder-main {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Bigger centered title row */
+.builder-title-row {
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+
+
+.loop-tile {
+  width: 120px;
+  height: 120px;
+  background: #d2c7bc;
+  border: 6px solid #20232f;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+.loop-tile:hover {
+  transform: scale(1.08);
+  border-color: #B8DE27;
+}
+
+.loop-tile span {
+  margin-top: 10px;
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 1rem;
+  color: #20232f;
+}
+
+#builder-controls {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Trash styled like control buttons */
+#builder-controls #trash-zone {
+  width: 140px;
+  padding: 10px;
+  border-radius: 30px;
+  border: 5px solid #20232f;
+  background: #ff006e;
+  color: white;
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+#builder-controls #trash-zone.hover {
+  background: #ff2e8c;
+  transform: scale(1.1);
+}
+
+#builder-controls button {
+  width: 100px;
+  padding: 10px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  border: 5px solid #20232f;
+  background: #d2c7bc;
+  color: #20232f;
+  font-family: "le-havre-rounded", sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+#builder-controls button:hover {
+  background: #B8DE27;
+  transform: scale(1.05);
+}
+
+
+
+
+
+
+/* ===============================
+   SONG BUILDER TIMELINE
+================================ */
+
+#song-timeline {
+  width: 100%;
+  height: 320px;
+  margin-top: 120px;
+  margin-bottom: 30px;
+
+  background: repeating-linear-gradient(
+    to right,
+    #8d8289,
+    #8d8289 10px,
+    #d2c7bc 10px,
+    #d2c7bc 20px
+  );
+
+  /*border: 10px solid #d2c7bc;*/
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+
+  overflow-x: auto;
+  position: relative;
+}
+
+#song-timeline {
+  position: relative;
+  width: 100%;
+  height: 200px; /* adjust for multiple rows */
+  border: 2px solid #444;
+  display: flex;
+  flex-direction: column; /* stack rows vertically */
+  justify-content: flex-start;
+  padding: 5px;
+  gap: 5px; /* space between rows */
+  overflow-x: hidden; /* timeline scrolls horizontally per row */
+  z-index: 5; /* allow drop */
+  pointer-events: auto; /* ensure drop works */
+}
+
+.timeline-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 45px; /* each row height */
+  gap: 4px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+#loop-bank {
+  z-index: 1;
+}
+
+.builder-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* -------------------------
+   SONG BUILDER PAGE LAYOUT
+-------------------------- */
+
+.builder-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* Small title in top-left */
+.builder-title {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 45px;
+  line-height: 10px;
+  margin: 0;
+}
+
+
+
+/* Builder page should scroll naturally */
+.builder-main.main-container {
+  height: auto;
+  overflow: visible;
+}
+
+#song-timeline {
+  position: relative; /* IMPORTANT */
+}
+
+#song-playhead {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #fb0a8a;
+  pointer-events: none;
+  transform: translateX(0px);
+}
+
+/* ===============================
+   SONG BANK SECTION
+================================ */
+
+.bank-section {
+  width: 70%;
+  margin-top: 60px;
+  margin-bottom: 60px;
+  background: #d2c7bc;
+  border: 10px solid #d2c7bc;
+  padding-bottom: 40px; /* gives visual grounding */
+  transition: all 0.3s ease;
+}
+
+.bank-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px 10px 40px;
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 1.5rem;
+  color: #20232f;
+  text-transform: lowercase;
+}
+
+.bank-header button {
+  background: #d2c7bc;
+  border: 7px solid #20232f;
+  color: #20232f;
+  font-size: 1.2rem;
+  padding: 6px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bank-header button:hover {
+  background: #B8DE27;
+  transform: scale(1.1);
+}
+
+#loop-bank {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 30px;
+  padding: 30px 40px;
+  overflow-y: auto;
+  max-height: 300px;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* collapsed state */
+.bank-section.collapsed #loop-bank {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+
+/* animated perimeter */
+.loop-progress.active {
+  animation: loopBorder linear forwards;
+}
+
+@keyframes loopBorder {
+  0% {
+    box-shadow: inset 0 0 0 0 rgba(255,255,255,0.7);
+  }
+  100% {
+    box-shadow: inset 0 0 0 8px rgba(255,255,255,0);
+  }
+}
+
+/* -------------------------
+   SAVED LOOP TILES
+-------------------------- */
+
+/* label text */
+.loop-label {
+  position: relative;
+  z-index: 3;
+  font-family: "le-havre-rounded", sans-serif;
+  color: white;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* animated perimeter ring */
+.saved-loop-tile {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.loop-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;      /* match tile size */
+  height: 120px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+
+  background: conic-gradient(#fc6f17 0deg 0deg, transparent 0deg 360deg);
+  mask: radial-gradient(farthest-side, white 85%, transparent 100%);
+  -webkit-mask: radial-gradient(farthest-side, white 85%, transparent 100%);
+}
+
+/* animation */
+@keyframes loopPerimeter {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#song-timeline {
+  position: relative;
+  width: 100%;
+  min-height: 300px; /* ensures enough initial space */
+  border: 2px solid #444;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.timeline-row {
+  position: relative;
+  height: 40px; /* 4 rows x 40px = 160px */
+  border-top: 1px dashed transparent; /* just for structure, invisible */
+}
+
+/* ===============================
+   TIMELINE & PATTERN BLOCKS
+================================ */
+
+/* pill-shaped timeline blocks */
+.timeline-block,
+.pattern-block {
+  min-width: 120px;        /* minimum width */
+  height: 40px;            /* height of the pill */
+  background: #B8DE27;     /* block color */
+  border: none;             /* remove border */
+  border-radius: 30px;      /* pill shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "le-havre-rounded", sans-serif;
+  font-size: 1.2rem;
+  cursor: grab;
+  transition: transform 0.2s ease, width 0.2s ease;
+  flex-shrink: 0;           /* prevent shrinking too small */
+}
+
+/* grab + active states */
+.timeline-block:active,
+.pattern-block:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
+
+/* allow dynamic resizing */
+.timeline-block.stretch,
+.pattern-block.stretch {
+  min-width: 60px;      /* can shrink smaller */
+  width: auto;          /* allow width to expand */
+}
+
+/* optional hover effect */
+.timeline-block:hover,
+.pattern-block:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(184, 222, 39, 0.6);
+}
+
+.pattern-block {
+  min-width: 100px;
+  height: 40px;
+  background: #B8DE27;
+  border: 3px solid #20232f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "le-havre-rounded", sans-serif;
+  cursor: grab;
+  flex-shrink: 0; /* prevents shrinking when overflowing */
+  user-select: none;
+}
+
+.timeline-row.dragover {
+  background-color: rgba(184, 222, 39, 0.2);
+  border: 2px dashed #B8DE27;
+}
+
+.timeline-row {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  height: 25%; /* divide timeline height by rows */
+  position: relative;
+  height: 80px; /* or whatever fits your pads */
+  gap: 4px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  border: 1px dashed red; /* temporary: see row boundaries */
+}
+
+.timeline-col {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  /* optional: visual debug */
+  /* border: 1px dashed rgba(255,255,255,0.1); */
+}
+#song-timeline {
+  border: 2px dashed blue; /* shows overall timeline boundary */
+}
+
+.timeline-row {
+  border: 1px dashed red;  /* shows individual rows */
+}
+
+.pattern-block {
+  border: 2px dashed green; /* shows each pattern block */
+}
+
+.timeline-block {
+  position: relative;
+  border-radius: 30px;
+  padding: 6px;
+  cursor: grab;
+  min-width: 100px;
+  height: 40px;
+  background: #B8DE27;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "le-havre-rounded", sans-serif;
+  cursor: grab;
+  flex-shrink: 0; /* prevents shrinking when overflowing */
+  user-select: none;
+}
+
+.stretch-handle {
+  position: absolute;
+  right: -4px;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  background: white;
+  border-radius: 2px;
 }

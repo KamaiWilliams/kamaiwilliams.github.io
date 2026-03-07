@@ -12,13 +12,49 @@ let loopLength = (60000 / bpm) * beatsPerLoop; // ms per 4 beats
 let isRecording = false;
 let isPaused = false;
 let startTime = 0;
-let recordedEvents = [];
 let loopInterval;
 let currentVolume = 1;
 let scheduledTimeouts = [];
 let historyStack = []; // for undo
 
+// --- PATTERN + ARRANGEMENT SYSTEM ---
+let patterns = []; // saved in session (not localStorage yet)
+let arrangement = []; // timeline placements
+
+let currentPattern = createNewPattern();
+
+function createNewPattern() {
+  return {
+    id: "pattern_" + Date.now(),
+    name: "untitled",
+    bpm: bpm,
+    events: []
+  };
+}
+
+
+
+
+document.getElementById("screwBtn")?.addEventListener("click", () => {
+  window.location.href = "song-builder.html";
+});
+
+
+
 // --- LOAD SAVED LOOP IF EXISTS ---
+const loopColors = [
+  "#B8DE27",
+  "#ff006e",
+  "#10eff6",
+  "#ff9028",
+  "#8f7dff",
+  "#29bf12",
+  "#db00b6",
+  "#00bbf9",
+  "#5cffce"
+];
+
+
 const loadedLoop = JSON.parse(localStorage.getItem("currentLoop"));
 
 if (loadedLoop) {
@@ -32,7 +68,7 @@ if (loadedLoop) {
 
   // Rebuild dots visually
   recordedEvents.forEach(event => {
-    addMeasureDot(event.category, event.time);
+    addMeasureDot(event);
   });
 
   // Optional: update BPM input visually
@@ -44,6 +80,10 @@ if (loadedLoop) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  const arrangementTimeline = document.getElementById("arrangement-timeline");
+const addToSongBtn = document.getElementById("addToSongBtn");
+
   // --- BPM Input ---
   const bpmInput = document.getElementById("bpm");
   if (bpmInput) {
@@ -102,8 +142,8 @@ snapResolution.addEventListener("change", (e) => {
           const loopTime = time % loopLength;
           const quantizedTime = quantizeTime(loopTime);
           const event = { category, i, time: quantizedTime };
-          recordedEvents.push(event);
-          addMeasureDot(category, quantizedTime, recordedEvents.length - 1);
+          currentPattern.events.push(event);
+          addMeasureDot(event);
         }
       });
       grid.appendChild(pad);
@@ -140,7 +180,7 @@ snapResolution.addEventListener("change", (e) => {
 
   recordBtn.addEventListener("click", () => {
     if (!isRecording) {
-      recordedEvents = [];
+      currentPattern = createNewPattern();
       startTime = Date.now();
       isRecording = true;
       recordBtn.textContent = "stop";
@@ -214,34 +254,44 @@ if (saveLoopConfirmBtn) {
       return;
     }
 
-    if (!recordedEvents.length) {
+    if (!currentPattern.events.length) {
       alert("No sounds recorded yet!");
       return;
     }
 
-    // Save the current loop data
+    // Make sure pattern stores its name
+    currentPattern.name = name;
+
     const loopData = {
+      id: currentPattern.id,
+      name: name,
       timestamp: Date.now(),
-      bpm,
-      events: recordedEvents, // use the real event array
+      bpm: bpm,
+      color: loopColors[Math.floor(Math.random()*loopColors.length)],
+      events: [...currentPattern.events]
     };
 
-    // Load existing loops or create new
-    let savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
+    // SAFELY parse existing loops
+    let savedLoops = localStorage.getItem("savedLoops");
+    savedLoops = savedLoops ? JSON.parse(savedLoops) : [];
 
-    // Check for duplicate name
+    // Ensure it's always an array
+    if (!Array.isArray(savedLoops)) {
+      savedLoops = [];
+    }
+
     const existingIndex = savedLoops.findIndex(loop => loop.name === name);
-    
+
     if (existingIndex !== -1) {
       const overwrite = confirm(`A loop named "${name}" already exists. Overwrite?`);
       if (!overwrite) return;
-      savedLoops[existingIndex] = { name, ...loopData };
+      savedLoops[existingIndex] = loopData;
     } else {
-      savedLoops.push({ name, ...loopData });
+      savedLoops.push(loopData);
     }
-    
+
     localStorage.setItem("savedLoops", JSON.stringify(savedLoops));
-    // Close popup
+
     saveLoopPopup.classList.add("hidden");
     alert(`Saved loop "${name}" successfully!`);
   });
@@ -266,17 +316,32 @@ function playSound(folder, index) {
 }
 
 // --- ADD DOT ---
-function addMeasureDot(category, time, i = null) {
+function addMeasureDot(eventData) {
   const bar = document.getElementById("measure-bar");
   const dot = document.createElement("div");
-  dot.classList.add("measure-dot", `dot-${category}`);
-  const percentage = (time / loopLength) * 100;
+
+  dot.classList.add("measure-dot", `dot-${eventData.category}`);
+
+  const percentage = (eventData.time / loopLength) * 100;
   dot.style.left = `${percentage}%`;
-  dot.style.pointerEvents = "auto"; // clickable
-  let eventData = i !== null ? recordedEvents[i] : recordedEvents.at(-1);
+
+  // --- STACKING LOGIC ---
+  const dotsAtSameTime = Array.from(bar.querySelectorAll(".measure-dot"))
+    .filter(existingDot => {
+      return Math.abs(parseFloat(existingDot.dataset.time) - eventData.time) < 1;
+    });
+
+  const stackIndex = dotsAtSameTime.length;
+
+  const stackSpacing = 16; // vertical spacing in px
+  dot.style.top = `${50 - (stackIndex * 6)}%`;
+
+  dot.dataset.time = eventData.time;
 
   makeDotInteractive(dot, eventData);
+
   bar.appendChild(dot);
+restackDots();
 }
 
 // --- DOT INTERACTIONS ---
@@ -310,6 +375,8 @@ function makeDotInteractive(dot, eventData) {
           prevTime: startTimeBeforeMove,
           dot,
         });
+
+        restackDots();
         isDragging = false;
         rescheduleLoopSounds();
       }
@@ -347,13 +414,35 @@ function showDotMenu(dot, eventData, x, y) {
     if (!menu.contains(e.target)) menu.remove();
   }, { once: true });
 }
+// --- REstack DOT ---
+function restackDots() {
+  const bar = document.getElementById("measure-bar");
+  const dots = Array.from(bar.querySelectorAll(".measure-dot"));
+
+  // Group dots by time
+  const groups = {};
+
+  dots.forEach(dot => {
+    const time = parseFloat(dot.dataset.time);
+    if (!groups[time]) groups[time] = [];
+    groups[time].push(dot);
+  });
+
+  // Reposition each group
+  Object.values(groups).forEach(group => {
+    group.forEach((dot, index) => {
+      dot.style.top = `${50 - (index * 6)}%`;
+    });
+  });
+}
 
 // --- REMOVE DOT ---
 function removeDot(dot, eventData) {
   dot.remove();
-  const idx = recordedEvents.indexOf(eventData);
-  if (idx !== -1) recordedEvents.splice(idx, 1);
+  const idx = currentPattern.events.indexOf(eventData);
+if (idx !== -1) currentPattern.events.splice(idx, 1);
   historyStack.push({ type: "delete", event: eventData, dot });
+  restackDots();
   rescheduleLoopSounds();
 }
 
@@ -363,8 +452,8 @@ function undoLastAction() {
   if (!last) return;
 
   if (last.type === "delete") {
-    recordedEvents.push(last.event);
-    addMeasureDot(last.event.category, last.event.time);
+    currentPattern.events.push(last.event);
+    addMeasureDot(last.event);
   } else if (last.type === "move") {
     last.event.time = last.prevTime;
     const percentage = (last.prevTime / loopLength) * 100;
@@ -386,11 +475,14 @@ function rescheduleLoopSounds() {
 // --- LOOP SOUND SCHEDULER ---
 function scheduleLoop() {
   if (isPaused) return;
-  recordedEvents.forEach(event => {
+  currentPattern.events.forEach(event => {
     const timeout = setTimeout(() => playSound(event.category, event.i), event.time);
     scheduledTimeouts.push(timeout);
   });
 }
+
+
+
 
 // --- UTILS ---
 function quantizeTime(time) {

@@ -1,9 +1,25 @@
+const MAX_TIMELINE_WIDTH = 900; // max width of timeline
+
+let bpm = 90;
+let beatDuration = 60000 / bpm;
+
+let isPlaying = false;
+let startOffset = 0;
+
+const timeline = document.getElementById("timeline-content");
+const playBtn = document.getElementById("playSongBtn");
+const pauseBtn = document.getElementById("pauseSongBtn");
+const playhead = document.getElementById("song-playhead");
+
+let timelineItems = [];
+let playTimeouts = [];
+let songStartTime = 0;
+let songDuration = 0;
+
 let savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
-let arrangement = [];
-
-
 const bank = document.getElementById("loop-bank");
-
+const toggleBankBtn = document.getElementById("toggleBankBtn");
+const bankSection = document.querySelector(".bank-section");
 
 renderBank();
 
@@ -11,558 +27,408 @@ renderBank();
    RENDER LOOP BANK
 =========================== */
 function renderBank() {
+  if (!bank) return;
 
   bank.innerHTML = "";
 
   savedLoops.forEach(loop => {
-
     const tile = document.createElement("div");
     tile.classList.add("saved-loop-tile");
     tile.draggable = true;
+  
 
-    // progress ring
-    const progress = document.createElement("div");
-    progress.classList.add("loop-progress");
-    
     const label = document.createElement("span");
-    label.classList.add("loop-label");
     label.textContent = loop.name;
-    
-    tile.appendChild(progress);
     tile.appendChild(label);
-    
-    if (loop.color) {
-      tile.style.background = loop.color;
-    }
 
-    /* -------------------------
-     PREVIEW LOOP
-    ------------------------- */
-    let holdTimer = null;
-    let isHolding = false;
-    
-    
-
-    tile.addEventListener("mousedown", () => {
-    
-      isHolding = false;
-    
-      holdTimer = setTimeout(() => {
-        isHolding = true;
-        startInfinitePreview(loop, progress);
-      }, 200); // hold threshold
-    
-    });
-    
-    tile.addEventListener("mouseup", () => {
-    
-      clearTimeout(holdTimer);
-    
-      if (isHolding) {
-        stopPreview();
-      } else {
-        playLoopPreview(loop, tile);
-      }
-    
-    });
-    
-    tile.addEventListener("mouseleave", stopPreview);
-
-    /* -------------------------
-       DRAG START
-    ------------------------- */
+    if (loop.color) tile.style.background = loop.color;
 
     tile.addEventListener("dragstart", e => {
       e.dataTransfer.setData(
         "application/json",
         JSON.stringify({ type: "bank", id: loop.id })
       );
-      tile.classList.add("dragging");
-    });
-    
-    tile.addEventListener("dragend", () => {
-      tile.classList.remove("dragging");
     });
 
     bank.appendChild(tile);
-
-  });
-
-}
-
-let previewTimeouts = []; // global to cancel previous previews
-
-function playLoopPreview(loop, tile) {
-    const progress = tile.querySelector(".loop-progress");
-    if (!progress) return;
-
-    const loopLength = (60000 / loop.bpm) * 4; // duration of one full loop in ms
-
-    // cancel any ongoing preview
-    previewTimeouts.forEach(t => clearTimeout(t));
-    previewTimeouts = [];
-
-    let startTime = performance.now();
-
-    function animate(now) {
-        const elapsed = now - startTime;
-        const percent = Math.min(elapsed / loopLength, 1);
-        const degrees = percent * 360;
-
-        // update conic-gradient to fill the ring
-        progress.style.background = `conic-gradient(#fc6f17 0deg ${degrees}deg, transparent ${degrees}deg 360deg)`;
-
-        if (percent < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            // reset gradient when done
-            progress.style.background = `conic-gradient(#fc6f17 0deg 0deg, transparent 0deg 360deg)`;
-        }
-    }
-
-    requestAnimationFrame(animate);
-
-    // schedule all sounds in the loop
-    loop.events.forEach(event => {
-        const timeout = setTimeout(() => {
-            playSound(event.category, event.i);
-        }, event.time);
-        previewTimeouts.push(timeout);
-    });
-}
-let previewInterval = null;
-
-function startInfinitePreview(loop, progressEl) {
-
-  stopPreview();
-
-  const loopLength = (60000 / loop.bpm) * 4;
-
-  progressEl.style.animation =
-    `loopCircle ${loopLength/1000}s linear infinite`;
-
-  function playRound() {
-
-    loop.events.forEach(event => {
-
-      const t = setTimeout(() => {
-        playSound(event.category, event.i);
-      }, event.time);
-
-      previewTimeouts.push(t);
-
-    });
-
-  }
-
-  playRound();
-
-  previewInterval = setInterval(playRound, loopLength);
-
-}
-
-function stopPreview() {
-  previewTimeouts.forEach(t => clearTimeout(t));
-  previewTimeouts = [];
-  clearInterval(previewInterval);
-  previewInterval = null;
-
-  // reset progress rings
-  document.querySelectorAll(".loop-progress").forEach(el => {
-    el.style.background = "conic-gradient(#fc6f17 0deg 0deg, transparent 0deg 360deg)";
-    el.style.animation = "none";
   });
 }
 
+/* -----------------------------
+CREATE TIMELINE GRID
+------------------------------ */
+function createTimelineGrid() {
+  timeline.querySelectorAll(".timeline-row").forEach(row => row.remove());
 
-/* ===========================
-   TIMELINE DROP & RENDER
-=========================== */
+  const row = document.createElement("div");
+  row.classList.add("timeline-row");
 
-const timeline = document.getElementById("song-timeline");
-buildTimelineGrid();
 
-// Allow drops on the timeline
-timeline.addEventListener("dragover", e => e.preventDefault());
+  timeline.addEventListener("dragover", e => e.preventDefault());
 
-timeline.addEventListener("drop", e => {
-  e.preventDefault();
-
-  const raw = e.dataTransfer.getData("application/json");
-  if (!raw) return;
-  const data = JSON.parse(raw);
-
-  if (data.type === "bank") {
-    // Drag from loop bank to timeline
-    const loop = savedLoops.find(l => l.id == data.id);
-    if (!loop) return;
-
-    renderTimelineBlocks(); // make sure rows exist
-
-    const rect = timeline.getBoundingClientRect();
-    const y = e.clientY - rect.top;
-    const rowHeight = rect.height / 4; // 4 rows
-    const rowIndex = Math.floor(y / rowHeight);
-
-    arrangement.push({ loop, row: rowIndex });
-    renderTimelineBlocks();
-  }
-
-  if (data.type === "timeline") {
-    // Rearranging existing blocks
-    const moved = arrangement.splice(data.index, 1)[0];
-
-    const rect = timeline.getBoundingClientRect();
-    const y = e.clientY - rect.top;
-    const rowHeight = rect.height / 4;
-    const rowIndex = Math.floor(y / rowHeight);
-
-    moved.row = rowIndex;
-    arrangement.splice(data.index, 0, moved);
-    renderTimelineBlocks();
-  }
-});
-
-function buildTimelineGrid() {
-
-  timeline.innerHTML = "";
-
-  const numRows = 4;
-  const numCols = 16;
-
-  for (let i = 0; i < numRows; i++) {
-
-    const row = document.createElement("div");
-    row.classList.add("timeline-row");
-
-    for (let j = 0; j < numCols; j++) {
-
-      const col = document.createElement("div");
-      col.classList.add("timeline-col");
-
-      col.dataset.row = i;
-      col.dataset.col = j;
-
-      col.addEventListener("dragover", e => e.preventDefault());
-
-      col.addEventListener("drop", e => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const raw = e.dataTransfer.getData("application/json");
-        if (!raw) return;
-
-        const data = JSON.parse(raw);
-
-        const rowIndex = parseInt(col.dataset.row);
-        const colIndex = parseInt(col.dataset.col);
-
-        if (data.type === "bank") {
-
-          const loop = savedLoops.find(l => l.id == data.id);
-          if (!loop) return;
-
-          arrangement.push({
-            loop,
-            row: rowIndex,
-            col: colIndex,
-            length: 4
-          });
-
-        }
-
-        if (data.type === "timeline") {
-
-          const moved = arrangement.splice(data.index, 1)[0];
-          moved.row = rowIndex;
-          moved.col = colIndex;
-
-          arrangement.push(moved);
-
-        }
-
-        renderTimelineBlocks();
-
-      });
-
-      row.appendChild(col);
-
-    }
-
-    timeline.appendChild(row);
-
-  }
-
-}
-
-function renderTimelineBlocks() {
-
-  document.querySelectorAll(".timeline-block").forEach(b => b.remove());
-
-  arrangement.forEach((item, index) => {
-
-    const col = timeline.querySelector(
-      `[data-row="${item.row}"][data-col="${item.col}"]`
-    );
-
-    if (!col) return;
-
-    const block = document.createElement("div");
-    block.classList.add("timeline-block");
-
-    block.style.gridColumn = `span ${item.length || 4}`;
-
-    block.textContent = item.loop.name;
-    block.draggable = true;
-
-    block.dataset.index = index;
-
-    block.addEventListener("dragstart", e => {
-
-      e.dataTransfer.setData(
-        "application/json",
-        JSON.stringify({ type: "timeline", index })
-      );
-
-    });
-
-    /* STRETCH HANDLE */
-
-    const stretch = document.createElement("div");
-    stretch.classList.add("stretch-handle");
-
-    stretch.addEventListener("mousedown", e => {
-
-      e.stopPropagation();
-
-      const startX = e.clientX;
-      const startLength = item.length || 4;
-
-      function onMove(ev) {
-
-        const dx = ev.clientX - startX;
-
-        const beats = Math.round(dx / 40);
-
-        item.length = Math.max(1, startLength + beats);
-
-        renderTimelineBlocks();
-
-      }
-
-      function onUp() {
-
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onUp);
-
-      }
-
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
-
-    });
-
-    block.appendChild(stretch);
-
-    col.appendChild(block);
-
-  });
-
-}
-
-/* ===========================
-   TRASH
-=========================== */
-  const trash = document.getElementById("trash-zone");
-
-  trash.addEventListener("dragover", e => {
+  timeline.addEventListener("drop", e => {
     e.preventDefault();
-    trash.classList.add("hover");
-  });
   
-  trash.addEventListener("dragleave", () => {
-    trash.classList.remove("hover");
-  });
-  
-  trash.addEventListener("drop", e => {
-    e.preventDefault();
-    trash.classList.remove("hover");
-  
-    const data = JSON.parse(
-      e.dataTransfer.getData("application/json")
-    );
-  
-    if (data.type === "timeline") {
-      arrangement.splice(data.index, 1);
-      renderTimelineBlocks();
-    }
+    const data = JSON.parse(e.dataTransfer.getData("application/json"));
   
     if (data.type === "bank") {
-      savedLoops = savedLoops.filter(l => l.id != data.id);
-      localStorage.setItem("savedLoops", JSON.stringify(savedLoops));
-      renderBank();
+      const loop = savedLoops.find(l => l.id === data.id);
+      if (!loop) return;
+  
+      timelineItems.push({ loop, length: 8 });
     }
+  
+    renderTimelineBlocks();
+    updateTimelineSize();
   });
 
-  let isPlaying = false;
-let currentTimeouts = [];
-
-const playBtn = document.getElementById("playSongBtn");
-const pauseBtn = document.getElementById("pauseSongBtn");
-const restartBtn = document.getElementById("restartSongBtn");
-
-playBtn.addEventListener("click", playArrangement);
-pauseBtn.addEventListener("click", pauseArrangement);
-restartBtn.addEventListener("click", restartArrangement);
-
-function updateSongLength() {
-
-  const beatDur = getColumnDuration();
-
-  songLengthMs = arrangement.reduce((max,item)=>{
-
-    const end = (item.col + item.length) * beatDur;
-
-    return Math.max(max,end);
-
-  },0);
-
+  timeline.appendChild(row);
 }
 
-const BPM = 120;
-const BEATS_PER_BAR = 4;
 
-function getBeatDuration() {
-  return 60000 / BPM;
-}
+/* -----------------------------
+RENDER TIMELINE BLOCKS
+------------------------------ */
+function renderTimelineBlocks() {
+  timeline.innerHTML = ""; // clear all rows
 
-function getColumnDuration() {
-  return getBeatDuration(); // 1 column = 1 beat
-}
+  if (timelineItems.length === 0) return;
 
-function startPlayheadAnimation() {
+  const MAX_WIDTH = 900; // max timeline width
+  const MIN_PX_PER_BEAT = 12;
+  const MAX_PX_PER_BEAT = 40;
 
-  const playhead = document.getElementById("song-playhead");
-  const timeline = document.getElementById("song-timeline");
+  let currentRow = document.createElement("div");
+  currentRow.classList.add("timeline-row");
+  timeline.appendChild(currentRow);
 
-  const timelineWidth = timeline.scrollWidth;
+  let rowBeats = 0;
+  let rows = [currentRow];
 
-  function animate() {
+  timelineItems.forEach((item, idx) => {
+    // Calculate tentative width of item
+    let tempPxPerBeat = MAX_WIDTH / (rowBeats + item.length);
+    tempPxPerBeat = Math.min(MAX_PX_PER_BEAT, Math.max(MIN_PX_PER_BEAT, tempPxPerBeat));
+    let tempWidth = item.length * tempPxPerBeat;
 
-    if (!isPlaying) return;
-
-    const elapsed = Date.now() - songStartTime;
-
-    const progress = Math.min(elapsed / songLengthMs, 1);
-
-    playhead.style.transform =
-      `translateX(${progress * timelineWidth}px)`;
-
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      isPlaying = false;
+    // if adding this item exceeds MAX_WIDTH, start new row
+    if (rowBeats * tempPxPerBeat + tempWidth > MAX_WIDTH) {
+      currentRow = document.createElement("div");
+      currentRow.classList.add("timeline-row");
+      timeline.appendChild(currentRow);
+      rowBeats = 0;
+      rows.push(currentRow);
     }
 
-  }
+    // create block
+    const block = document.createElement("div");
+    block.classList.add("timeline-block");
+    block.textContent = item.loop.name;
 
-  requestAnimationFrame(animate);
+    // calculate grid span
+    block.style.gridColumn = `span ${item.length}`;
 
-}
+    currentRow.appendChild(block);
+    rowBeats += item.length;
+  });
 
-function playArrangement() {
-
-  if (isPlaying) return;
-
-  isPlaying = true;
-  currentTimeouts = [];
-
-  const beatDur = getColumnDuration();
-
-  songStartTime = Date.now();
-
-  startPlayheadAnimation();
-
-  arrangement.forEach(item => {
-
-    const startTime = item.col * beatDur;
-
-    const loopLength = item.loop.events.reduce(
-      (m,e)=>Math.max(m,e.time),
-      0
-    );
-
-    const repeats = Math.ceil((item.length * beatDur) / loopLength);
-
-    for (let r = 0; r < repeats; r++) {
-
-      item.loop.events.forEach(event => {
-
-        const timeout = setTimeout(() => {
-
-          if (isPlaying) {
-            playSound(event.category, event.i);
-          }
-
-        }, startTime + event.time + r * loopLength);
-
-        currentTimeouts.push(timeout);
-
-      });
-
-    }
-
+  // Update each row width and px per beat
+  rows.forEach(row => {
+    const totalBeats = Array.from(row.children).reduce((sum, b) => sum + parseInt(b.style.gridColumn.replace("span ", "")), 0);
+    let pxPerBeat = Math.min(MAX_PX_PER_BEAT, Math.max(MIN_PX_PER_BEAT, MAX_WIDTH / totalBeats));
+    row.style.gridAutoColumns = pxPerBeat + "px";
+    row.style.width = Math.min(totalBeats * pxPerBeat, MAX_WIDTH) + "px";
   });
 
   updateSongLength();
-
 }
 
-function pauseArrangement() {
+/* -----------------------------
+SONG LENGTH
+------------------------------ */
+function updateSongLength() {
+  if (timelineItems.length === 0) {
+    songDuration = 0;
+    timeDisplay.textContent = "0:00 / 0:00";
+    return;
+  }
 
-  currentTimeouts.forEach(t => clearTimeout(t));
-  currentTimeouts = [];
+  // Compute total beats based on timelineItems
+  let totalBeats = 0;
+  timelineItems.forEach(item => {
+    totalBeats += item.length;
+  });
+
+  // Each beat in ms
+  songDuration = totalBeats * beatDuration;
+
+  // Update UI
+  timeDisplay.textContent = `0:00 / ${formatTime(songDuration)}`;
+}
+/* -----------------------------
+PROGRESS BAR
+------------------------------ */
+const songProgress = document.getElementById("song-progress");
+const timeDisplay = document.getElementById("time-display");
+
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const min = Math.floor(totalSeconds / 60);
+  const sec = totalSeconds % 60;
+  return `${min}:${sec.toString().padStart(2, "0")}`;
+}
+
+let animationFrame;
+
+function startPlayhead() {
+  cancelAnimationFrame(animationFrame);
+
+  const startTime = performance.now() - startOffset;
+
+  function animate(time) {
+    if (!isPlaying) return;
+
+    const elapsed = time - startTime;
+    const percent = Math.min(elapsed / songDuration, 1);
+
+    playhead.style.transform = `translateX(${percent * 100}%)`;
+    songProgress.style.width = `${percent * 100}%`;
+    timeDisplay.textContent = `${formatTime(elapsed)} / ${formatTime(songDuration)}`;
+
+    if (percent < 1) {
+      animationFrame = requestAnimationFrame(animate);
+    } else {
+      isPlaying = false;
+      startOffset = 0;
+      playhead.style.transform = "translateX(0%)";
+      songProgress.style.width = "0%";
+    }
+  }
+
+  animationFrame = requestAnimationFrame(animate);
+  console.log("duration:", songDuration);
+}
+
+
+/* -----------------------------
+PLAY SONG
+------------------------------ */
+
+playBtn.addEventListener("click", () => {
+  if (isPlaying) return;
+
+  updateSongLength();
+
+  isPlaying = true;
+
+  songStartTime = performance.now();
+
+  timelineItems.forEach(item => {
+    const rowItems = timelineItems;
+
+  const indexInRow = rowItems.indexOf(item);
+
+  let startCol = 0;
+  
+  for (let i = 0; i < indexInRow; i++) {
+    startCol += rowItems[i].length;
+  }
+
+  const startTime = startCol * beatDuration;
+
+    const loopLength = item.loop.events.reduce(
+      (m, e) => Math.max(m, e.time), 0
+    );
+
+    const repeats = Math.ceil(
+      (item.length * beatDuration) / loopLength
+    );
+
+    for (let r = 0; r < repeats; r++) {
+      item.loop.events.forEach(event => {
+
+        let time =
+          startTime + event.time + r * loopLength - startOffset;
+
+        if (time < 0) return;
+
+        const timeout = setTimeout(() => {
+          playSound(event.category, event.i);
+        }, time);
+
+        playTimeouts.push(timeout);
+      });
+    }
+  });
+
+  startPlayhead();
+});
+
+/* -----------------------------
+PAUSE and Restart SONG
+------------------------------ */
+
+pauseBtn.addEventListener("click", () => {
+  if (!isPlaying) return;
 
   isPlaying = false;
 
-}
+  playTimeouts.forEach(t => clearTimeout(t));
+  playTimeouts = [];
 
-function restartArrangement() {
+  startOffset += performance.now() - songStartTime;
 
-  pauseArrangement();
-
-  const playhead = document.getElementById("song-playhead");
-  playhead.style.transform = "translateX(0px)";
-
-  playArrangement();
-
-}
-
-let songLengthMs = 10000; // default 10 seconds
-let playheadInterval = null;
-let songStartTime = 0;
-
-const toggleBtn = document.getElementById("toggleBankBtn");
-const bankSection = document.querySelector(".bank-section");
-
-toggleBtn.addEventListener("click", () => {
-  bankSection.classList.toggle("collapsed");
-
-  toggleBtn.textContent =
-    bankSection.classList.contains("collapsed") ? "+" : "–";
+  cancelAnimationFrame(animationFrame);
 });
 
 
-const blocks = document.querySelectorAll(".loop-tile");
+const restartBtn = document.getElementById("restartSongBtn");
+restartBtn.addEventListener("click", () => {
 
-// Create multiple rows dynamically if needed
-function getTimelineRow(index) {
-  let rows = timeline.querySelectorAll(".timeline-row");
-  if (!rows[index]) {
-    const row = document.createElement("div");
-    row.classList.add("timeline-row");
-    timeline.appendChild(row);
-    return row;
+  isPlaying = false;
+
+  playTimeouts.forEach(t => clearTimeout(t));
+  playTimeouts = [];
+
+  startOffset = 0;
+  songStartTime = 0;
+
+  cancelAnimationFrame(animationFrame);
+
+  playhead.style.transform = "translateX(0%)";
+
+  const progress = document.getElementById("song-progress");
+  if (progress) progress.style.width = "0%";
+
+  timeDisplay.textContent = "0:00 / 0:00";
+});
+
+
+const clearBtn = document.getElementById("clearSongBtn");
+
+clearBtn.addEventListener("click", () => {
+
+  isPlaying = false;
+
+  playTimeouts.forEach(t => clearTimeout(t));
+  playTimeouts = [];
+
+  cancelAnimationFrame(animationFrame);
+
+  timelineItems = [];
+
+  startOffset = 0;
+  songStartTime = 0;
+  songDuration = 0;
+
+  playhead.style.transform = "translateX(0%)";
+
+  const progress = document.getElementById("song-progress");
+  if (progress) progress.style.width = "0%";
+
+  timeDisplay.textContent = "0:00 / 0:00";
+
+  renderTimelineBlocks();
+  updateTimelineSize();
+  updateSongLength();
+
+  if (!confirm("clear entire timeline?")) return;
+});
+
+/* -----------------------------
+INIT
+------------------------------ */
+
+createTimelineGrid();
+
+const trash = document.getElementById("trash-zone");
+
+trash.addEventListener("dragover", e => {
+  e.preventDefault();
+});
+
+trash.addEventListener("drop", e => {
+
+  e.preventDefault();
+
+  const data = JSON.parse(
+    e.dataTransfer.getData("application/json")
+  );
+
+  if (data.type === "timeline") {
+
+    timelineItems.splice(data.index, 1);
+
+    renderTimelineBlocks();
+    updateTimelineSize();
   }
-  return rows[index];
+
+});
+
+/* -----------------------------
+UPDATE TIMELINE SIZE + PLACEHOLDER
+------------------------------ */
+function updateTimelineSize() {
+  const rows = timeline.querySelectorAll(".timeline-row");
+  if (rows.length === 0) return;
+
+  rows.forEach(row => {
+    const totalBeats = Array.from(row.children).reduce((sum, b) => sum + parseInt(b.style.gridColumn.replace("span ", "")), 0);
+    let pxPerBeat = Math.min(40, Math.max(12, MAX_TIMELINE_WIDTH / totalBeats));
+    row.style.gridAutoColumns = pxPerBeat + "px";
+    row.style.width = Math.min(totalBeats * pxPerBeat, MAX_TIMELINE_WIDTH) + "px";
+  });
 }
+  if (placeholder) placeholder.style.display = "none";
+
+  let totalBeats = timelineItems.reduce((sum, i) => sum + i.length, 0);
+
+  const MAX_WIDTH = 900;
+  const MIN_WIDTH = 600;
+
+  // 🔥 key logic
+  let pxPerBeat = MAX_WIDTH / totalBeats;
+
+  // clamp size
+  pxPerBeat = Math.max(12, Math.min(40, pxPerBeat));
+
+  let totalWidth = totalBeats * pxPerBeat;
+
+  // 🔥 clamp total width
+  totalWidth = Math.min(totalWidth, MAX_WIDTH);
+
+  row.style.width = Math.max(totalWidth, MIN_WIDTH) + "px";
+  row.style.gridAutoColumns = pxPerBeat + "px";
+
+
+
+// load state
+const isCollapsed = localStorage.getItem("bankCollapsed") === "true";
+
+if (isCollapsed) {
+  bankSection.classList.add("collapsed");
+  toggleBankBtn.textContent = "+";
+}
+
+// save on click
+toggleBankBtn.addEventListener("click", () => {
+
+  bankSection.classList.toggle("collapsed");
+
+  const collapsed = bankSection.classList.contains("collapsed");
+
+  toggleBankBtn.textContent = collapsed ? "+" : "–";
+
+  localStorage.setItem("bankCollapsed", collapsed);
+
+});
+
+// Grab DOM elements
+
+const audio = document.getElementById("your-audio-element"); // your <audio>
+const measureFill = document.getElementById("measure-fill");
+
+audio.addEventListener("timeupdate", () => {
+  const progressPercent = (audio.currentTime / audio.duration) * 100;
+  measureFill.style.width = `${progressPercent}%`;
+});

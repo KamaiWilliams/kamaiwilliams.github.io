@@ -159,13 +159,15 @@ snapResolution.addEventListener("change", (e) => {
     tabButtons.forEach(b => b.classList.remove("active"));
     document.querySelector(`.tab-btn[data-category="${category}"]`)?.classList.add("active");
 
+    categories.forEach(cat => {
+      cat.classList.remove("active");
+    });
+    
     if (category === "all") {
-      categories.forEach(cat => cat.style.display = "flex");
+      categories.forEach(cat => cat.classList.add("active"));
       loopPad.classList.add("all-view");
     } else {
-      categories.forEach(cat => {
-        cat.style.display = cat.id === `${category}-grid` ? "flex" : "none";
-      });
+      document.getElementById(`${category}-grid`)?.classList.add("active");
       loopPad.classList.remove("all-view");
     }
   }

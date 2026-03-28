@@ -373,55 +373,45 @@ function updateTimelineSize() {
   if (rows.length === 0) return;
 
   rows.forEach(row => {
-    const totalBeats = Array.from(row.children).reduce((sum, b) => sum + parseInt(b.style.gridColumn.replace("span ", "")), 0);
+    const totalBeats = Array.from(row.children).reduce(
+      (sum, b) => sum + parseInt(b.style.gridColumn.replace("span ", "")), 0
+    );
+
     let pxPerBeat = Math.min(40, Math.max(12, MAX_TIMELINE_WIDTH / totalBeats));
     row.style.gridAutoColumns = pxPerBeat + "px";
     row.style.width = Math.min(totalBeats * pxPerBeat, MAX_TIMELINE_WIDTH) + "px";
   });
-}
-  if (placeholder) placeholder.style.display = "none";
 
-  let totalBeats = timelineItems.reduce((sum, i) => sum + i.length, 0);
-
-  const MAX_WIDTH = 900;
-  const MIN_WIDTH = 600;
-
-  // 🔥 key logic
-  let pxPerBeat = MAX_WIDTH / totalBeats;
-
-  // clamp size
-  pxPerBeat = Math.max(12, Math.min(40, pxPerBeat));
-
-  let totalWidth = totalBeats * pxPerBeat;
-
-  // 🔥 clamp total width
-  totalWidth = Math.min(totalWidth, MAX_WIDTH);
-
-  row.style.width = Math.max(totalWidth, MIN_WIDTH) + "px";
-  row.style.gridAutoColumns = pxPerBeat + "px";
-
-
-
-// load state
-const isCollapsed = localStorage.getItem("bankCollapsed") === "true";
-
-if (isCollapsed) {
-  bankSection.classList.add("collapsed");
-  toggleBankBtn.textContent = "+";
+  const placeholder = document.getElementById("timeline-placeholder");
+  if (placeholder) {
+    placeholder.style.display = timelineItems.length ? "none" : "block";
+  }
 }
 
-// save on click
-toggleBankBtn.addEventListener("click", () => {
+if (toggleBankBtn && bankSection) {
 
-  bankSection.classList.toggle("collapsed");
+  const isCollapsed = localStorage.getItem("bankCollapsed") === "true";
 
-  const collapsed = bankSection.classList.contains("collapsed");
+  if (isCollapsed) {
+    bankSection.classList.add("collapsed");
+    toggleBankBtn.textContent = "+";
+  }
 
-  toggleBankBtn.textContent = collapsed ? "+" : "–";
+  toggleBankBtn.addEventListener("click", () => {
+    console.log("clicked"); // 👈 debug (you should see this)
 
-  localStorage.setItem("bankCollapsed", collapsed);
+    bankSection.classList.toggle("collapsed");
 
-});
+    const collapsed = bankSection.classList.contains("collapsed");
+
+    toggleBankBtn.textContent = collapsed ? "+" : "–";
+
+    localStorage.setItem("bankCollapsed", collapsed);
+  });
+
+}
+
+
 
 // Grab DOM elements
 
@@ -431,4 +421,34 @@ const measureFill = document.getElementById("measure-fill");
 audio.addEventListener("timeupdate", () => {
   const progressPercent = (audio.currentTime / audio.duration) * 100;
   measureFill.style.width = `${progressPercent}%`;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleBankBtn = document.getElementById("toggleBankBtn");
+  const bankSection = document.querySelector(".bank-section");
+
+  if (!toggleBankBtn || !bankSection) {
+    console.error("Toggle elements not found");
+    return;
+  }
+
+  // load state
+  const isCollapsed = localStorage.getItem("bankCollapsed") === "true";
+
+  if (isCollapsed) {
+    bankSection.classList.add("collapsed");
+    toggleBankBtn.textContent = "+";
+  }
+
+  toggleBankBtn.addEventListener("click", () => {
+    console.log("clicked"); // debug
+
+    bankSection.classList.toggle("collapsed");
+
+    const collapsed = bankSection.classList.contains("collapsed");
+
+    toggleBankBtn.textContent = collapsed ? "+" : "–";
+
+    localStorage.setItem("bankCollapsed", collapsed);
+  });
 });

@@ -8,14 +8,22 @@
 </head>
 <body>
 
-  <div class="main-container">
+  
     <div class="main-container builder-main">
     
      <!-- Small Title Top Left -->
-<a href="loop-pad.html" class="title builder-title">
-    <span class="line1">chop&</span><br>
-    <span class="line2">screw</span>
-  </a>
+     <div class="title-container">
+      <div class="title-row">
+    
+        <a href="loop-pad.html"  id="screwBtn" class="title screw-btn">
+          <span class="line1">←</span>
+        </a>
+    
+        <!-- optional spacer (like measure bar area) -->
+        <div class="builder-spacer"></div>
+    
+      </div>
+    </div>
   
   
   <div class="builder-workspace">
@@ -36,7 +44,7 @@
     <button id="pauseSongBtn">pause</button>
     <button id="restartSongBtn">restart</button>
     <button id="clearSongBtn">clear</button>
-    <div id="trash-zone">delete</div>
+    <div id="trash-zone">trash</div>
   </div>
 
 </div>
@@ -55,7 +63,7 @@
       
       
     </div>
-  </div>
+ 
     <script src="audio.js"></script>
 <script src="song-builder.js"></script>
     </body>

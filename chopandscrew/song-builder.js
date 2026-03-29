@@ -69,13 +69,42 @@ function createTimelineGrid() {
   timeline.addEventListener("drop", e => {
     e.preventDefault();
   
-    const data = JSON.parse(e.dataTransfer.getData("application/json"));
+    const data = JSON.parse(
+      e.dataTransfer.getData("application/json")
+    );
   
+    const blocks = Array.from(document.querySelectorAll(".timeline-block"));
+  
+    // figure out drop index based on mouse position
+    let dropIndex = timelineItems.length;
+  
+    for (let i = 0; i < blocks.length; i++) {
+      const rect = blocks[i].getBoundingClientRect();
+      if (e.clientX < rect.left + rect.width / 2) {
+        dropIndex = i;
+        break;
+      }
+    }
+  
+    // FROM BANK → insert
     if (data.type === "bank") {
       const loop = savedLoops.find(l => l.id === data.id);
       if (!loop) return;
   
-      timelineItems.push({ loop, length: 8 });
+      timelineItems.splice(dropIndex, 0, {
+        loop,
+        length: 8
+      });
+    }
+  
+    // REORDER EXISTING
+    if (data.type === "timeline") {
+      const item = timelineItems.splice(data.index, 1)[0];
+  
+      // adjust index if moving forward
+      if (data.index < dropIndex) dropIndex--;
+  
+      timelineItems.splice(dropIndex, 0, item);
     }
   
     renderTimelineBlocks();
@@ -120,12 +149,30 @@ function renderTimelineBlocks() {
       rows.push(currentRow);
     }
 
-    // create block
     const block = document.createElement("div");
-    block.classList.add("timeline-block");
-    block.textContent = item.loop.name;
+block.classList.add("timeline-block");
+block.textContent = item.loop.name;
 
-    // calculate grid span
+block.draggable = true;
+
+// store index
+block.dataset.index = idx;
+
+// DRAG START (timeline block)
+block.addEventListener("dragstart", e => {
+  e.dataTransfer.setData(
+    "application/json",
+    JSON.stringify({
+      type: "timeline",
+      index: idx
+    })
+  );
+});
+
+    if (item.loop.color) {
+      block.style.background = item.loop.color;
+    }
+
     block.style.gridColumn = `span ${item.length}`;
 
     currentRow.appendChild(block);
@@ -348,21 +395,27 @@ trash.addEventListener("dragover", e => {
 });
 
 trash.addEventListener("drop", e => {
-
   e.preventDefault();
 
   const data = JSON.parse(
     e.dataTransfer.getData("application/json")
   );
 
+ 
   if (data.type === "timeline") {
-
     timelineItems.splice(data.index, 1);
-
     renderTimelineBlocks();
     updateTimelineSize();
   }
 
+ 
+  if (data.type === "bank") {
+    savedLoops = savedLoops.filter(loop => loop.id !== data.id);
+
+    localStorage.setItem("savedLoops", JSON.stringify(savedLoops));
+
+    renderBank();
+  }
 });
 
 /* -----------------------------

@@ -24,11 +24,34 @@ function loadSavedLoops() {
 
     return;
   }
-
+  const loopColors = [
+    "#B8DE27",
+    "#ff006e",
+    "#10eff6",
+    "#ff9028",
+    "#8f7dff",
+    "#29bf12",
+    "#db00b6",
+    "#00bbf9",
+    "#5cffce"
+  ];
+  
+  savedLoops.forEach(loop => {
+    if (!loop.color) {
+      loop.color = loopColors[Math.floor(Math.random() * loopColors.length)];
+    }
+  });
+  
+  // persist fix
+  localStorage.setItem("savedLoops", JSON.stringify(savedLoops));
   savedLoops.forEach(loop => {
 
     const tile = document.createElement("div");
     tile.classList.add("saved-loop-tile");
+    
+    if (loop.color) {
+      tile.style.background = loop.color;
+    }
 
     tile.innerHTML = `
       <div class="loop-progress"></div>
@@ -61,7 +84,56 @@ function loadSavedLoops() {
    LOOP PREVIEW
 ------------------------------ */
 
+function playLoopPreview(loop, tile) {
 
+  const progress = tile.querySelector(".loop-progress");
+  // clear any existing playback
+  previewTimeouts.forEach(t => clearTimeout(t));
+  previewTimeouts = [];
+
+  if (!loop.events || !loop.events.length) return;
+
+  const bpm = 90; // match your app BPM (or pull dynamically later)
+  const beatDuration = 60000 / bpm;
+
+  // find loop length
+  const loopLength = loop.events.reduce(
+    (max, e) => Math.max(max, e.time),
+    0
+  );
+
+  // animate ring (optional but 🔥)
+  const color = loop.color || "#ffffff"; // fallback if needed
+
+  if (progress) {
+    progress.style.background = `conic-gradient(${color} 0deg, transparent 0deg)`;
+  }
+
+  const startTime = performance.now();
+
+  function scheduleLoop(startOffset = 0) {
+
+    loop.events.forEach(event => {
+  
+      const timeout = setTimeout(() => {
+        playSound(event.category, event.i);
+      }, event.time + startOffset);
+  
+      previewTimeouts.push(timeout);
+    });
+  
+    // repeat loop
+    const loopTimeout = setTimeout(() => {
+      scheduleLoop(startOffset + loopLength);
+    }, loopLength);
+  
+    previewTimeouts.push(loopTimeout);
+  }
+  
+  scheduleLoop();
+
+
+}
 /* -----------------------------
    PLAY BUTTON
 ------------------------------ */

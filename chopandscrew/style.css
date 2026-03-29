@@ -30,7 +30,7 @@
   flex-direction: column;
   align-items: center; /* or center */
   justify-content: center;
-  height: auto;
+  height: 15vh;
 }
 
 /* --- HOME PAGE TITLE --- */
@@ -40,7 +40,7 @@
   font-style: normal;
   font-size: clamp(100px, 20vw, 800px);
   color: transparent; 
-  -webkit-text-stroke: 5px #7E718F;
+  -webkit-text-stroke: 5px #20232f;
   letter-spacing: -40px;
   line-height: .35;
   z-index: 1;
@@ -54,7 +54,7 @@
   
   transform: scale(1.25);
   color: transparent; /*83425D*/
-  -webkit-text-stroke: 7px #B8DE27; 
+  -webkit-text-stroke: 10px #20232f; 
   letter-spacing: 1px;
   line-height: .5;
 }
@@ -64,8 +64,8 @@
   font-family: "ouma-devanagari", sans-serif;
   font-weight: 600;
   font-style: normal;
-  font-size: 55px;
-  line-height: 13px;
+  font-size: 1.5rem;
+  line-height: .7rem;
   letter-spacing: -10px;
   -webkit-text-stroke: 2px #7E718F;
   color: transparent;
@@ -103,17 +103,14 @@
   letter-spacing: -0.15em; /* 🔥 relative instead of px */
 }
 
-.screw-btn {
-  flex-shrink: 0;
-  margin-left: auto;
-}
 
 /* --- MEASURE BAR --- */
 #measure-bar {
   flex: 1;
   min-width: 70vw;   /* 🔥 CRITICAL FIX */
-  height: 7vh;
+  height: 11vh;
   margin-top: 2vh;
+  margin-left: 1vw;
 
   display: flex;
   align-items: center;
@@ -235,7 +232,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   overflow-x: hidden;
-  overflow-y: auto; 
+  overflow: hidden;
 }
 
 *, *::before, *::after {
@@ -524,8 +521,8 @@ font-style: normal;
 -------------------------- */
 #bass-grid .pad {
   background: #10eff6;
-  width: clamp(50px, 8vw, 130px);
-  height: clamp(50px, 8vw, 130px);
+  width: clamp(40px, 8vw, 110px);
+  height: clamp(40px, 8vw, 110px);
   border: clamp(10px, 2vw, 20px) solid #f6f2e9;
   
 }
@@ -588,8 +585,8 @@ font-style: normal;
 #horn-grid .pad {
   background: #d4ff00;
   border: clamp(10px, 2vw, 15px) solid #f6f2e9;
-  width: 120px;
-  height: 120px;
+  width: clamp(40px, 8vw, 110px);
+  height: clamp(40px, 8vw, 110px);
 }
 #synth-grid .pad {
   background: #27FB6B;
@@ -1071,16 +1068,52 @@ font-style: normal;
 .builder-main {
   align-items: center;
   justify-content: flex-start;
-  
-}
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
+    padding: 20px;
+    margin: 20px;
+    /* border: 2px solid black;
+    background: white;
+    */
+    border-radius: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    box-sizing: border-box;
+    overflow: hidden;
+    
+  }
+
 
 /* Bigger centered title row */
 .builder-title-row {
   justify-content: center;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 1vh;
+}
+/* builder top bar matches loop-pad layout */
+.builder-title {
+  display: block; /* 🔥 important fix */
+  margin: 0;
 }
 
+/* spacer replaces measure bar space */
+.builder-spacer {
+  flex: 1;
+  min-width: 70vw; /* same feel as measure bar */
+}
+
+/* optional: adjust row spacing */
+.builder-main .title-row {
+  width: 100%;
+  gap: 0px;
+  align-items: center;
+}
 
 
 .loop-tile {
@@ -1124,9 +1157,9 @@ font-style: normal;
   width: 140px;
   padding: 10px;
   border-radius: 30px;
-  border: 5px solid #20232f;
-  background: #ff006e;
-  color: white;
+  border: 5px solid #f6f2e9;
+  background: #f6f2e9;
+  color: #20232f;
   font-family: "le-havre-rounded", sans-serif;
   font-size: 1.1rem;
   display: flex;
@@ -1146,12 +1179,14 @@ font-style: normal;
   padding: 10px;
   font-size: 1.8rem;
   border-radius: 30px;
-  border: 5px solid #20232f;
-  background: #20232f;
-  color: #d2c7bc;
+  border: 5px solid #f6f2e9;
+  background: #7E718F;
+  color: #f6f2e9;
   font-family: "le-havre-rounded", sans-serif;
   cursor: pointer;
   transition: all 0.25s ease;
+  font-size: 1.4rem;
+  padding: 6px;
 }
 
 #builder-controls button:hover {
@@ -1181,35 +1216,35 @@ font-style: normal;
   position: relative;
 }
 
-/* -------------------------
-   SONG BUILDER PAGE LAYOUT
--------------------------- */
-
-.builder-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  position: relative;
-  
-}
 
 /* Small title in top-left */
 .builder-title {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 45px;
-  line-height: 10px;
+  position: relative;
+  display: contents;
+ 
   margin: 0;
+
+  text-align: left;
+  font-family: "ouma-devanagari", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 55px;
+  line-height: 13px;
+  letter-spacing: -10px;
+  -webkit-text-stroke: 2px #7E718F;
+  color: transparent;
+  z-index: 1;
+  margin: 20px;
+  text-decoration: none; /* removes underline */
+  cursor: pointer;       /* shows pointer cursor */
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 
 .builder-main.main-container {
-  height: 100vh;           
-  overflow: hidden;        
-  padding: 10px;
-  margin: 0;
+  height: 100vh;       /* exact fit */
+  min-height: unset;   /* remove expansion */
+  overflow: hidden;    /* kill scroll */
 }
 
 
@@ -1230,22 +1265,23 @@ font-style: normal;
 ================================ */
 
 .bank-section {
+  width: 90vw;
 
-  width: min(90vw, 1400px);
-    margin: 0;
-    height: 40vh;
-  
-    display: flex;
-    flex-direction: column;
-  
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
-  margin-top: 2vh;
-  margin-bottom: 60px;
-  background: #d2c7bc;
-  border: 10px solid #d2c7bc;
-  padding-bottom: 40px; /* gives visual grounding */
-  transition: all 0.3s ease;
+  background: transparent;
+  border: 10px solid #20232f;
+
+  margin: 0;
+
+  max-height: 40vh;
+  overflow: hidden;
+  flex: 0 0 auto;  
+  width: 90%;
+  padding: 15px;
+
+  display: flex;
 }
 
 .bank-header {
@@ -1254,15 +1290,15 @@ font-style: normal;
   align-items: center;
   padding: 20px 40px 10px 40px;
   font-family: "le-havre-rounded", sans-serif;
-  font-size: 1.5rem;
-  color: #f6f2e9;
+  font-size: 2rem;
+  color: #20232f;
   text-transform: lowercase;
 }
 
 .bank-header button {
-  background: #d2c7bc;
-  border: 7px solid #f6f2e9;
-  color: #f6f2e9;
+  background: #f6f2e9;
+  border: 5px solid #20232f;
+  color: #20232f;
   font-size: 1.2rem;
   padding: 6px 14px;
   border-radius: 50%;
@@ -1281,13 +1317,13 @@ font-style: normal;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 30px;
-  padding: 20px 20px;
-  overflow-y: scroll;
-  max-height: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  gap: clamp(10px, 2vw, 30px);
+  max-height: 100%;
   transition: max-height 0.3s ease, opacity 0.3s ease;
   flex: 1;
-  overflow: visible; 
   justify-content: center;
   align-content: flex-start;
   max-width: 1200px;        /* prevents awkward mega stretching */
@@ -1335,8 +1371,8 @@ font-style: normal;
 /* animated perimeter ring */
 .saved-loop-tile {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: clamp(60px, 8vw, 120px);
+  height: clamp(60px, 8vw, 120px);
   border-radius: 50%;
   background: #222;
   display: flex;
@@ -1451,26 +1487,28 @@ font-style: normal;
 
   width: 90%;
   max-width: 100%;
+  min-width: 70vw;
 
   margin-top: 4%;
 
 
   background: repeating-linear-gradient(
     to right,
-    #8d8289,
-    #8d8289 10px,
+    #f6f2e9,
+    #f6f2e9 10px,
     #d2c7bc 10px,
     #d2c7bc 20px
   );
+ /* background: #f6f2e9;*/
 
-  border: 3px dashed #8d8289;
+  border: 3px solid #f6f2e9;
   border-radius: 12px;
 
   display: flex;
   align-items: center;
   padding: 10px;
   flex: 0 0 12%;      /* fixed proportion of screen */
-  height: auto;
+  height: 11vh;
   min-height: 7vh;
 }
 
@@ -1520,8 +1558,8 @@ font-style: normal;
 
 #time-display {
   font-family: "le-havre-rounded", sans-serif;
-  color: #B8DE27;
-  font-size: 1.2rem;
+  color: #f6f2e9;
+  font-size: 1.5rem;
   margin-top: 10px;
 }
 
@@ -1570,7 +1608,7 @@ font-style: normal;
 }
 
 .bank-section.collapsed {
-  padding-bottom: 0;
+  max-height: 20vh;
 }
 
 
@@ -1642,22 +1680,21 @@ font-style: normal;
   border: none;
   text-align: left;
   flex-shrink: 0;
-}
-
-.screw-btn {
-  -webkit-text-stroke: 1.5px #ff006e;
-}
-
-/* optional: slightly smaller so it feels like a control */
-.screw-btn {
-  font-size: 45px;
+  color: #000;
+  -webkit-text-stroke: 3.5px #000;
+  font-size: 3.5rem;
   line-height: 10px;
   letter-spacing: -8px;
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-top: 5vh;
 }
 
-/* hover same vibe but slightly toned */
+
+
+
 .screw-btn:hover {
-  transform: scale(1.05);
+  transform: scale(1.5);
   opacity: 0.8;
 }
 
@@ -1670,25 +1707,24 @@ font-style: normal;
   min-width: 0;
 }
 
-/* SONG BUILDER MAIN CONTAINER (like loop-content) */
+
 .builder-workspace {
-  flex: 1;                      /* 🔥 fills available space */
-  width: 100%;
-  height: 30%;
-  margin: 0;
+  flex: 0 0 auto;  
+  width: 90%;
+  height: 40%;
   padding: 15px;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 20px;
 
-  overflow: hidden; 
-  gap: 30px;            /* 🔥 no scroll */
+  overflow: visible; 
+  background-color: #20232f;
 }
 
 .bank-section.collapsed #loop-bank {
-  max-height: 0;
+  height: 2vh;
   opacity: 0;
   overflow: hidden;
 }
@@ -1699,12 +1735,11 @@ font-style: normal;
     height: 80px;
   }
 
-  .builder-title {
-    font-size: 30px;
-  }
+ 
+}
 
-  #builder-controls button {
-    font-size: 1.4rem;
-    padding: 6px;
-  }
+.chop-btn {
+  margin-left: 0;      /* remove auto push */
+  margin-right: auto;  /* keep it left */
+  margin-top: 0;       /* align with title row */
 }

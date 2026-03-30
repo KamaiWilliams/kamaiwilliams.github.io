@@ -290,7 +290,7 @@ body {
   min-width: 0;                 
   
   font-size: clamp(0.7rem, 1.5vw, 1.5rem);
-  padding: clamp(2px, 0.8vw, 4px) clamp(3px, 1.2vw, 6px);
+  padding: clamp(2px, 0.8vw, 4px) clamp(3px, 1.4vw, 6px);
 
   white-space: nowrap;          
 }
@@ -359,7 +359,7 @@ body {
   opacity: 100%;
   color: #FD4B01;
   font-weight: normal;
-  transform: scale(1.35);
+  transform: scale(1.15);
 }
 
 

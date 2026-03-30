@@ -1,14 +1,9 @@
-/* -------------------------
-   HOME SCREEN STYLES
--------------------------- */
 
-/* --- TITLE --- */
 .top-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
- /* border: 4px solid #fc6f17;
-  background-color: rgb(226, 237, 249);*/
+
   border-radius: 0px;
   margin: 5px;
   padding: 4px;
@@ -28,12 +23,12 @@
 .title-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* or center */
+  align-items: center; 
   justify-content: center;
   height: 15vh;
 }
 
-/* --- HOME PAGE TITLE --- */
+
 .home-title {
   font-family: "ouma-devanagari", sans-serif;
   font-weight: 600;
@@ -42,11 +37,11 @@
   color: transparent; 
   -webkit-text-stroke: 5px #20232f;
   letter-spacing: -40px;
-  line-height: .35;
+  line-height: 6.35rem;
   z-index: 1;
   margin: 0px;
-  text-decoration: none; /* removes underline */
-  cursor: pointer;       /* shows pointer cursor */
+  text-decoration: none; 
+  cursor: pointer;      
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -54,8 +49,8 @@
   
   transform: scale(1.25);
   color: transparent; /*83425D*/
-  -webkit-text-stroke: 10px #20232f; 
-  letter-spacing: 1px;
+  -webkit-text-stroke: 5px #FD4B01;
+  letter-spacing: .5px;
   line-height: .5;
 }
 
@@ -71,23 +66,20 @@
   color: transparent;
   z-index: 1;
   margin: 20px;
-  text-decoration: none; /* removes underline */
-  cursor: pointer;       /* shows pointer cursor */
+  text-decoration: none; 
+  cursor: pointer;      
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .title:hover {
-  opacity: 0.7;
-  transform: scale(1.02);
+ 
+  transform: scale(1.1);
 }
 
 .title .line1, .title .line2 {
   display: block;
 }
 
-/* --- MEASURE GRID --- */
-
-/* --- TITLE ROW (title + measure timeline) --- */
 .title-row {
   display: flex;
   align-items: center;
@@ -97,17 +89,17 @@
 }
 
 .title {
-  flex-shrink: 1;     /* allow shrinking */
+  flex-shrink: 1;     
   min-width: 0; 
-  font-size: clamp(30px, 5vw, 55px); /* responsive instead of fixed */
-  letter-spacing: -0.15em; /* 🔥 relative instead of px */
+  font-size: clamp(30px, 5vw, 55px); 
+  letter-spacing: -0.15em; 
 }
 
 
-/* --- MEASURE BAR --- */
+
 #measure-bar {
   flex: 1;
-  min-width: 70vw;   /* 🔥 CRITICAL FIX */
+  min-width: 70vw;
   height: 11vh;
   margin-top: 2vh;
   margin-left: 1vw;
@@ -130,7 +122,7 @@
 }
 
 
-/* Moving fill that shows playback progress */
+
 #measure-fill {
   position: absolute;
   top: 0;
@@ -141,14 +133,14 @@
   opacity: 50%;
   border-radius: 10px;
 
-  animation: measureFill 4s linear forwards; /* 4s = length of your loop */
+  animation: measureFill 4s linear forwards; 
 }
 @keyframes measureFill {
   from { width: 0%; }
   to { width: 100%; }
 }
 
-/* Dots that mark recorded sounds */
+
 .measure-dot {
   position: absolute;
   top: 50%;
@@ -156,24 +148,24 @@
   height: 14px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: auto; /* ← THIS IS THE FIX */
-  cursor: pointer;      /* optional but good UX */
+  pointer-events: auto; 
+  cursor: pointer;      
   opacity: 0.9;
 }
 
 /* Color codes by category */
-.dot-bass { background: #10eff6; }      /* green  */
-.dot-clap { background: #ff9028; }      /* purple */
-.dot-fx { background: #29bf12; }        /* orange */
-.dot-hihat { background: #8f7dff; }     /* gold   */
-.dot-openhat { background: #ff006e; }   /* pink   */
-.dot-snare { background: #8f7dff; }     /* blue   */
-.dot-vox { background: #ff206a; }       /* magenta*/
-.dot-snap { background: #00bbf9; }      /* teal   */
-.dot-kick { background: #db00b6; }   /* pink   */
-.dot-horn { background: #aacc00; }     /* blue   */
-.dot-synth { background: #27FB6B; }       /* magenta*/
-.dot-strings { background: #5cffce; }      /* teal   */
+.dot-bass { background: #10eff6; }      
+.dot-clap { background: #ff9028; }      
+.dot-fx { background: #29bf12; }     
+.dot-hihat { background: #8f7dff; }   
+.dot-openhat { background: #ff006e; }  
+.dot-snare { background: #8f7dff; }    
+.dot-vox { background: #ff206a; }       
+.dot-snap { background: #00bbf9; }     
+.dot-kick { background: #db00b6; }  
+.dot-horn { background: #aacc00; }   
+.dot-synth { background: #27FB6B; }     
+.dot-strings { background: #5cffce; }   
 
 
 
@@ -182,13 +174,13 @@
   to { transform: translateX(0); }
 }
 
-/* animate fill progress */
+
 @keyframes measureLoop {
   from { width: 0%; }
   to { width: 100%; }
 }
 
-/* --- HOME SCREEN --- */
+
 .home-screen {
   display: flex;
   justify-content: center;
@@ -205,14 +197,13 @@
 }
 
 
-/* --- ANIMATIONS --- */
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 
-/* --- GLOBAL RESET --- */
 html {
   scroll-behavior: smooth;
   width: 100%;
@@ -233,16 +224,14 @@ body {
   flex-direction: column;
   align-items: flex-start;
   overflow-x: hidden;
-  overflow: hidden;
+  overflow-y: auto;;
 }
 
 *, *::before, *::after {
   box-sizing: inherit;
 }
 
-/* -------------------------
-   MAIN CONTAINER
--------------------------- */
+
 .main-container {
   display: flex;
   flex-direction: column;
@@ -251,9 +240,7 @@ body {
   gap: 0px;
   padding: 20px;
   margin: 20px;
-  /* border: 2px solid black;
-  background: white;
-  */
+
   border-radius: 20px;
   width: calc(100% - 40px);
   height: calc(100% - 40px);
@@ -262,9 +249,6 @@ body {
   
 }
 
-/* -------------------------
-   TAB BAR
--------------------------- */
 #tab-bar {
   display: flex;
   flex-wrap: nowrap;         
@@ -276,10 +260,10 @@ body {
   padding-bottom: 0px;
   padding-left: 0px;
 
-  overflow-x: auto;   /* ✅ allow scrolling */
+  overflow-x: auto;   
   overflow-y: auto;
 
-  -webkit-overflow-scrolling: touch; /* smooth on mobile */
+  -webkit-overflow-scrolling: touch; 
 }
 
 .tab-btn {
@@ -303,12 +287,12 @@ body {
 
 .tab-btn {
   flex: 1;
-  min-width: 0;                   /* 🔥 critical for shrinking */
+  min-width: 0;                 
   
   font-size: clamp(0.7rem, 1.5vw, 1.5rem);
   padding: clamp(2px, 0.8vw, 4px) clamp(3px, 1.2vw, 6px);
 
-  white-space: nowrap;            /* prevents text breaking */
+  white-space: nowrap;          
 }
 .bass-tab:hover {
   background: #10eff6;
@@ -379,9 +363,7 @@ body {
 }
 
 
-/* -------------------------
-   LOOP FRAME
--------------------------- */
+
 .loop-frame {
   display: flex;
   flex-direction: column;
@@ -400,9 +382,7 @@ body {
   overflow: scroll;
   min-height: 500px;
 }
-/* -------------------------
-   LOOP FRAME CONTENT SPLIT
--------------------------- */
+
 .loop-content {
   display: flex;
   flex-direction: row;
@@ -419,11 +399,7 @@ body {
   
 }
 
-/* -------------------------
-   CONTROL PANEL
--------------------------- */
 
-/* Right side (controls) */
 #control-panel {
   flex: 0 0 10%;
   display: flex;
@@ -448,7 +424,7 @@ font-style: normal;
   text-align: left;
 }
 
-/* Control buttons inside panel */
+
 #control-panel button {
   width: 90px;
   padding: 8px 4px;
@@ -468,7 +444,6 @@ font-style: normal;
   transition: all 0.25s ease;
 }
 
-/* Hover + active states */
 #control-panel button:hover {
   background: #FD4B01;
   color: #f6f2e9;
@@ -481,9 +456,6 @@ font-style: normal;
 
 
 
-/* -------------------------
-   LOOP PAD CONTAINER
--------------------------- */
 #loop-pad {
   display: flex;
   flex-wrap: wrap;
@@ -505,16 +477,14 @@ font-style: normal;
   position: relative;
   overflow: hidden;
   aspect-ratio: 1 / 1;
-  overflow-x: hidden; /* no horizontal overflow */
+  overflow-x: hidden; 
   
 }
 #loop-pad {
   display: grid;
   place-items: center;
 }
-/* -------------------------
-   CATEGORY CONTAINERS
--------------------------- */
+
 .category {
   position: absolute;
   inset: 0;
@@ -542,9 +512,7 @@ font-style: normal;
   transform: scale(1);
 }
 
-/* -------------------------
-   PADS (default style)
--------------------------- */
+
 
 .pad {
   width: clamp(30px, 6vw, 120px);
@@ -556,7 +524,7 @@ font-style: normal;
   border: 5px solid #444;
   transition: all 0.2s ease;
   cursor: pointer;
-  flex-shrink: 0; /* keeps size consistent */
+  flex-shrink: 0;
 }
 
 .pad:hover {
@@ -571,9 +539,7 @@ font-style: normal;
   transform: scale(1.15);
 }
 
-/* -------------------------
-   CATEGORY-SPECIFIC PAD STYLES
--------------------------- */
+
 #bass-grid .pad {
   background: #10eff6;
   width: clamp(40px, 8vw, 110px);
@@ -657,12 +623,12 @@ font-style: normal;
   height: clamp(15px, 5vw, 70px);
 }
 
-/* optional: add subtle glow on hover per category */
+
 .category .pad:hover {
   box-shadow: 0 0 12px currentColor;
 }
 
-/* Shrink pads when viewing "All" tab */
+
 .all-active .pad {
   width: 50px;
   height: 50px;
@@ -670,16 +636,14 @@ font-style: normal;
   border-radius: 25px;
 }
 
-/* -------------------------
-   ALL TAB — CENTERED FLEX VERSION
--------------------------- */
+
 
 .all-view {
   display: flex !important;
   flex-wrap: wrap;
-  justify-content: center; /* center all pads */
+  justify-content: center; 
   align-content: space-evenly;
-  gap: 15px; /* adjust spacing between pads */
+  gap: 15px; 
   padding: 25px;
   height: 100%;
   overflow-y: auto;
@@ -687,7 +651,7 @@ font-style: normal;
   box-sizing: border-box;
 }
 
-/* Flatten category layout for “all” view */
+
 .all-view .category {
   display: contents !important;
   padding: 0;
@@ -696,7 +660,7 @@ font-style: normal;
   background: none;
 }
 
-/* Uniform pad sizing for all view */
+
 .all-view .pad {
   width: clamp(5px, 8vw, 35px) !important;
   height: clamp(5px, 8vw, 35px) !important;
@@ -707,7 +671,7 @@ font-style: normal;
   flex: 0 0 auto;
 }
 
-/* Make sure everything stays within the loop pad border */
+
 #loop-pad.all-view {
   padding: 15px;
   border: 4px solid transparent;
@@ -727,9 +691,7 @@ font-style: normal;
     justify-content: flex-start;
   }
 }
-/* -------------------------
-   LOOP VISUALIZER
--------------------------- */
+
 #playhead {
   position: absolute;
   top: 0;
@@ -744,9 +706,7 @@ font-style: normal;
   from { left: 0%; }
   to { left: 100%; }
 }
-/* -------------------------
-   BPM CONTROL (MATCH SNAP STYLE)
--------------------------- */
+
 .bpm-control {
   display: flex;
   align-items: center;
@@ -759,7 +719,7 @@ font-style: normal;
   margin-top: 4px;
 }
 
-/* --- BPM LABEL --- */
+
 .bpm-control label {
   font-family: "le-havre-rounded", sans-serif;
   font-weight: 600;
@@ -769,7 +729,7 @@ font-style: normal;
   white-space: nowrap;
 }
 
-/* --- BPM INPUT --- */
+
 .bpm-control input[type="number"] {
   background: #20232f;
   border: clamp(2px, .25vw, 7px) solid #f6f2e9;
@@ -785,23 +745,21 @@ font-style: normal;
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-/* --- Hover Effect --- */
+
 .bpm-control input[type="number"]:hover {
   transform: scale(1.08);
   border-color: #8d8289;
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* --- Remove spin arrows --- */
+
 .bpm-control input::-webkit-outer-spin-button,
 .bpm-control input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/*.bpm-control input[type=number] {
--moz-appearance: textfield;
-}*/
+
 
 .dot-menu {
   position: fixed;
@@ -826,9 +784,7 @@ font-style: normal;
   background: #8d8289;
 }
 
-/* -------------------------
-   SNAP TO BEAT CONTROLS
--------------------------- */
+
 #snap-controls {
   display: flex;
   align-items: center;
@@ -881,7 +837,7 @@ font-style: normal;
   cursor: default;
 }
 
-/* SNAP TO BEAT BUTTON */
+
 .snap-to-beat-section {
   display: flex;
   align-items: center;
@@ -890,8 +846,8 @@ font-style: normal;
 }
 
 .snap-btn {
-  background-color: #f5e1b9; /* tan */
-  border: 2px solid #1a1a1a; /* dark outline */
+  background-color: #f5e1b9; 
+  border: 2px solid #1a1a1a; 
   color: #1a1a1a;
   font-family: "le-havre-rounded", sans-serif;
   font-weight: 600;
@@ -902,11 +858,11 @@ font-style: normal;
 }
 
 .snap-btn:hover {
-  background-color: #b89bd9; /* purple hover */
+  background-color: #b89bd9;
 }
 
 .snap-btn.active {
-  background-color: #8d71c4; /* current active purple */
+  background-color: #8d71c4; 
   color: white;
 }
 
@@ -945,9 +901,6 @@ font-style: normal;
 }
 
 
-/* -------------------------
-   SAVED LOOPS PAGE
--------------------------- */
 
 #saved-loops-grid {
   display: grid;
@@ -966,8 +919,8 @@ font-style: normal;
 }
 
 .saved-loop-tile {
-  width: 60px;            /* circle width */
-  height: 60px;           /* circle height same as width */
+  width: 60px;            
+  height: 60px;           
   border-radius: 50%; 
   border: 6px solid #20232f;
 
@@ -1002,9 +955,6 @@ font-style: normal;
   pointer-events: none;
 }
 
-/* -------------------------
-   SAVE LOOP POPUP
--------------------------- */
 
 #save-loop-popup {
   position: fixed;
@@ -1076,9 +1026,7 @@ font-style: normal;
 }
 
 
-/* -------------------------
-   RESPONSIVE
--------------------------- */
+
 @media (max-width: 900px) {
   .title {
     font-size: 50px;
@@ -1104,12 +1052,12 @@ font-style: normal;
 }
 #arrangement-timeline {
   display: flex;
-  flex-direction: column; /* stack timelines vertically */
+  flex-direction: column; 
   align-items: flex-start;
-  gap: 12px; /* spacing between rows */
-  width: 800px; /* fixed width */
-  max-width: 100%; /* responsive fallback */
-  margin: 20px auto; /* center horizontally */
+  gap: 12px; 
+  width: 800px; 
+  max-width: 100%;
+  margin: 20px auto;
   overflow-x: hidden;
 }
 .pattern-block {
@@ -1124,9 +1072,7 @@ font-style: normal;
   cursor: pointer;
 }
 
-/* ===============================
-   SONG BUILDER PAGE
-================================ */
+
 
 .builder-main {
   align-items: center;
@@ -1140,7 +1086,7 @@ font-style: normal;
     justify-content: center;
     gap: 0px;
     padding: 20px;
-    margin: 20px;
+    margin: 0px;
     /* border: 2px solid black;
     background: white;
     */
@@ -1153,25 +1099,25 @@ font-style: normal;
   }
 
 
-/* Bigger centered title row */
+
 .builder-title-row {
   justify-content: center;
   width: 100%;
   margin-top: 1vh;
 }
-/* builder top bar matches loop-pad layout */
+
 .builder-title {
-  display: block; /* 🔥 important fix */
+  display: block; 
   margin: 0;
 }
 
-/* spacer replaces measure bar space */
+
 .builder-spacer {
   flex: 1;
-  min-width: 70vw; /* same feel as measure bar */
+  min-width: 70vw; 
 }
 
-/* optional: adjust row spacing */
+
 .builder-main .title-row {
   width: 100%;
   gap: 0px;
@@ -1208,14 +1154,16 @@ font-style: normal;
 #builder-controls {
   margin-top: 30px;
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;          
+  justify-content: center;
+  gap: clamp(10px, 2vw, 20px);
+  width: 100%;
   align-items: center;
   justify-content: center;
-  flex: 0 0 10%;     /* small fixed area */
+  flex: 0 0 10%;    
   margin: 0;
 }
 
-/* Trash styled like control buttons */
 #builder-controls #trash-zone {
   width: 140px;
   padding: 10px;
@@ -1238,8 +1186,8 @@ font-style: normal;
 }
 
 #builder-controls button {
-  width: 100px;
-  padding: 10px;
+  width: clamp(70px, 10vw, 110px);
+  font-size: clamp(0.8rem, 1.5vw, 1.4rem);
   font-size: 1.8rem;
   border-radius: 30px;
   border: 5px solid #f6f2e9;
@@ -1262,10 +1210,6 @@ font-style: normal;
 
 
 
-/* ===============================
-   SONG BUILDER TIMELINE
-================================ */
-
 
 #loop-bank {
   z-index: 1;
@@ -1280,7 +1224,7 @@ font-style: normal;
 }
 
 
-/* Small title in top-left */
+
 .builder-title {
   position: relative;
   display: contents;
@@ -1298,16 +1242,16 @@ font-style: normal;
   color: transparent;
   z-index: 1;
   margin: 20px;
-  text-decoration: none; /* removes underline */
-  cursor: pointer;       /* shows pointer cursor */
+  text-decoration: none; 
+  cursor: pointer;       
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 
 .builder-main.main-container {
-  height: 100vh;       /* exact fit */
-  min-height: unset;   /* remove expansion */
-  overflow: hidden;    /* kill scroll */
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;  
 }
 
 
@@ -1323,9 +1267,6 @@ font-style: normal;
   transform: translateX(0px);
 }
 
-/* ===============================
-   SONG BANK SECTION
-================================ */
 
 .bank-section {
   width: 90vw;
@@ -1389,11 +1330,11 @@ font-style: normal;
   flex: 1;
   justify-content: center;
   align-content: flex-start;
-  max-width: 1200px;        /* prevents awkward mega stretching */
+  max-width: 1200px;       
   margin: 0 auto;
 }
 
-/* collapsed state */
+
 .bank-section.collapsed #loop-bank {
   max-height: 0;
   opacity: 0;
@@ -1403,7 +1344,7 @@ font-style: normal;
 }
 
 
-/* animated perimeter */
+
 .loop-progress.active {
   animation: loopBorder linear forwards;
 }
@@ -1417,11 +1358,7 @@ font-style: normal;
   }
 }
 
-/* -------------------------
-   SAVED LOOP TILES
--------------------------- */
 
-/* label text */
 .loop-label {
   position: relative;
   z-index: 3;
@@ -1431,7 +1368,7 @@ font-style: normal;
   pointer-events: none;
 }
 
-/* animated perimeter ring */
+
 .saved-loop-tile {
   position: relative;
   width: clamp(60px, 8vw, 120px);
@@ -1460,7 +1397,7 @@ font-style: normal;
   -webkit-mask: radial-gradient(farthest-side, white 85%, transparent 100%);
 }
 
-/* animation */
+
 @keyframes loopPerimeter {
   0% {
     transform: rotate(0deg);
@@ -1480,18 +1417,14 @@ font-style: normal;
 }
 
 
-/* ===============================
-   TIMELINE & PATTERN BLOCKS
-================================ */
 
-/* pill-shaped timeline blocks */
 .timeline-block,
 .pattern-block {
-  min-width: 50px;        /* minimum width */
-  height: 40px;            /* height of the pill */
-  background: #B8DE27;     /* block color */
-  border: none;             /* remove border */
-  border-radius: 30px;      /* pill shape */
+  min-width: 50px;        
+  height: 40px;            
+  background: #B8DE27;    
+  border: none;             
+  border-radius: 30px;      
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1499,24 +1432,23 @@ font-style: normal;
   font-size: 1.2rem;
   cursor: grab;
   transition: transform 0.2s ease, width 0.2s ease;
-  flex-shrink: 0;           /* prevent shrinking too small */
+  flex-shrink: 0;          
 }
 
-/* grab + active states */
 .timeline-block:active,
 .pattern-block:active {
   cursor: grabbing;
   transform: scale(1.05);
 }
 
-/* allow dynamic resizing */
+
 .timeline-block.stretch,
 .pattern-block.stretch {
-  min-width: 60px;      /* can shrink smaller */
-  width: auto;          /* allow width to expand */
+  min-width: 60px;      
+  width: auto;         
 }
 
-/* optional hover effect */
+
 .timeline-block:hover,
 .pattern-block:hover {
   transform: scale(1.05);
@@ -1533,7 +1465,7 @@ font-style: normal;
   justify-content: center;
   font-family: "le-havre-rounded", sans-serif;
   cursor: grab;
-  flex-shrink: 0; /* prevents shrinking when overflowing */
+  flex-shrink: 0; 
   user-select: none;
 }
 
@@ -1545,12 +1477,13 @@ font-style: normal;
 
 #song-timeline {
   position: relative;
-  overflow-x: auto;   /* ✅ allow horizontal scroll */
-  overflow-y: hidden; /* ✅ keep vertical clean */
+  overflow-x: auto;   
+  overflow-y: hidden; 
 
   width: 90%;
   max-width: 100%;
   min-width: 70vw;
+  
 
   margin-top: 4%;
 
@@ -1562,7 +1495,7 @@ font-style: normal;
     #d2c7bc 10px,
     #d2c7bc 20px
   );
- /* background: #f6f2e9;*/
+
 
   border: 3px solid #f6f2e9;
   border-radius: 12px;
@@ -1570,7 +1503,7 @@ font-style: normal;
   display: flex;
   align-items: center;
   padding: 10px;
-  flex: 0 0 12%;      /* fixed proportion of screen */
+  flex: 0 0 12%;      
   height: 11vh;
   min-height: 7vh;
 }
@@ -1578,14 +1511,14 @@ font-style: normal;
 .timeline-row {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 40px; /* must match JS */
+  grid-auto-columns: 40px; 
   width: max-content;
   height: 80px;
   position: relative;
 }
 
 .pattern-block {
-  border: 2px dashed green; /* shows each pattern block */
+  border: 2px dashed green; 
 }
 
 .timeline-block {
@@ -1604,7 +1537,7 @@ font-style: normal;
   justify-content: center;
   font-family: "le-havre-rounded", sans-serif;
   cursor: grab;
-  flex-shrink: 0; /* prevents shrinking when overflowing */
+  flex-shrink: 0; 
   user-select: none;
 }
 
@@ -1646,7 +1579,7 @@ font-style: normal;
   height: 100%;
   width: 0%;
   background: rgba(184, 222, 39, 0.6);
-  z-index: 5; /* HIGHER than blocks */
+  z-index: 5; 
   pointer-events: none;
 }
 
@@ -1697,7 +1630,7 @@ font-style: normal;
 
 #song-playhead {
   position: absolute;
-  z-index: 3; /* ALWAYS on top */
+  z-index: 3;
 }
 
 #song-progress {
@@ -1709,17 +1642,25 @@ font-style: normal;
 }
 
 .timeline-row {
-  min-height: 80px;   /* 👈 THIS FIXES DROP */
+  min-height: 80px;   
   width: max-content;
 }
 
 #timeline-content {
   flex: 1;
   width: 100%;
-  overflow: hidden;   /* 🔥 no scroll */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  flex: 0 0 12%;      
+  height: 5vh;
+  min-height: 2vh;
+  width: 100%;
+  margin-top: 0vh;
+  
 }
 
 #measure-fill {
@@ -1738,7 +1679,7 @@ font-style: normal;
 }
 
 .screw-btn {
-  margin-left: auto; /* pushes it to the right */
+  margin-left: auto; 
   background: none;
   border: none;
   text-align: left;
@@ -1802,7 +1743,7 @@ font-style: normal;
 }
 
 .chop-btn {
-  margin-left: 0;      /* remove auto push */
-  margin-right: auto;  /* keep it left */
-  margin-top: 0;       /* align with title row */
+  margin-left: 0;      
+  margin-right: auto;  
+  margin-top: 0;      
 }

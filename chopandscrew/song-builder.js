@@ -1,4 +1,4 @@
-const MAX_TIMELINE_WIDTH = 900; // max width of timeline
+const MAX_TIMELINE_WIDTH = 900; 
 
 let bpm = 90;
 let beatDuration = 60000 / bpm;
@@ -23,9 +23,7 @@ const bankSection = document.querySelector(".bank-section");
 
 renderBank();
 
-/* ===========================
-   RENDER LOOP BANK
-=========================== */
+
 function renderBank() {
   if (!bank) return;
 
@@ -54,9 +52,7 @@ function renderBank() {
   });
 }
 
-/* -----------------------------
-CREATE TIMELINE GRID
------------------------------- */
+/* TIMELINE GRID*/
 function createTimelineGrid() {
   timeline.querySelectorAll(".timeline-row").forEach(row => row.remove());
 
@@ -111,15 +107,13 @@ timeline.addEventListener("drop", e => {
   updateTimelineSize();
 });
 
-/* -----------------------------
-RENDER TIMELINE BLOCKS
------------------------------- */
+
 function renderTimelineBlocks() {
-  timeline.innerHTML = ""; // clear all rows
+  timeline.innerHTML = ""; 
 
  
 
-  const MAX_WIDTH = 900; // max timeline width
+  const MAX_WIDTH = 900; 
   const MIN_PX_PER_BEAT = 12;
   const MAX_PX_PER_BEAT = 40;
 
@@ -131,12 +125,12 @@ function renderTimelineBlocks() {
   let rows = [currentRow];
 
   timelineItems.forEach((item, idx) => {
-    // Calculate tentative width of item
+    
     let tempPxPerBeat = MAX_WIDTH / (rowBeats + item.length);
     tempPxPerBeat = Math.min(MAX_PX_PER_BEAT, Math.max(MIN_PX_PER_BEAT, tempPxPerBeat));
     let tempWidth = item.length * tempPxPerBeat;
 
-    // if adding this item exceeds MAX_WIDTH, start new row
+  
     if (rowBeats * tempPxPerBeat + tempWidth > MAX_WIDTH) {
       currentRow = document.createElement("div");
       currentRow.classList.add("timeline-row");
@@ -151,10 +145,9 @@ block.textContent = item.loop.name;
 
 block.draggable = true;
 
-// store index
 block.dataset.index = idx;
 
-// DRAG START (timeline block)
+
 block.addEventListener("dragstart", e => {
   e.dataTransfer.setData(
     "application/json",
@@ -175,7 +168,7 @@ block.addEventListener("dragstart", e => {
     rowBeats += item.length;
   });
 
-  // Update each row width and px per beat
+  
   rows.forEach(row => {
     const totalBeats = Array.from(row.children).reduce((sum, b) => sum + parseInt(b.style.gridColumn.replace("span ", "")), 0);
     let pxPerBeat = Math.min(MAX_PX_PER_BEAT, Math.max(MIN_PX_PER_BEAT, MAX_WIDTH / totalBeats));
@@ -186,9 +179,7 @@ block.addEventListener("dragstart", e => {
   updateSongLength();
 }
 
-/* -----------------------------
-SONG LENGTH
------------------------------- */
+
 function updateSongLength() {
   if (timelineItems.length === 0) {
     songDuration = 0;
@@ -196,21 +187,20 @@ function updateSongLength() {
     return;
   }
 
-  // Compute total beats based on timelineItems
+  
   let totalBeats = 0;
   timelineItems.forEach(item => {
     totalBeats += item.length;
   });
 
-  // Each beat in ms
+  
   songDuration = totalBeats * beatDuration;
 
-  // Update UI
+  
   timeDisplay.textContent = `0:00 / ${formatTime(songDuration)}`;
 }
-/* -----------------------------
-PROGRESS BAR
------------------------------- */
+
+
 const songProgress = document.getElementById("song-progress");
 const timeDisplay = document.getElementById("time-display");
 
@@ -233,13 +223,13 @@ function startPlayhead() {
   
     const elapsed = time - startTime;
   
-    // convert elapsed → beats
+
     const currentBeat = elapsed / beatDuration;
   
     let accumulatedBeats = 0;
     let currentBlockIndex = 0;
   
-    // find which block we are in
+    
     for (let i = 0; i < timelineItems.length; i++) {
       const blockBeats = timelineItems[i].length;
   
@@ -289,9 +279,7 @@ function startPlayhead() {
 }
 
 
-/* -----------------------------
-PLAY SONG
------------------------------- */
+/* PLAY SONG*/
 
 playBtn.addEventListener("click", () => {
   if (isPlaying) return;
@@ -328,7 +316,7 @@ for (let t = 0; t < blockDuration; t += loopLength) {
     const time =
       startTime + event.time + t - startOffset;
 
-    // 🚨 prevent overflow past block
+   
     if (time < 0 || t + event.time > blockDuration) return;
 
     const timeout = setTimeout(() => {
@@ -344,9 +332,7 @@ for (let t = 0; t < blockDuration; t += loopLength) {
   startPlayhead();
 });
 
-/* -----------------------------
-PAUSE and Restart SONG
------------------------------- */
+
 
 pauseBtn.addEventListener("click", () => {
   if (!isPlaying) return;
@@ -416,9 +402,6 @@ clearBtn.addEventListener("click", () => {
   if (!confirm("clear entire timeline?")) return;
 });
 
-/* -----------------------------
-INIT
------------------------------- */
 
 createTimelineGrid();
 
@@ -452,9 +435,7 @@ trash.addEventListener("drop", e => {
   }
 });
 
-/* -----------------------------
-UPDATE TIMELINE SIZE + PLACEHOLDER
------------------------------- */
+
 function updateTimelineSize() {
   const rows = timeline.querySelectorAll(".timeline-row");
   if (rows.length === 0) return;
@@ -479,8 +460,6 @@ function updateTimelineSize() {
 
 
 
-// Grab DOM elements
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const toggleBankBtn = document.getElementById("toggleBankBtn");
@@ -491,7 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // load state
+ 
   const isCollapsed = localStorage.getItem("bankCollapsed") === "true";
 
   if (isCollapsed) {

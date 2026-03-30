@@ -1,4 +1,4 @@
-// --- SOUND CATEGORIES ---
+
 const soundCategories = {
   bass: 13, clap: 9, fx: 35, hihat: 15, openhat: 14,
   snare: 11, vox: 17, snap: 2, kick: 15, horn: 13,
@@ -22,7 +22,7 @@ const categoryColors = {
 
 let bpm = 120;
 const beatsPerLoop = 4;
-let loopLength = (60000 / bpm) * beatsPerLoop; // ms per 4 beats
+let loopLength = (60000 / bpm) * beatsPerLoop; 
 
 let isRecording = false;
 let isPaused = false;
@@ -30,11 +30,11 @@ let startTime = 0;
 let loopInterval;
 let currentVolume = 1;
 let scheduledTimeouts = [];
-let historyStack = []; // for undo
+let historyStack = []; 
 
-// --- PATTERN + ARRANGEMENT SYSTEM ---
-let patterns = []; // saved in session (not localStorage yet)
-let arrangement = []; // timeline placements
+
+let patterns = []; 
+let arrangement = []; 
 
 let currentPattern = createNewPattern();
 
@@ -56,7 +56,7 @@ document.getElementById("screwBtn")?.addEventListener("click", () => {
 
 
 
-// --- LOAD SAVED LOOP IF EXISTS ---
+
 const loopColors = [
   "#B8DE27",
   "#ff006e",
@@ -78,19 +78,19 @@ if (loadedLoop) {
 
   recordedEvents = loadedLoop.events || [];
 
-  // Clear existing dots
+  
   document.querySelectorAll(".measure-dot").forEach(dot => dot.remove());
 
-  // Rebuild dots visually
+  
   recordedEvents.forEach(event => {
     addMeasureDot(event);
   });
 
-  // Optional: update BPM input visually
+  
   const bpmInput = document.getElementById("bpm");
   if (bpmInput) bpmInput.value = bpm;
 
-  // Clear temporary storage
+  
   localStorage.removeItem("currentLoop");
 }
 
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const arrangementTimeline = document.getElementById("arrangement-timeline");
 const addToSongBtn = document.getElementById("addToSongBtn");
 
-  // --- BPM Input ---
+ 
   const bpmInput = document.getElementById("bpm");
   if (bpmInput) {
     bpmInput.value = bpm;
@@ -113,13 +113,13 @@ const addToSongBtn = document.getElementById("addToSongBtn");
       }
     });
   }
-// --- Snap UI (inside control panel) ---
+
 const snapToggle = document.getElementById("snapToggle");
 const snapOptions = document.getElementById("snapOptions");
 const snapResolution = document.getElementById("snapResolution");
 
 let snapEnabled = false;
-let snapDivision = 16; // default 1/16th
+let snapDivision = 16; 
 
 snapToggle.addEventListener("click", () => {
   snapEnabled = !snapEnabled;
@@ -127,10 +127,10 @@ snapToggle.addEventListener("click", () => {
   snapOptions.classList.toggle("hidden", !snapEnabled);
 });
 
-// Update snap resolution when user changes the dropdown
+
 snapResolution.addEventListener("change", (e) => {
   const value = e.target.value;
-  // extract the number after the slash, e.g., "1/16" → 16
+  
   snapDivision = parseInt(value.split("/")[1], 10);
 });
 
@@ -138,7 +138,7 @@ snapResolution.addEventListener("change", (e) => {
   
 
 
-  // --- BUILD SOUND PADS ---
+  
   Object.keys(soundCategories).forEach(category => {
     const grid = document.getElementById(`${category}-grid`);
     if (!grid) return;
@@ -165,7 +165,7 @@ snapResolution.addEventListener("change", (e) => {
     }
   });
 
-  // --- TAB SWITCHING ---
+  
   const tabButtons = document.querySelectorAll(".tab-btn");
   const categories = document.querySelectorAll(".category");
 
@@ -182,15 +182,26 @@ snapResolution.addEventListener("change", (e) => {
       categories.forEach(cat => cat.classList.add("active"));
       loopPad.classList.add("all-view");
     } else {
-      document.getElementById(`${category}-grid`)?.classList.add("active");
+      categories.forEach(cat => {
+        if (cat.id === `${category}-grid`) {
+          cat.classList.add("active");
+        }
+      });
       loopPad.classList.remove("all-view");
     }
   }
 
-  tabButtons.forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.category)));
-  activateTab("all");
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const category = btn.dataset.category;
+      localStorage.setItem("activeTab", category); 
+      activateTab(category);
+    });
+  });
+  const savedTab = localStorage.getItem("activeTab") || "all";
+activateTab(savedTab);
 
-  // --- CONTROLS ---
+  
   const recordBtn = document.getElementById("recordBtn");
   const pauseBtn = document.getElementById("pauseBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -238,7 +249,7 @@ snapResolution.addEventListener("change", (e) => {
     document.querySelectorAll(".measure-dot").forEach(dot => dot.remove());
   });
 
-// --- SAVE LOOP FUNCTIONALITY ---
+
 
 const saveLoopBtn = document.getElementById("saveLoopBtn");
 const saveLoopPopup = document.getElementById("save-loop-popup");
@@ -246,7 +257,7 @@ const saveLoopConfirmBtn = document.getElementById("saveLoopConfirmBtn");
 const cancelSaveBtn = document.getElementById("cancelSaveBtn");
 const loopNameInput = document.getElementById("loopName");
 
-// Show popup when clicking "save loop"
+
 if (saveLoopBtn) {
   saveLoopBtn.addEventListener("click", () => {
     saveLoopPopup.classList.remove("hidden");
@@ -255,14 +266,13 @@ if (saveLoopBtn) {
   });
 }
 
-// Cancel popup
+
 if (cancelSaveBtn) {
   cancelSaveBtn.addEventListener("click", () => {
     saveLoopPopup.classList.add("hidden");
   });
 }
 
-// Confirm save
 if (saveLoopConfirmBtn) {
   saveLoopConfirmBtn.addEventListener("click", () => {
     const name = loopNameInput.value.trim();
@@ -276,7 +286,7 @@ if (saveLoopConfirmBtn) {
       return;
     }
 
-    // Make sure pattern stores its name
+    
     currentPattern.name = name;
 
     const loopData = {
@@ -288,11 +298,11 @@ if (saveLoopConfirmBtn) {
       events: [...currentPattern.events]
     };
 
-    // SAFELY parse existing loops
+    
     let savedLoops = localStorage.getItem("savedLoops");
     savedLoops = savedLoops ? JSON.parse(savedLoops) : [];
 
-    // Ensure it's always an array
+    
     if (!Array.isArray(savedLoops)) {
       savedLoops = [];
     }
@@ -316,15 +326,13 @@ if (saveLoopConfirmBtn) {
 
 
 
-  // --- UNDO (Ctrl+Z) ---
+ 
   document.addEventListener("keydown", e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") undoLastAction();
   });
 });
 
-// ---------------------------
-// SOUND + DOT FUNCTIONS
-// ---------------------------
+
 function playSound(folder, index) {
   const audio = new Audio(`jerkbeat/${folder}/${folder}${index}.wav`);
   audio.volume = currentVolume;
@@ -332,7 +340,7 @@ function playSound(folder, index) {
   audio.play().catch(err => console.warn("Playback failed:", err));
 }
 
-// --- ADD DOT ---
+
 function addMeasureDot(eventData) {
   const bar = document.getElementById("measure-bar");
   const dot = document.createElement("div");
@@ -343,7 +351,7 @@ dot.style.background = categoryColors[eventData.category];
   const percentage = (eventData.time / loopLength) * 100;
   dot.style.left = `${percentage}%`;
 
-  // --- STACKING LOGIC ---
+  
   const dotsAtSameTime = Array.from(bar.querySelectorAll(".measure-dot"))
     .filter(existingDot => {
       return Math.abs(parseFloat(existingDot.dataset.time) - eventData.time) < 1;
@@ -351,7 +359,7 @@ dot.style.background = categoryColors[eventData.category];
 
   const stackIndex = dotsAtSameTime.length;
 
-  const stackSpacing = 16; // vertical spacing in px
+  const stackSpacing = 16; 
   dot.style.top = `${50 - (stackIndex * 6)}%`;
 
   dot.dataset.time = eventData.time;
@@ -362,16 +370,16 @@ dot.style.background = categoryColors[eventData.category];
 restackDots();
 }
 
-// --- DOT INTERACTIONS ---
+
 function makeDotInteractive(dot, eventData) {
   let isDragging = false;
 
   dot.addEventListener("mousedown", e => {
-    if (e.button !== 0) return; // left click only
+    if (e.button !== 0) return; 
     isDragging = true;
     const bar = document.getElementById("measure-bar");
     const barRect = bar.getBoundingClientRect();
-    const startTimeBeforeMove = eventData.time; // for undo
+    const startTimeBeforeMove = eventData.time; 
 
     function onMouseMove(moveEvent) {
       if (!isDragging) return;
@@ -412,7 +420,7 @@ function makeDotInteractive(dot, eventData) {
   });
 }
 
-// --- FLOATING DOT MENU ---
+
 function showDotMenu(dot, eventData, x, y) {
   document.querySelector(".dot-menu")?.remove();
   const menu = document.createElement("div");
@@ -432,12 +440,12 @@ function showDotMenu(dot, eventData, x, y) {
     if (!menu.contains(e.target)) menu.remove();
   }, { once: true });
 }
-// --- REstack DOT ---
+
 function restackDots() {
   const bar = document.getElementById("measure-bar");
   const dots = Array.from(bar.querySelectorAll(".measure-dot"));
 
-  // Group dots by time
+  
   const groups = {};
 
   dots.forEach(dot => {
@@ -446,7 +454,7 @@ function restackDots() {
     groups[time].push(dot);
   });
 
-  // Reposition each group
+  
   Object.values(groups).forEach(group => {
     group.forEach((dot, index) => {
       dot.style.top = `${50 - (index * 6)}%`;
@@ -454,7 +462,7 @@ function restackDots() {
   });
 }
 
-// --- REMOVE DOT ---
+
 function removeDot(dot, eventData) {
   dot.remove();
   const idx = currentPattern.events.indexOf(eventData);
@@ -464,7 +472,7 @@ if (idx !== -1) currentPattern.events.splice(idx, 1);
   rescheduleLoopSounds();
 }
 
-// --- UNDO ---
+
 function undoLastAction() {
   const last = historyStack.pop();
   if (!last) return;
@@ -480,7 +488,7 @@ function undoLastAction() {
   rescheduleLoopSounds();
 }
 
-// --- RESCHEDULE ---
+
 function rescheduleLoopSounds() {
   if (isRecording) return;
   clearInterval(loopInterval);
@@ -490,7 +498,7 @@ function rescheduleLoopSounds() {
   loopInterval = setInterval(scheduleLoop, loopLength);
 }
 
-// --- LOOP SOUND SCHEDULER ---
+
 function scheduleLoop() {
   if (isPaused) return;
   currentPattern.events.forEach(event => {
@@ -501,10 +509,8 @@ function scheduleLoop() {
 
 
 
-
-// --- UTILS ---
 function quantizeTime(time) {
-  const step = loopLength / 16; // 1/16th note grid
+  const step = loopLength / 16; 
   return Math.round(time / step) * step;
 }
 
@@ -523,7 +529,7 @@ function clearScheduledSounds() {
 function restartMeasureBar() {
   const bar = document.getElementById("measure-fill");
   bar.style.animation = "none";
-  void bar.offsetWidth; // restart animation
+  void bar.offsetWidth; 
   bar.style.animation = `measureLoop ${loopLength / 1000}s linear infinite`;
   bar.style.animationPlayState = "running";
 }

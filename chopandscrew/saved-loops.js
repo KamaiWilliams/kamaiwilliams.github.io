@@ -4,10 +4,6 @@ let previewTimeouts = [];
 
 
 
-/* -----------------------------
-   LOAD SAVED LOOPS
------------------------------- */
-
 function loadSavedLoops() {
 
   const savedLoops = JSON.parse(localStorage.getItem("savedLoops")) || [];
@@ -42,7 +38,7 @@ function loadSavedLoops() {
     }
   });
   
-  // persist fix
+ 
   localStorage.setItem("savedLoops", JSON.stringify(savedLoops));
   savedLoops.forEach(loop => {
 
@@ -80,30 +76,28 @@ function loadSavedLoops() {
 
 }
 
-/* -----------------------------
-   LOOP PREVIEW
------------------------------- */
+
 
 function playLoopPreview(loop, tile) {
 
   const progress = tile.querySelector(".loop-progress");
-  // clear any existing playback
+ 
   previewTimeouts.forEach(t => clearTimeout(t));
   previewTimeouts = [];
 
   if (!loop.events || !loop.events.length) return;
 
-  const bpm = 90; // match your app BPM (or pull dynamically later)
+  const bpm = 90; 
   const beatDuration = 60000 / bpm;
 
-  // find loop length
+
   const loopLength = loop.events.reduce(
     (max, e) => Math.max(max, e.time),
     0
   );
 
-  // animate ring (optional but 🔥)
-  const color = loop.color || "#ffffff"; // fallback if needed
+  
+  const color = loop.color || "#ffffff"; 
 
   if (progress) {
     progress.style.background = `conic-gradient(${color} 0deg, transparent 0deg)`;
@@ -122,7 +116,7 @@ function playLoopPreview(loop, tile) {
       previewTimeouts.push(timeout);
     });
   
-    // repeat loop
+
     const loopTimeout = setTimeout(() => {
       scheduleLoop(startOffset + loopLength);
     }, loopLength);
@@ -134,9 +128,7 @@ function playLoopPreview(loop, tile) {
 
 
 }
-/* -----------------------------
-   PLAY BUTTON
------------------------------- */
+
 
 document.getElementById("playSavedBtn")
 .addEventListener("click", () => {
@@ -166,9 +158,7 @@ document.getElementById("playSavedBtn")
 
 });
 
-/* -----------------------------
-   PAUSE BUTTON
------------------------------- */
+
 
 document.getElementById("pauseSavedBtn")
 .addEventListener("click", () => {
@@ -178,9 +168,7 @@ document.getElementById("pauseSavedBtn")
 
 });
 
-/* -----------------------------
-   LOOP PAD BUTTON
------------------------------- */
+
 
 document.getElementById("loopPadBtn")
 .addEventListener("click", () => {
@@ -189,8 +177,5 @@ document.getElementById("loopPadBtn")
 
 });
 
-/* -----------------------------
-   INIT
------------------------------- */
 
 loadSavedLoops();

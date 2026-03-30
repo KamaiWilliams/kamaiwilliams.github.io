@@ -64,56 +64,52 @@ function createTimelineGrid() {
   row.classList.add("timeline-row");
 
 
-  timeline.addEventListener("dragover", e => e.preventDefault());
 
-  timeline.addEventListener("drop", e => {
-    e.preventDefault();
-  
-    const data = JSON.parse(
-      e.dataTransfer.getData("application/json")
-    );
-  
-    const blocks = Array.from(document.querySelectorAll(".timeline-block"));
-  
-    // figure out drop index based on mouse position
-    let dropIndex = timelineItems.length;
-  
-    for (let i = 0; i < blocks.length; i++) {
-      const rect = blocks[i].getBoundingClientRect();
-      if (e.clientX < rect.left + rect.width / 2) {
-        dropIndex = i;
-        break;
-      }
-    }
-  
-    // FROM BANK → insert
-    if (data.type === "bank") {
-      const loop = savedLoops.find(l => l.id === data.id);
-      if (!loop) return;
-  
-      timelineItems.splice(dropIndex, 0, {
-        loop,
-        length: 8
-      });
-    }
-  
-    // REORDER EXISTING
-    if (data.type === "timeline") {
-      const item = timelineItems.splice(data.index, 1)[0];
-  
-      // adjust index if moving forward
-      if (data.index < dropIndex) dropIndex--;
-  
-      timelineItems.splice(dropIndex, 0, item);
-    }
-  
-    renderTimelineBlocks();
-    updateTimelineSize();
-  });
 
   timeline.appendChild(row);
 }
+timeline.addEventListener("dragover", e => e.preventDefault());
 
+timeline.addEventListener("drop", e => {
+  e.preventDefault();
+
+  const data = JSON.parse(
+    e.dataTransfer.getData("application/json")
+  );
+
+  const blocks = Array.from(document.querySelectorAll(".timeline-block"));
+
+  let dropIndex = timelineItems.length;
+
+  for (let i = 0; i < blocks.length; i++) {
+    const rect = blocks[i].getBoundingClientRect();
+    if (e.clientX < rect.left + rect.width / 2) {
+      dropIndex = i;
+      break;
+    }
+  }
+
+  if (data.type === "bank") {
+    const loop = savedLoops.find(l => l.id === data.id);
+    if (!loop) return;
+
+    timelineItems.splice(dropIndex, 0, {
+      loop,
+      length: 8
+    });
+  }
+
+  if (data.type === "timeline") {
+    const item = timelineItems.splice(data.index, 1)[0];
+
+    if (data.index < dropIndex) dropIndex--;
+
+    timelineItems.splice(dropIndex, 0, item);
+  }
+
+  renderTimelineBlocks();
+  updateTimelineSize();
+});
 
 /* -----------------------------
 RENDER TIMELINE BLOCKS
@@ -121,7 +117,7 @@ RENDER TIMELINE BLOCKS
 function renderTimelineBlocks() {
   timeline.innerHTML = ""; // clear all rows
 
-  if (timelineItems.length === 0) return;
+ 
 
   const MAX_WIDTH = 900; // max timeline width
   const MIN_PX_PER_BEAT = 12;
@@ -234,21 +230,57 @@ function startPlayhead() {
 
   function animate(time) {
     if (!isPlaying) return;
-
+  
     const elapsed = time - startTime;
-    const percent = Math.min(elapsed / songDuration, 1);
-
-    playhead.style.transform = `translateX(${percent * 100}%)`;
-    songProgress.style.width = `${percent * 100}%`;
-    timeDisplay.textContent = `${formatTime(elapsed)} / ${formatTime(songDuration)}`;
-
-    if (percent < 1) {
+  
+    // convert elapsed → beats
+    const currentBeat = elapsed / beatDuration;
+  
+    let accumulatedBeats = 0;
+    let currentBlockIndex = 0;
+  
+    // find which block we are in
+    for (let i = 0; i < timelineItems.length; i++) {
+      const blockBeats = timelineItems[i].length;
+  
+      if (currentBeat < accumulatedBeats + blockBeats) {
+        currentBlockIndex = i;
+        break;
+      }
+  
+      accumulatedBeats += blockBeats;
+    }
+  
+    const block = document.querySelectorAll(".timeline-block")[currentBlockIndex];
+  
+    if (block) {
+      const blockStartBeat = accumulatedBeats;
+      const blockProgress =
+        (currentBeat - blockStartBeat) / timelineItems[currentBlockIndex].length;
+  
+      const blockRect = block.getBoundingClientRect();
+      const timelineRect = timeline.getBoundingClientRect();
+  
+      const x =
+        blockRect.left -
+        timelineRect.left +
+        blockRect.width * blockProgress;
+  
+      playhead.style.transform = `translateX(${x}px)`;
+    }
+  
+    
+  
+    timeDisplay.textContent =
+      `${formatTime(elapsed)} / ${formatTime(songDuration)}`;
+  
+    if (elapsed < songDuration) {
       animationFrame = requestAnimationFrame(animate);
     } else {
       isPlaying = false;
       startOffset = 0;
-      playhead.style.transform = "translateX(0%)";
-      songProgress.style.width = "0%";
+      playhead.style.transform = "translateX(0px)";
+      
     }
   }
 
@@ -287,25 +319,26 @@ playBtn.addEventListener("click", () => {
       (m, e) => Math.max(m, e.time), 0
     );
 
-    const repeats = Math.ceil(
-      (item.length * beatDuration) / loopLength
-    );
+    const blockDuration = item.length * beatDuration;
 
-    for (let r = 0; r < repeats; r++) {
-      item.loop.events.forEach(event => {
+for (let t = 0; t < blockDuration; t += loopLength) {
 
-        let time =
-          startTime + event.time + r * loopLength - startOffset;
+  item.loop.events.forEach(event => {
 
-        if (time < 0) return;
+    const time =
+      startTime + event.time + t - startOffset;
 
-        const timeout = setTimeout(() => {
-          playSound(event.category, event.i);
-        }, time);
+    // 🚨 prevent overflow past block
+    if (time < 0 || t + event.time > blockDuration) return;
 
-        playTimeouts.push(timeout);
-      });
-    }
+    const timeout = setTimeout(() => {
+      playSound(event.category, event.i);
+    }, time);
+
+    playTimeouts.push(timeout);
+  });
+
+}
   });
 
   startPlayhead();
@@ -344,8 +377,7 @@ restartBtn.addEventListener("click", () => {
 
   playhead.style.transform = "translateX(0%)";
 
-  const progress = document.getElementById("song-progress");
-  if (progress) progress.style.width = "0%";
+  
 
   timeDisplay.textContent = "0:00 / 0:00";
 });
@@ -370,12 +402,14 @@ clearBtn.addEventListener("click", () => {
 
   playhead.style.transform = "translateX(0%)";
 
-  const progress = document.getElementById("song-progress");
-  if (progress) progress.style.width = "0%";
+  
 
   timeDisplay.textContent = "0:00 / 0:00";
 
   renderTimelineBlocks();
+  if (timelineItems.length === 0) {
+    createTimelineGrid();
+  }
   updateTimelineSize();
   updateSongLength();
 
@@ -441,40 +475,12 @@ function updateTimelineSize() {
   }
 }
 
-if (toggleBankBtn && bankSection) {
 
-  const isCollapsed = localStorage.getItem("bankCollapsed") === "true";
-
-  if (isCollapsed) {
-    bankSection.classList.add("collapsed");
-    toggleBankBtn.textContent = "+";
-  }
-
-  toggleBankBtn.addEventListener("click", () => {
-    console.log("clicked"); // 👈 debug (you should see this)
-
-    bankSection.classList.toggle("collapsed");
-
-    const collapsed = bankSection.classList.contains("collapsed");
-
-    toggleBankBtn.textContent = collapsed ? "+" : "–";
-
-    localStorage.setItem("bankCollapsed", collapsed);
-  });
-
-}
 
 
 
 // Grab DOM elements
 
-const audio = document.getElementById("your-audio-element"); // your <audio>
-const measureFill = document.getElementById("measure-fill");
-
-audio.addEventListener("timeupdate", () => {
-  const progressPercent = (audio.currentTime / audio.duration) * 100;
-  measureFill.style.width = `${progressPercent}%`;
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   const toggleBankBtn = document.getElementById("toggleBankBtn");
@@ -491,11 +497,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (isCollapsed) {
     bankSection.classList.add("collapsed");
     toggleBankBtn.textContent = "+";
+  } else {
+    toggleBankBtn.textContent = "–";
   }
 
   toggleBankBtn.addEventListener("click", () => {
-    console.log("clicked"); // debug
-
     bankSection.classList.toggle("collapsed");
 
     const collapsed = bankSection.classList.contains("collapsed");

@@ -5,6 +5,21 @@ const soundCategories = {
   synth: 8, strings: 32
 };
 
+const categoryColors = {
+  bass: "#10eff6",
+  clap: "#ff9028",
+  snare: "#8f7dff",
+  hihat: "#ffb700",
+  openhat: "#ff006e",
+  snap: "#00bbf9",
+  fx: "#29bf12",
+  vox: "#ff206a",
+  kick: "#db00b6",
+  horn: "#d4ff00",
+  synth: "#27FB6B",
+  strings: "#5cffce"
+};
+
 let bpm = 120;
 const beatsPerLoop = 4;
 let loopLength = (60000 / bpm) * beatsPerLoop; // ms per 4 beats
@@ -322,7 +337,8 @@ function addMeasureDot(eventData) {
   const bar = document.getElementById("measure-bar");
   const dot = document.createElement("div");
 
-  dot.classList.add("measure-dot", `dot-${eventData.category}`);
+  dot.classList.add("measure-dot");
+dot.style.background = categoryColors[eventData.category];
 
   const percentage = (eventData.time / loopLength) * 100;
   dot.style.left = `${percentage}%`;

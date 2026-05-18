@@ -1,0 +1,284 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* BASE */
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #111;
+    background: #fafafa;
+  }
+  
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    z-index: 100;
+  }
+  
+  .nav-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav a {
+    margin-left: 1rem;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+  }
+  
+  .nav a:hover {
+    text-decoration: underline;
+  }
+  
+/* HERO */
+.hero {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: #eaeaea; /* placeholder for now */
+}
+
+/* CONTENT WRAPPER */
+.hero-content {
+  width: 100%;
+  max-width: 900px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* KEY CHANGE */
+}
+
+/* TEXT BLOCK */
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* TITLE */
+.hero h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* SUBTITLE */
+.hero p {
+  font-size: 1.2rem;
+  max-width: 500px;
+  color: #333;
+}
+  
+  /* CONTAINER */
+  .container {
+    max-width: 700px;
+    margin: 4rem auto;
+    padding: 0 1rem;
+  }
+  
+  /* SECTIONS */
+  .section {
+    margin-bottom: 4rem;
+  }
+  
+  .section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .section p {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* IMAGE BLOCK */
+  .image-block {
+    margin: 3rem 0;
+    text-align: center;
+  }
+  
+  .image-block img {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .caption {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+  
+  /* FULL WIDTH IMAGE */
+  .full-image {
+    margin: 4rem 0;
+  }
+  
+  .full-image img {
+    width: 100%;
+  }
+  
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid #ddd;
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  .kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
+  }
+
+  /* SCROLL SECTION */
+.scrolly {
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 6rem auto;
+  padding: 0 2rem;
+}
+
+/* LEFT: STICKY IMAGE */
+.scrolly-image {
+  flex: 1;
+  position: sticky;
+  top: 20vh;
+  height: 60vh;
+}
+
+.scrolly-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RIGHT: TEXT */
+.scrolly-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+/* EACH TEXT BLOCK */
+.step {
+  max-width: 400px;
+}
+
+.step h4 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.step p {
+  color: #444;
+}
+
+/* CAROUSEL WRAPPER */
+.carousel {
+  position: relative;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* TRACK becomes positioning container */
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ITEMS */
+.carousel-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0.2;
+  transition: all 0.5s ease;
+  pointer-events: none;
+}
+
+.carousel-item img {
+  height: 400px;
+  width: auto;
+  object-fit: cover;
+}
+
+/* CENTER */
+.carousel-item.active {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  z-index: 5;
+}
+
+/* LEFT + RIGHT */
+.carousel-item.prev,
+.carousel-item.next {
+  opacity: 0.4;
+  transform: translate(-150%, -50%) scale(0.75);
+  z-index: 3;
+  filter: blur(3px);
+}
+
+.carousel-item.next {
+  transform: translate(50%, -50%) scale(0.75);
+}
+/* HIDE FAR ITEMS COMPLETELY */
+.carousel-item.far-prev,
+.carousel-item.far-next {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carousel {
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.carousel:active {
+  cursor: grabbing;
+}
+/* INLINE FIGURE (NYT STYLE) */
+.inline-figure {
+  margin: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* IMAGE */
+.inline-figure img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* CAPTION */
+.inline-figure figcaption {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+  max-width: 90%;
+}

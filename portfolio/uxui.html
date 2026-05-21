@@ -38,13 +38,13 @@
     <p class="section-label">
       UX/UI
     </p>
-
+<!-- 
     <h1>
       Human-centered interfaces,
       digital experiences,
       and interaction design.
     </h1>
-
+-->
   </header>
 
   <main class="fineart-projects">
@@ -53,10 +53,15 @@
     <!-- PROJECT 2 -->
 
     <section class="art-project">
+        <div class="project-heading">
 
-        <div class="project-text">
-  
-          <h2>Chop&Screw</h2>
+            <h2>Chop&Screw</h2>
+          
+            <p class="project-year">
+              2025
+            </p>
+          
+          </div>
   
           <p class="project-caption">
               Interactive Loop Sequencer
@@ -74,26 +79,40 @@
   
         </div>
   
-        <div class="project-images">
-  
-          <img src="images/chopscrew/chopscrew1.jpg" alt="Design Project">
-  
-          <img src="images/chopscrew/chopscrew2.jpg" alt="Design Project">
-  
-          <img src="images/chopscrew/chopscrew3.jpg" alt="Design Project">
-  
-          <img src="images/chopscrew/chopscrew4.jpg" alt="Design Project">
-  
-          <img src="images/chopscrew/chopscrew5.jpg" alt="Design Project">
-  
-          <img src="images/chopscrew/chopscrew6.jpg" alt="Design Project">
-  
-          <img src="images/chopscrew/chopscrew8.jpg" alt="Design Project">
-  
-          <img src="images/chopscrew/chopscrew9.jpg" alt="Design Project">
-  
-  
-        </div>
+        <div class="chop-layout">
+
+            <!-- LEFT STATIC IMAGE -->
+          
+            <div class="chop-static">
+              <img src="images/chopscrew/chopscrew1.jpg" alt="Chop & Screw Interface">
+            </div>
+          
+            <!-- RIGHT SLIDESHOW -->
+          
+            <div class="slideshow-container">
+
+                <button class="slide-btn prev">&#8592;</button>
+          
+          
+                <img src="images/chopscrew/chopscrew2.jpg" class="slide active">
+
+                <img src="images/chopscrew/chopscrew3.jpg" class="slide">
+
+                <img src="images/chopscrew/chopscrew4.jpg" class="slide">
+
+                <img src="images/chopscrew/chopscrew5.jpg" class="slide">
+
+                <img src="images/chopscrew/chopscrew6.jpg" class="slide">
+
+                <img src="images/chopscrew/chopscrew8.jpg" class="slide">
+
+                <img src="images/chopscrew/chopscrew9.jpg" class="slide">
+              
+        <button class="slide-btn next">&#8594;</button>
+          
+            </div>
+          
+          </div>
   
       </section>
   
@@ -101,9 +120,15 @@
   
       <section class="art-project">
   
-        <div class="project-text">
-  
-          <h2>Reach 4 Stars</h2>
+        <div class="project-heading">
+
+            <h2>Reach 4 Stars</h2>
+          
+            <p class="project-year">
+              2025
+            </p>
+          
+          </div>
   
           <p class="project-caption">
               Carpal Tunnel relief game
@@ -218,6 +243,6 @@
     </section>
 
   </main>
-
+  <script src="script.js"></script>
 </body>
 </html>

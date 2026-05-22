@@ -447,17 +447,17 @@
 /* PAGE HEADER */
 
 .page-header {
-  padding: 180px 40px 100px;
+  padding: 100px 40px 80px;
 }
 
 .section-label {
-  font-size: 12px;
+  font-size: 22px;
   text-transform: uppercase;
   letter-spacing: 2px;
 
   opacity: 0.5;
 
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .page-header h1 {
@@ -502,7 +502,7 @@
 }
 
 .project-caption {
-  max-width: 500px;
+  max-width: 600px;
 
   font-size: 18px;
   line-height: 1.5;
@@ -693,7 +693,7 @@
 .hoy-poster-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-
+  align-items: center;
   gap: 20px;
 }
 
@@ -707,7 +707,7 @@
 .hoy-brand-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
+  align-items: center;
   gap: 20px;
 }
 
@@ -716,8 +716,18 @@
   height: auto;
 }
 
+.busstop-sketch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: 20px;
+}
 
+.busstop-sketch-grid img {
+  width: 100%;
+  height: auto;
 
+}
 /* MOBILE */
 
 @media (max-width: 900px) {
@@ -831,4 +841,48 @@
   .mobile-layout {
     grid-template-columns: 1fr;
   }
+}
+
+/* CHOP TOP ROW */
+
+.chop-top {
+  display: grid;
+  grid-template-columns: .6fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* LEFT SIDE */
+
+.chop-text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  
+}
+
+.chop-static img {
+  width: 70%;
+  max-width: 300px;
+  height: auto;
+  display: block
+}
+
+@media (max-width: 900px) {
+
+  .chop-top {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+}
+
+.project-heading h2 a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.project-heading h2 a:hover {
+  opacity: 0.5;
 }

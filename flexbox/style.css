@@ -28,8 +28,8 @@
   --color-border: hsla(210, 10%, 20%, 0.1);
   
   /* Typography */
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-display: 'Inter', system-ui, sans-serif; /* Change this */
+  font-family: "le-havre-rounded", sans-serif;
+  font-family: "le-havre-rounded", sans-serif;
 }
 
 /* Reset */

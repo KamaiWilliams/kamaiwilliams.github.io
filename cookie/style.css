@@ -1,0 +1,349 @@
+/* INTENTIONALLY UGLY STARTER STYLES */
+/* These styles are very, very ugly. */
+/* Time to make them attractive, legible, and usable */
+
+body {
+    background-color: #4C2930;
+    color: #3f281c;
+    line-height: 1.6;
+    font-family: "amster", serif;
+    font-weight: 400;
+    font-style: normal;
+    
+}
+.recipe-feature {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    
+
+    padding: 20px 25px;
+    /*background-color: #AD352F;*/
+    /*border-bottom: 1px solid #b8a68d;*/
+}
+.recipe-container {
+    /*background-color: #494493;
+    border: 0px solid #b8a68d;*/
+    margin: 0px;
+    padding: 0px;
+}
+
+.recipe-header {
+    /*background-color: #AD352F;*/
+    padding: 35px 50px 15px;
+    margin: 10px 
+    /*border-bottom: 1px solid #b8a68d;*/
+    
+}
+
+.recipe-title {
+    
+    /*font-size: 70px;*/
+    text-decoration: none;
+    font-family: "remedy", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    color: #F1C354;
+    font-size: 6rem;
+    width: 50vw;
+    margin-left: 0px;
+    margin-top: 30px; 
+    line-height: 70px;
+    margin-bottom: 10px;
+    padding: 25px 30px;
+
+    background-color: #494493;
+
+    transform: rotate(-12deg);
+    text-shadow: -4px 7px #3f281c;
+}
+
+
+.recipe-meta {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+
+    background-color: transparent;
+    color: #3f281c;
+
+    padding: 5px 10px;display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.meta-item {
+    position: relative;
+    padding: 7px 15px;
+    background-color: #A33D20;
+    color: #f7f1e5;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 5px 5px #31543d;
+}
+
+.meta-item:nth-child(1) {
+    transform: rotate(-1.5deg);
+}
+
+.meta-item:nth-child(2) {
+    transform: rotate(1deg);
+}
+
+.meta-item:nth-child(3) {
+    transform: rotate(-0.8deg);
+    margin-top: 2vh;
+}
+
+.meta-item:nth-child(4) {
+    transform: rotate(1.8deg);
+    margin-right: 2vw;
+}
+
+.meta-item:nth-child(5) {
+    transform: rotate(-1.2deg);
+}
+.meta-item:last-child {
+    border-bottom: none;
+}
+
+.meta-item strong {
+    display: block;
+    color: #d9c99f;
+    font-size: 1.7rem;
+    font-family: "catnip", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0.12em;
+    margin-bottom: 0px;
+}
+
+
+.recipe-description {
+   
+    font-size: 16px;
+
+    width: 60%;
+    padding: 35px 20px;
+    margin: 0 auto;
+
+    border-bottom: 1px solid #b8a68d;
+    border: none;
+    display: flex;
+    
+    align-items: center;
+    justify-content: center;
+}
+
+.recipe-description p {
+    max-width: 780px;
+    font-family: "amster", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #efe5d3;
+}
+
+.ingredients-section {
+    
+    /*border: 5px solid brown;*/
+}
+.ingredients-section,
+.instructions-section {
+    
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    color: #50392b;
+}
+
+.ingredients-section {
+    background-color: #F1C354;
+    transform: rotate(-1deg);
+    width: 40%;
+    margin: 20px auto;
+    padding: 25px 35px;
+    color: #3f281c;
+}
+
+.instructions-section {
+    background-color: #eee4d2;
+    width: 50%;
+    margin: 20px auto;
+    padding: 25px 35px;
+}
+
+
+/* Section headings */
+
+
+.instructions-section h2 {
+    font-family: "caprizant", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 3.5rem;
+    color: #eee4d2;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    text-shadow: -2px 3px #F1C354;
+    
+}
+
+.ingredients-section h2 {
+    font-family: "caprizant", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 3.5rem;
+    color: #eee4d2;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    text-shadow: -2px 3px #3f281c;
+    
+}
+.ingredients-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    max-width: 850px;
+    font-family: "amster", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.ingredients-list li {
+    width: 100%;
+    padding: 0px 0px 00px 0;
+    /*border-bottom: 1px dotted #aa967b;*/
+    color: #50392b;
+    font-size: 1.2rem;
+}
+
+.ingredients-list li::before {
+    content: "•";
+    color: #b44932;
+    font-weight: bold;
+    margin-right: 20px;
+    font-size: 2.25rem;
+    line-height: 1.4rem;
+}
+
+.instructions-list {
+    list-style: none;
+    counter-reset: recipe-step;
+    max-width: 850px;
+}
+
+.instruction-step {
+    counter-increment: recipe-step;
+    position: relative;
+    padding: 18px 20px 18px 65px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #c4b49e;
+    color: #50392b;
+}
+
+.instruction-step::before {
+    content: counter(recipe-step);
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    width: 32px;
+    height: 32px;
+    border: 2px solid #31543d;
+    border-radius: 50%;
+    color: #31543d;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 28px;
+}
+
+.instruction-step strong {
+    color: #4c2311;
+}
+
+
+.recipe-footer {
+    padding: 25px 50px;
+    background-color: #31543d;
+    color: #f7f1e5;
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+}
+
+.recipe-footer p {
+    margin-bottom: 5px;
+}
+
+.recipe-footer p:last-child {
+    margin-bottom: 0;
+}
+
+
+.recipe-image {
+    width: 70%;
+    height: 360px;
+    object-fit: cover;
+    border: 8px solid #fffaf0;
+    outline: 1px solid #a99173;
+}
+
+* {
+    margin: 2px;
+    padding: 1px;
+}
+
+/*
+Amoretta Regular
+font-family: "amoretta", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+Amoretta Dark
+font-family: "amoretta-dark", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+Caprizant Regular
+font-family: "caprizant", sans-serif;
+font-weight: 400;
+font-style: normal;
+
+Caprizant Bold
+font-family: "caprizant", sans-serif;
+font-weight: 700;
+font-style: normal;
+
+Amster Regular
+font-family: "amster", serif;
+font-weight: 400;
+font-style: normal;
+
+Amster Regular Italic
+font-family: "amster", serif;
+font-weight: 400;
+font-style: italic;
+
+Amster Bold
+font-family: "amster", serif;
+font-weight: 700;
+font-style: normal;
+
+Amster Bold Italic
+font-family: "amster", serif;
+font-weight: 700;
+font-style: italic;
+*/

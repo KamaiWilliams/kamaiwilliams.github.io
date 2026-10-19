@@ -54,3 +54,36 @@ document.querySelectorAll(".slideshow-container").forEach((container) => {
 
 
 
+
+document.querySelectorAll("[data-slideshow]").forEach((slideshow) => {
+  const slides = Array.from(slideshow.querySelectorAll(".sm-slide"));
+  const previousButton = slideshow.querySelector(".sm-prev");
+  const nextButton = slideshow.querySelector(".sm-next");
+  const counter = slideshow.querySelector(".sm-slide-counter");
+
+  if (!slides.length || !previousButton || !nextButton) return;
+
+  let currentIndex = 0;
+
+  function showSlide(index) {
+      currentIndex = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+          slide.classList.toggle("is-active", i === currentIndex);
+      });
+
+      if (counter) {
+          counter.textContent = `${currentIndex + 1} / ${slides.length}`;
+      }
+  }
+
+  previousButton.addEventListener("click", () => {
+      showSlide(currentIndex - 1);
+  });
+
+  nextButton.addEventListener("click", () => {
+      showSlide(currentIndex + 1);
+  });
+
+  showSlide(0);
+});

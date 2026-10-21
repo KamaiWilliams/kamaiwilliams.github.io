@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial 6: From callbacks to fetch to async/await</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tutorial 6: From callbacks to fetch to async/await</h1>
+        </header>
+
+        <section class="tutorial-instructions">
+            <h2>Your Tasks</h2>
+            <p>Open this folder in VS Code and run it with Live Server. Then fill in the four TODOs in <code>script.js</code>.</p>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 1: A callback that runs later</h2>
+            <p>A <strong>callback</strong> is a function you hand to another function to call. <code>setTimeout</code> calls yours later. Predict which line reaches the log first, then run it.</p>
+            <div class="demo-area">
+                <button id="run-todo-1" class="method-button" type="button">Run TODO 1</button>
+                <p id="ready-output" class="big-output"></p>
+                <ol id="log-todo-1" class="event-log"></ol>
+            </div>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 2: fetch with .then()</h2>
+            <p><code>fetch()</code> doesn't give you the data. It gives you a <strong>promise</strong>: a value that arrives later. <code>.then()</code> hands it a callback to run when it does. Watch which log line comes first.</p>
+            <div class="demo-area">
+                <button id="load-then" class="method-button" type="button">Load with .then()</button>
+                <ol id="log-then" class="event-log"></ol>
+            </div>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 3: The same load with async/await</h2>
+            <p>Still a promise underneath. Why write it this way?</p>
+            <ul>
+                <li><strong>It reads top to bottom.</strong> Each <code>await</code> waits for one step, so the code reads in the order it happens.</li>
+                <li><strong>Errors go in one place.</strong> A <code>try</code>/<code>catch</code> catches a failure at any step.</li>
+                <li><strong>No callbacks inside callbacks.</strong> Each step's result is a normal variable you can use on the next line.</li>
+            </ul>
+            <div class="demo-area">
+                <button id="load-await" class="load-button" type="button">Load with async/await</button>
+                <div id="loading-status" class="status-display">
+                    <p class="status-message">Ready to load</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 4: Count by price range</h2>
+            <p>This button switches on once TODO 2 or TODO 3 has loaded the data. Tutorial 7 turns your count into a chart.</p>
+            <div class="demo-area">
+                <button id="count-by-price" class="method-button" type="button" disabled>Count by price range</button>
+                <div id="count-output"></div>
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

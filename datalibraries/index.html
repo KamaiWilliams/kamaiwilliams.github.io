@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial 7: Your data → the library's data</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- TODO 1: Add the <script> tag for Chart.js here, before script.js.
+         Find it on Chart.js's Getting Started page: https://www.chartjs.org/docs/latest/getting-started/
+         Use version 4.5.1, so it can't change under you: put @4.5.1 straight after chart.js in the address. -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tutorial 7: Your data → the library's data</h1>
+            <p>Chart.js doesn't take your array of restaurants. Each kind of chart wants the data in its own shape.</p>
+        </header>
+
+        <section class="tutorial-instructions">
+            <h2>Your Tasks</h2>
+            <p>Open this folder in VS Code and run it with Live Server. TODO 1 is in <code>index.html</code>; TODOs 2–5 are in <code>script.js</code>.</p>
+            <p id="data-status" class="shape-output">Loading restaurants...</p>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 1: Include the library</h2>
+            <p>A library is someone else's code. You include it with a <code>&lt;script&gt;</code> tag that points at a CDN, a server that hosts it for anyone to use.</p>
+            <p id="library-status" class="library-status"></p>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 2: Count, then split into two lists</h2>
+            <p>A bar chart wants two lists that line up: the label for each bar, and how tall it is. One entry per <strong>group</strong>.</p>
+            <div class="demo-area">
+                <button id="make-lists" class="method-button" type="button" disabled>Make the two lists</button>
+                <pre id="lists-output" class="shape-output"></pre>
+            </div>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 3: A bar chart, and a sentence</h2>
+            <p>Give the chart a title and a label on each axis. Then write one sentence that says what it shows: charts are drawn as pictures, so screen readers can't read them.</p>
+            <div class="demo-area">
+                <button id="draw-bar" class="method-button" type="button" disabled>Draw the bar chart</button>
+                <figure class="chart-figure">
+                    <canvas id="bar-chart"></canvas>
+                    <figcaption id="bar-summary" class="chart-summary"></figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 4: Put the bars in order</h2>
+            <p>The bars come out in the order each price first appears in the data. A reader expects cheapest to dearest. Instead of counting again, <code>map()</code> over the order you want and look up each count. Then click <strong>Draw the bar chart</strong> again: you changed the data, so redraw it.</p>
+            <div class="demo-area">
+                <button id="order-bars" class="method-button" type="button" disabled>Put them in order</button>
+                <pre id="order-output" class="shape-output"></pre>
+            </div>
+        </section>
+
+        <section class="method-section">
+            <h2>TODO 5: One point per restaurant</h2>
+            <p>A scatter chart wants one <code>{ x, y }</code> object for each point. One entry per <strong>restaurant</strong>, so this is a job for <code>map()</code>.</p>
+            <div class="demo-area">
+                <button id="draw-scatter" class="method-button" type="button" disabled>Draw the scatter chart</button>
+                <pre id="points-output" class="shape-output"></pre>
+                <figure class="chart-figure">
+                    <canvas id="scatter-chart"></canvas>
+                    <figcaption id="scatter-summary" class="chart-summary"></figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="method-section">
+            <h2>Every library wants its own shape</h2>
+            <p>A map library like Leaflet wants a <code>[latitude, longitude]</code> for each marker: the same kind of <code>map()</code> as TODO 5. Reading a library's docs mostly means finding out what shape it wants.</p>
+        </section>
+    </div>
+</body>
+</html>

@@ -182,7 +182,7 @@ document.querySelector('#draw-scatter').addEventListener('click', () => {
     });
   
     document.querySelector('#scatter-summary').textContent =
-      'Each point represents one restaurant. Points farther to the right have higher price ranges, while points higher on the chart have better ratings.';
+      'Each point represents one restaurant. The ones on the right have higher price ranges, and the points higher up on the chart have better ratings.';
   });
 });
 

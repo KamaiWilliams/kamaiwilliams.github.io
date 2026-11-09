@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Dataset, Four Views</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js, for the Charts View. Pinned to one version so it can't change under you mid-semester. -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>One Dataset, Four Views</h1>
+            <p><strong>Project 2:</strong> The same data, shown four different ways. Each view emphasises different parts of the information and serves a different user goal.</p>
+        </header>
+
+        <nav class="view-selector">
+            <button class="view-button active" id="btn-cards" data-view="cards">Card View</button>
+            <button class="view-button" id="btn-table" data-view="table">Table View</button>
+            <button class="view-button" id="btn-categories" data-view="categories">Category View</button>
+            <button class="view-button" id="btn-charts" data-view="charts">Charts View</button>
+        </nav>
+
+        <main class="display-container">
+            <div id="data-display">
+                <div class="loading">Loading data...</div>
+            </div>
+        </main>
+
+        <section class="asst-box">
+            <h3>Your Project:</h3>
+            <ol>
+                <li><strong>Read the data:</strong> open <code>data.json</code> and look at a few inspections before you write any code</li>
+                <li><strong>Decide who each view is for:</strong> a diner, a health inspector, a reporter…</li>
+                <li><strong>Write three views:</strong> Table, Category, and Charts. Card View is done for you as an example.</li>
+                <li><strong>Make each view useful:</strong> what does each one emphasise, and what does it leave out?</li>
+                <li><strong>Write a reflection:</strong> how does presentation change what your data seems to say?</li>
+            </ol>
+
+            <h3>Why Four Views?</h3>
+            <ul>
+                <li><strong>Card View:</strong> best for browsing and comparing individual items</li>
+                <li><strong>Table View:</strong> best for scanning specific values and sorting</li>
+                <li><strong>Category View:</strong> shows groups and how they compare</li>
+                <li><strong>Charts View:</strong> shows patterns at a glance, with a text alternative for every chart</li>
+            </ul>
+        </section>
+    </div>
+    <script type="module" src="./script.js"></script>
+</body>
+</html>

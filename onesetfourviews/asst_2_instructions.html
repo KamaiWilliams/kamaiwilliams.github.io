@@ -1,0 +1,100 @@
+<p>A "dataset" is a collection of related records: restaurants, artworks, inspections, bus stops. In this project you will work with a slice of real public data, Prince George's County food safety inspections, saved in your starter code as a <code>.json</code> file. You will load it with <code>fetch()</code> and show it four different ways: three ordinary views, and one view of charts made with an external library.</p>
+<p>The same information tells different stories depending on how it is presented. <strong>Information architecture</strong> is what we call the choice of what each view emphasises or hides.</p>
+
+<h3>Learning Objectives</h3>
+<p>By completing this project, you will demonstrate that you can:</p>
+<ul>
+    <li>Load data asynchronously with <code>fetch()</code> and <code>async</code>/<code>await</code></li>
+    <li>Transform data with array methods: reshape it into what each view, and each library, needs</li>
+    <li>Include an external library from a CDN and pass it your data</li>
+    <li>Design several interface patterns for different user goals</li>
+    <li>Make your views usable by more people by correctly using real tables, labelled charts, and text alternatives.</li>
+</ul>
+
+<h3>Starter Code</h3>
+<p>Download the starter code: <a href="https://umd.instructure.com/courses/1390958/files/84821117?wrap=1" target="_blank" rel="noopener">asst_2_restaurants.zip</a></p>
+<p>The starter code provides:</p>
+<ul>
+    <li>One complete example view (Card View) showing the pattern to follow</li>
+    <li>A stylesheet with utility classes</li>
+    <li>Data loading, view switching and error display, already wired up</li>
+    <li>Incomplete view functions for you to write, in the <code>editable_js/</code> folder</li>
+    <li><code>data.json</code>: 150 recent food safety inspections from Prince George's County</li>
+</ul>
+<p><strong>To run it:</strong> open the folder in VS Code and start Live Server. Opening <code>index.html</code> by double-clicking it will not work: browsers block <code>fetch()</code> from a file on your own computer. It will also work once it is on GitHub Pages.</p>
+
+<h3>1. The Dataset</h3>
+<p>Everyone works with the same data: 150 recent food safety inspections from <a href="https://data.princegeorgescountymd.gov/" target="_blank" rel="noopener">Prince George's County Open Data</a>, in <code>data.json</code>. Each record is one inspection of one business. Open the file in VS Code and read a few records before you write any code.</p>
+<p><strong>Useful fields:</strong></p>
+<ul>
+    <li><code>name</code>, <code>category</code> (Restaurant, Carry-out, Fast Food - Chain…), <code>address_line_1</code>, <code>city</code>, <code>zip</code></li>
+    <li><code>inspection_date</code> and <code>inspection_type</code></li>
+    <li><code>inspection_results</code> (Compliant - No Health Risk, Critical Violations observed…)</li>
+    <li>15 food safety checks, such as <code>proper_hand_washing</code> and <code>cold_holding_temperature</code>, each either "In Compliance" or "Out of Compliance"</li>
+</ul>
+<p><strong>Missing values are written as <code>"------"</code> or <code>"N/A"</code></strong>, not left empty. Your code won't break on them: it will just show <code>------</code> or <code>N/A</code> on the page. Treat both as missing.</p>
+<p><strong>There are no ready-made numbers. You make them</strong> by counting: inspections per city, inspections per month, or how many checks in each inspection were "Out of Compliance".</p>
+<p>The same inspections can serve very different people: a diner choosing where to eat, a health inspector planning visits, a reporter looking for patterns. Decide who each of your views is for.</p>
+
+<h3>2. Load the Data</h3>
+<p>The starter already loads <code>data.json</code>, in <code>editable_js/load_data.js</code>:</p>
+<pre><code>async function loadData() {
+  const response = await fetch('./data.json');
+  const data = await response.json();
+  return data;
+}</code></pre>
+<p>You don't need to change it. Open the browser console: you should see <code>Loaded 150 items</code>. If you see an error instead, check that you are running Live Server.</p>
+
+<h3>3. The Four Views</h3>
+<p>Card View is done for you as an example. Write the other three. Each view must:</p>
+<ul>
+    <li>Transform the data for its own purpose: don't just print every field</li>
+    <li>Handle missing values (show "Not listed" instead of <code>------</code> or <code>N/A</code>). Card View shows one way to do it.</li>
+    <li>Serve a different user goal, and look clearly different from the others</li>
+    <li>Work on a phone and on a laptop</li>
+</ul>
+
+<h4>Table View</h4>
+<ul>
+    <li>A real HTML <code>&lt;table&gt;</code> with <code>&lt;th&gt;</code> header cells and a <code>&lt;caption&gt;</code> that says what the table shows</li>
+    <li>The 4–6 most useful fields for the person this table is for</li>
+    <li>Optional: sorting. See the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/" target="_blank" rel="noopener">sortable table example at the W3C</a></li>
+</ul>
+
+<h4>Category View</h4>
+<ul>
+    <li>Group the inspections by one meaningful field (type of business, city, inspection result…)</li>
+    <li>Show how many inspections are in each group, plus one other number per group (how many were compliant, the average number of "Out of Compliance" checks, the most recent inspection)</li>
+    <li>Make the groups easy to compare, and visually distinct from the items inside them</li>
+</ul>
+
+<h4>Charts View</h4>
+<p>This view replaces the old text statistics view. Use <a href="https://www.chartjs.org/docs/latest/getting-started/" target="_blank" rel="noopener">Chart.js</a>, included from a CDN with a <code>&lt;script&gt;</code> tag. (If you would rather use another charting library, check with me first.)</p>
+<ul>
+    <li>At least <strong>two charts of different types</strong> (bar, pie, line, scatter…), each answering a different question about your data</li>
+    <li>Every chart has a title, and every axis has a label</li>
+    <li>Every chart has a <strong>text alternative</strong> on the page: one sentence that says what the chart shows (for example, "Chain fast food restaurants had the most inspections: 29 of 150"), or a small table of the same numbers. Charts are drawn as pictures, so screen readers can't read them on their own.</li>
+</ul>
+<p><strong>Your data → the library's data.</strong> Chart.js does not take your array of records. It wants a list of labels and a matching list of numbers. Reshaping your data into that form is the main skill in this view. For example, to count inspections by type of business:</p>
+<pre><code>const counts = {};
+data.forEach((inspection) => {
+  counts[inspection.category] = (counts[inspection.category] || 0) + 1;
+});
+
+const labels = Object.keys(counts);    // ['Fast Food - Chain', 'Diet/Nutrition Site', 'Restaurant', ...]
+const numbers = Object.values(counts); // [29, 3, 22, ...]</code></pre>
+<p><code>labels</code> and <code>numbers</code> are what you pass to Chart.js. Tutorial 8 walks through this step by step.</p>
+
+<h3>Submission</h3>
+<ol>
+    <li><strong>Working page:</strong> your GitHub Pages link</li>
+    <li><strong>Code:</strong> your GitHub repository link</li>
+    <li><strong>Reflection</strong> (300–400 words):
+        <ul>
+            <li>Who each of your views is for, and what that person needs from the data</li>
+            <li>How each view emphasises a different part of your data, and which view you think is most useful</li>
+            <li>One transformation you wrote: what the data looked like before, and what it looked like after (a short code snippet is welcome)</li>
+            <li>One problem you ran into, and how you solved it</li>
+        </ul>
+    </li>
+</ol>

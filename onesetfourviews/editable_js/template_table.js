@@ -35,10 +35,10 @@ function orNotListed(value) {
   `).join("");
 
   return `
-    <h2 class="view-title">📊 Table View</h2>
+    <h2 class="view-title"> Table View</h2>
 
     <p class="view-description">
-      Compare food safety inspection records across businesses.
+      Food safety inspection records for each business.
     </p>
 
     <div class="table-container">
@@ -57,7 +57,7 @@ function orNotListed(value) {
             <th scope="col">Inspection Result</th>
           </tr>
         </thead>
-
+        
         <tbody>
           ${tableRows}
         </tbody>

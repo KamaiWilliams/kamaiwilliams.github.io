@@ -15,7 +15,6 @@ function countViolations(inspection) {
   return violations.length;
 }
 
-// Build the city view
 function showCategories(data) {
   const cities = {};
 
@@ -71,8 +70,7 @@ function showCategories(data) {
     <h2 class="view-title">City View</h2>
 
     <p class="view-description">
-      Explore food safety inspections across cities in Prince George's County.
-      Each city shows the number of inspections and average violations.
+      Number of inspections and violations in each city.
     </p>
 
     <div class="categories-container">

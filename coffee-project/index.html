@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>America Runs on Coffee</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Leaflet CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <a href="#home">COFFEE CULTURE</a>
+            <a href="#map">THE MAP</a>
+            <a href="#work">WORK CULTURE</a>
+            <a href="#conclusion">REFLECT</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- INTRO -->
+        <section id="home" class="intro">
+            <p class="eyebrow">AN EXPLORATION OF AMERICAN CULTURE</p>
+
+            <h1>AMERICA RUNS ON COFFEE.</h1>
+
+            <p class="intro-text">
+                What does America's relationship with coffee
+                reveal about the way we work, spend, and live?
+            </p>
+
+            <p>Scroll to explore ↓</p>
+        </section>
+
+
+        <!-- SECTION 1: MAP -->
+        <section id="map" class="section">
+
+            <div class="section-heading">
+                <p class="eyebrow">01 / A NATION OF COFFEE DRINKERS</p>
+
+                <h2>Where do we stand?</h2>
+
+                <p>
+                    Explore differences in economic conditions
+                    across the United States.
+                </p>
+            </div>
+
+            <div class="map-controls">
+
+                <label for="metric-select">
+                    Explore a statistic:
+                </label>
+
+                <select id="metric-select">
+                    <option value="povertyRate">Poverty rate</option>
+                    <option value="medianIncome">Median household income</option>
+                    <option value="foodInsecurity">Food insecurity</option>
+                    <option value="unemployment">Unemployment</option>
+                </select>
+
+            </div>
+
+            <div class="map-layout">
+
+                <div id="us-map"
+                     role="region"
+                     aria-label="Interactive map of socioeconomic statistics by US state">
+                </div>
+
+                <aside id="state-info" aria-live="polite">
+                    <h3>Explore a state</h3>
+                    <p>Select a state on the map to see its statistics.</p>
+                </aside>
+
+            </div>
+
+            <p class="data-source">
+                Source: U.S. Census Bureau, USDA, and BLS.
+            </p>
+
+        </section>
+
+
+        <!-- SECTION 2: COFFEE SPENDING -->
+        <section id="spending" class="section">
+
+            <div class="section-heading">
+                <p class="eyebrow">02 / THE COST OF A DAILY HABIT</p>
+
+                <h2>What does your coffee cost?</h2>
+
+                <p>
+                    Explore the changing cost of coffee
+                    and how much Americans spend on it.
+                </p>
+            </div>
+
+            <div id="spending-viz" class="visualization">
+                Visualization coming soon.
+            </div>
+
+        </section>
+
+
+        <!-- SECTION 3: WORK -->
+        <section id="work" class="section">
+
+            <div class="section-heading">
+                <p class="eyebrow">03 / FUELING THE WORKFORCE</p>
+
+                <h2>Why do we drink coffee?</h2>
+
+                <p>
+                    Explore the relationship between coffee,
+                    employment, and productivity.
+                </p>
+            </div>
+
+            <div id="work-viz" class="visualization">
+                Visualization coming soon.
+            </div>
+
+        </section>
+
+
+        <!-- SECTION 4: CONSUMER CULTURE -->
+        <section id="culture" class="section">
+
+            <div class="section-heading">
+                <p class="eyebrow">04 / THE CULTURE OF CONSUMPTION</p>
+
+                <h2>What's in your cup?</h2>
+
+                <p>
+                    Explore coffee preferences, ingredients,
+                    and changing consumer habits.
+                </p>
+            </div>
+
+            <div id="culture-viz" class="visualization">
+                Visualization coming soon.
+            </div>
+
+        </section>
+
+
+        <!-- CONCLUSION -->
+        <section id="conclusion" class="section conclusion">
+
+            <p class="eyebrow">05 / REFLECTION</p>
+
+            <h2>So, what's in your cup?</h2>
+
+            <p>
+                Does our relationship with coffee reflect
+                our personal preferences, or the economic
+                and social systems we participate in every day?
+            </p>
+
+        </section>
+
+    </main>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="js/app.js"></script>
+
+</body>
+</html>

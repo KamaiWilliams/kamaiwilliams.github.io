@@ -31,7 +31,7 @@ function showCards(data) {
     .join("");
      /*html*/ 
   return `
-                <h2 class="view-title">🃏 Card View</h2>
+                <h2 class="view-title">Card View</h2>
                 <p class="view-description">Browse inspections one place at a time</p>
                 <div class="card-grid">
                     ${cardHTML}

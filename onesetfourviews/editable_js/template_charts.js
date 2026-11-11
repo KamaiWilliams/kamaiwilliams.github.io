@@ -10,7 +10,7 @@
  */
 function showCharts(data) {
   return `
-    <h2 class="view-title">📈 Charts View</h2>
+    <h2 class="view-title">Charts View</h2>
 
     <p class="view-description">
       Patterns in the data at a glance

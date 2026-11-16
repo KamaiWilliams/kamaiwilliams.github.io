@@ -25,14 +25,15 @@ function showCategories(data) {
       inspection.city && inspection.city !== "------"
         ? inspection.city
         : "Not listed";
-    if (!cities[city]) {
-      cities[city] = {
-        count: 0,
-        totalViolations: 0
-      };
-    }
-    cities[city].count++;
-    cities[city].totalViolations += countViolations(inspection);
+if (!cities[city]) {
+  cities[city] = {
+    count: 0,
+    totalViolations: 0
+  };
+}
+
+cities[city].count++;
+cities[city].totalViolations += countViolations(inspection);
   });
 
  

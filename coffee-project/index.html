@@ -14,47 +14,64 @@
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
+
+    <script>
+        (function(d) {
+          var config = {
+            kitId: 'wku7lnl',
+            scriptTimeout: 3000,
+            async: true
+          },
+          h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+        })(document);
+      </script>
 </head>
 
 <body>
 
     <header>
-        <nav>
-            <a href="#home">COFFEE CULTURE</a>
-            <a href="#map">THE MAP</a>
-            <a href="#work">WORK CULTURE</a>
-            <a href="#conclusion">REFLECT</a>
-        </nav>
+        <div class="top-bar"></div>
     </header>
 
     <main>
 
-        <!-- INTRO -->
         <section id="home" class="intro">
-            <p class="eyebrow">AN EXPLORATION OF AMERICAN CULTURE</p>
+    
+            <div class="hero-title">
 
-            <h1>AMERICA RUNS ON COFFEE.</h1>
-
-            <p class="intro-text">
-                What does America's relationship with coffee
-                reveal about the way we work, spend, and live?
-            </p>
-
-            <p>Scroll to explore ↓</p>
+                <div class="hero-left">
+                    <h1 class="america-title">
+                        america
+                        <span>runs on</span>
+                    </h1>
+                </div>
+            
+                <div class="hero-right">
+                    <h1 class="coffee-title">COFFEE</h1>
+                </div>
+            
+            </div>
+    
+            <div class="intro-description">
+    
+                <p class="intro-text">
+                    What does America’s relationship with coffee say about the way we live?
+                </p>
+            </div>
+    
         </section>
 
 
-        <!-- SECTION 1: MAP -->
+      
         <section id="map" class="section">
 
             <div class="section-heading">
-                <p class="eyebrow">01 / A NATION OF COFFEE DRINKERS</p>
-
-                <h2>Where do we stand?</h2>
+            
+                <h2> coffee stats in different states</h2>
 
                 <p>
                     Explore differences in economic conditions
-                    across the United States.
+                    across the us
                 </p>
             </div>
 
@@ -94,87 +111,7 @@
         </section>
 
 
-        <!-- SECTION 2: COFFEE SPENDING -->
-        <section id="spending" class="section">
-
-            <div class="section-heading">
-                <p class="eyebrow">02 / THE COST OF A DAILY HABIT</p>
-
-                <h2>What does your coffee cost?</h2>
-
-                <p>
-                    Explore the changing cost of coffee
-                    and how much Americans spend on it.
-                </p>
-            </div>
-
-            <div id="spending-viz" class="visualization">
-                Visualization coming soon.
-            </div>
-
-        </section>
-
-
-        <!-- SECTION 3: WORK -->
-        <section id="work" class="section">
-
-            <div class="section-heading">
-                <p class="eyebrow">03 / FUELING THE WORKFORCE</p>
-
-                <h2>Why do we drink coffee?</h2>
-
-                <p>
-                    Explore the relationship between coffee,
-                    employment, and productivity.
-                </p>
-            </div>
-
-            <div id="work-viz" class="visualization">
-                Visualization coming soon.
-            </div>
-
-        </section>
-
-
-        <!-- SECTION 4: CONSUMER CULTURE -->
-        <section id="culture" class="section">
-
-            <div class="section-heading">
-                <p class="eyebrow">04 / THE CULTURE OF CONSUMPTION</p>
-
-                <h2>What's in your cup?</h2>
-
-                <p>
-                    Explore coffee preferences, ingredients,
-                    and changing consumer habits.
-                </p>
-            </div>
-
-            <div id="culture-viz" class="visualization">
-                Visualization coming soon.
-            </div>
-
-        </section>
-
-
-        <!-- CONCLUSION -->
-        <section id="conclusion" class="section conclusion">
-
-            <p class="eyebrow">05 / REFLECTION</p>
-
-            <h2>So, what's in your cup?</h2>
-
-            <p>
-                Does our relationship with coffee reflect
-                our personal preferences, or the economic
-                and social systems we participate in every day?
-            </p>
-
-        </section>
-
-    </main>
-
-    <!-- Leaflet JavaScript -->
+        
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script src="js/app.js"></script>

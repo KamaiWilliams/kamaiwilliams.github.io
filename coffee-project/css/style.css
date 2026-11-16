@@ -10,17 +10,24 @@ html {
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f1e9;
+    font-family: "acumin-variable", sans-serif;
+    font-variation-settings: "slnt" 0, "wdth" 100, "wght" 194.2857;
+    background-color: #FFFEF4;
     color: #29251f;
+    
 }
 
 header {
-    padding: 20px 5%;
-    position: sticky;
-    top: 0;
-    background-color: #f5f1e9;
+    width: 100%;
+    height: 22px;
+    background-color: white;
+    position: relative;
     z-index: 1000;
+}
+.top-bar {
+    width: 100%;
+    height: 100%;
+    background-color: white;
 }
 
 nav {
@@ -39,39 +46,104 @@ nav a {
 
 section {
     padding: 100px 8%;
-    min-height: 80vh;
+    min-height: 40vh;
 }
 
 .intro {
-    min-height: 90vh;
+    min-height: 40vh;
+    padding: 70px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 25px;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.hero-title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.hero-left {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.hero-right {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+.america-title {
+    font-family: "papyrus-std", sans-serif;
+    font-style: normal;
+    font-size: 6.5rem;
+    font-weight: 400;
+    line-height: 4rem;
+    overflow-wrap: normal;
+}
+
+.america-title span {
+    display: block;
+    white-space: nowrap;
+}
+.coffee-title {
+    font-family: "papyrus-std", sans-serif;
+    font-size: clamp(7.5rem, 7vw, 9rem);
+    font-weight: 400;
+    line-height: 0.85;
+    white-space: normal;
+    
 }
 
 h1 {
     font-size: clamp(3rem, 9vw, 8rem);
     line-height: 0.95;
     max-width: 1000px;
+    font-family: "papyrus-std", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 h2 {
-    font-size: clamp(2rem, 5vw, 4rem);
+    font-size: clamp(1rem, 5vw, 2rem);
     margin: 15px 0;
+    font-family: "papyrus-std", sans-serif;
+    font-style: normal;
 }
 
-.eyebrow {
-    font-size: 12px;
-    letter-spacing: 2px;
-    font-weight: bold;
+
+
+.intro-description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
 }
 
 .intro-text {
-    max-width: 550px;
-    font-size: 20px;
-    line-height: 1.5;
+    max-width: 200px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+@media (max-width: 700px) {
+
+    .hero-title {
+        gap: 12px;
+    }
+
+    .hero-left h1,
+    .hero-right h1 {
+        font-size: clamp(2.2rem, 10vw, 4rem);
+    }
+
+    .intro {
+        padding: 70px 6%;
+    }
+
 }
 
 .section-heading {
@@ -98,21 +170,30 @@ select {
 
 .map-layout {
     display: flex;
-    flex-wrap: wrap;
+    align-items: stretch;
     gap: 25px;
+    max-width: 1100px;
 }
 
 #us-map {
-    flex: 3 1 500px;
-    height: 500px;
+    flex: 0 1 750px;
+    width: 100%;
+    height: 450px;
     min-width: 0;
+    background: transparent;
 }
 
+.leaflet-container {
+    background: transparent;
+}
+
+.leaflet-control-attribution {
+    display: none;
+}
 #state-info {
-    flex: 1 1 200px;
+    flex: 0 1 250px;
     padding: 25px;
     background: #e8e0d2;
-    min-width: 0;
 }
 
 #state-info h3 {
@@ -172,3 +253,4 @@ select {
     }
 
 }
+
